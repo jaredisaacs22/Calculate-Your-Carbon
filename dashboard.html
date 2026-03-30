@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon Footprint Dashboard — calculateyourcarbon.com</title>
+  <meta name="description" content="US carbon emissions data, sector breakdowns, diet comparisons, flight tables, and interactive equivalency calculator. Powered by EPA 2022 data.">
+  <meta property="og:title" content="Carbon Dashboard — calculateyourcarbon.com">
+  <meta property="og:url" content="https://calculateyourcarbon.com/dashboard.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://calculateyourcarbon.com/dashboard.html">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: var(--space-8);
+      align-items: start;
+    }
+    .dashboard-sidebar {
+      position: sticky;
+      top: 80px;
+    }
+    .chart-container {
+      position: relative;
+      height: 320px;
+      width: 100%;
+    }
+    .chart-container-tall {
+      position: relative;
+      height: 260px;
+      width: 100%;
+    }
+    @media (max-width: 900px) {
+      .dashboard-layout { grid-template-columns: 1fr; }
+      .dashboard-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">calculateyourcarbon</a>
+      <div class="nav__links">
+        <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+        <a href="/explore.html" class="nav__link">Explore</a>
+        <a href="/dashboard.html" class="nav__link active">Dashboard</a>
+        <a href="/learn/" class="nav__link">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav">
+    <button class="nav__mobile-close" id="mobileClose">✕</button>
+    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/dashboard.html" class="nav__link active">Dashboard</a>
+    <a href="/learn/" class="nav__link">Learn</a>
+  </div>
+
+  <main id="main">
+    <div style="padding: var(--space-16) 0 var(--space-8); text-align:center;">
+      <div class="container">
+        <p class="eyebrow">Data & insights</p>
+        <h1 class="section-heading">Carbon Footprint Dashboard</h1>
+        <p class="section-subheading" style="margin:0 auto;">US emissions data, sector breakdowns, and interactive tools. All sourced from EPA and peer-reviewed research.</p>
+      </div>
+    </div>
+
+    <div class="container" style="padding-bottom: var(--space-24);">
+      <div class="dashboard-layout">
+        <div>
+
+          <!-- KPI Cards -->
+          <div class="grid-2" style="gap:var(--space-4);margin-bottom:var(--space-8);">
+            <div class="kpi-card">
+              <div class="kpi-value">16 <span style="font-size:var(--text-xl);">tons</span></div>
+              <div class="kpi-label">Avg US Individual Footprint (CO₂e/year)</div>
+              <div class="kpi-source">Source: EPA 2022</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value">4.7 <span style="font-size:var(--text-xl);">tons</span></div>
+              <div class="kpi-label">Global Average (CO₂e/person/year)</div>
+              <div class="kpi-source">Source: World Bank 2022</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value" style="color:var(--color-ok);">&lt;2 <span style="font-size:var(--text-xl);">tons</span></div>
+              <div class="kpi-label">Paris Agreement Target (CO₂e/person/year)</div>
+              <div class="kpi-source">Source: IPCC AR6 2021</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value">5.56 <span style="font-size:var(--text-xl);">Gt</span></div>
+              <div class="kpi-label">US Total Annual Emissions (2022)</div>
+              <div class="kpi-source">Source: EPA National GHG Inventory 2022</div>
+            </div>
+          </div>
+
+          <!-- Sector breakdown -->
+          <div class="card" style="margin-bottom:var(--space-8);">
+            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">US Emissions by Sector</h2>
+            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">Transportation is now the single largest source of US greenhouse gas emissions.</p>
+            <div class="chart-container">
+              <canvas id="chart-sector" aria-label="Donut chart showing US greenhouse gas emissions by sector" role="img"></canvas>
+            </div>
+            <!-- Accessible data table -->
+            <div class="table-wrapper" style="margin-top:var(--space-6);">
+              <table aria-label="US emissions by sector data table">
+                <thead>
+                  <tr><th>Sector</th><th>Share</th><th>Approx. Billion Tons CO₂e</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Transportation</td><td>28%</td><td>1.56</td></tr>
+                  <tr><td>Electric Power</td><td>25%</td><td>1.39</td></tr>
+                  <tr><td>Industry</td><td>23%</td><td>1.28</td></tr>
+                  <tr><td>Agriculture</td><td>10%</td><td>0.56</td></tr>
+                  <tr><td>Commercial</td><td>7%</td><td>0.39</td></tr>
+                  <tr><td>Residential</td><td>6%</td><td>0.33</td></tr>
+                  <tr><td>Other</td><td>1%</td><td>0.06</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="source-tag" style="margin-top:var(--space-3);">Source: EPA National GHG Inventory 2022 (published 2024)</p>
+          </div>
+
+          <!-- Personal breakdown -->
+          <div class="card" style="margin-bottom:var(--space-8);">
+            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">Average American's Footprint by Category</h2>
+            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">Transportation and home energy together account for ~58% of a typical American's carbon footprint.</p>
+            <div class="chart-container-tall">
+              <canvas id="chart-personal" aria-label="Bar chart of average American carbon footprint by category" role="img"></canvas>
+            </div>
+            <p class="source-tag" style="margin-top:var(--space-6);">Source: EPA 2022, USDA, Poore & Nemecek 2018</p>
+          </div>
+
+          <!-- Diet comparison -->
+          <div class="card" style="margin-bottom:var(--space-8);">
+            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">Diet & Carbon: Annual Impact</h2>
+            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">What you eat is one of the highest-leverage lifestyle choices for your carbon footprint. A vegan diet produces 3× less than a meat-heavy one.</p>
+            <div class="chart-container">
+              <canvas id="chart-diet" aria-label="Bar chart comparing annual carbon footprint by diet type" role="img"></canvas>
+            </div>
+            <p class="source-tag" style="margin-top:var(--space-6);">Source: Poore & Nemecek 2018 (Science), Oxford University. Includes land use change, methane, N₂O.</p>
+          </div>
+
+          <!-- Ad between rows -->
+          <div class="ad-unit" style="margin-bottom:var(--space-8);">
+            <p class="ad-label">Advertisement</p>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          </div>
+
+          <!-- Flight emissions table -->
+          <div class="card" style="margin-bottom:var(--space-8);">
+            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">Flight Emissions by Route</h2>
+            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">A single long-haul round trip can equal 10–30% of an average American's annual footprint. Business class multiplies emissions by 2–6×.</p>
+            <div class="table-wrapper">
+              <table aria-label="Flight emissions table by route and cabin class">
+                <thead>
+                  <tr>
+                    <th>Route</th>
+                    <th>One-Way Distance</th>
+                    <th>Economy (round trip)</th>
+                    <th>Business (round trip)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>NYC → LAX</td>
+                    <td>2,475 mi</td>
+                    <td>1,040 lbs CO₂e</td>
+                    <td>2,940 lbs CO₂e</td>
+                  </tr>
+                  <tr>
+                    <td>NYC → London</td>
+                    <td>3,459 mi</td>
+                    <td>1,870 lbs CO₂e</td>
+                    <td>5,300 lbs CO₂e</td>
+                  </tr>
+                  <tr>
+                    <td>NYC → Tokyo</td>
+                    <td>6,740 mi</td>
+                    <td>3,240 lbs CO₂e</td>
+                    <td>9,180 lbs CO₂e</td>
+                  </tr>
+                  <tr>
+                    <td>LA → Miami</td>
+                    <td>2,757 mi</td>
+                    <td>1,157 lbs CO₂e</td>
+                    <td>3,274 lbs CO₂e</td>
+                  </tr>
+                  <tr>
+                    <td>Chicago → Dallas</td>
+                    <td>803 mi</td>
+                    <td>551 lbs CO₂e</td>
+                    <td>1,560 lbs CO₂e</td>
+                  </tr>
+                  <tr>
+                    <td>Seattle → Denver</td>
+                    <td>1,025 mi</td>
+                    <td>617 lbs CO₂e</td>
+                    <td>1,748 lbs CO₂e</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="source-tag" style="margin-top:var(--space-3);">Source: ICAO Carbon Emissions Calculator methodology. Includes radiative forcing index (RFI ≈2.0). Round trip values.</p>
+            <div style="margin-top:var(--space-4);">
+              <a href="/calculate/quick.html" class="btn btn-ghost btn-sm">Calculate your own flight →</a>
+            </div>
+          </div>
+
+          <!-- Equivalency Widget -->
+          <div class="card" style="margin-bottom:var(--space-8);">
+            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">Carbon Equivalency Calculator</h2>
+            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">Enter any CO₂e amount to see what it's equivalent to in everyday terms.</p>
+
+            <div style="display:flex;gap:var(--space-4);align-items:center;margin-bottom:var(--space-6);">
+              <input type="number" id="equiv-input" class="form-input" style="max-width:180px;" value="1000" min="0" aria-label="Enter CO₂e amount">
+              <select id="equiv-unit" class="form-select" style="max-width:140px;" aria-label="Select unit">
+                <option value="lbs">lbs CO₂e</option>
+                <option value="kg">kg CO₂e</option>
+                <option value="tons">tons CO₂e</option>
+              </select>
+              <span style="color:var(--color-muted);font-size:var(--text-sm);">is equivalent to...</span>
+            </div>
+
+            <div id="equiv-output">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Trend line chart -->
+          <div class="card">
+            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">US GHG Emissions Trend (2005–2022)</h2>
+            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">Total US emissions have declined ~25% from their 2005 peak, driven by coal plant retirements and efficiency improvements. But more work remains to hit climate targets.</p>
+            <div class="chart-container">
+              <canvas id="chart-trend" aria-label="Line chart of US total greenhouse gas emissions 2005 to 2022" role="img"></canvas>
+            </div>
+            <div style="margin-top:var(--space-4);display:flex;gap:var(--space-6);flex-wrap:wrap;">
+              <div>
+                <p style="font-size:var(--text-xs);color:var(--color-muted);">2005 peak</p>
+                <p style="font-weight:600;">7.38 billion tons</p>
+              </div>
+              <div>
+                <p style="font-size:var(--text-xs);color:var(--color-muted);">2022 (latest)</p>
+                <p style="font-weight:600;">5.56 billion tons</p>
+              </div>
+              <div>
+                <p style="font-size:var(--text-xs);color:var(--color-muted);">Reduction</p>
+                <p style="font-weight:600;color:var(--color-ok);">−24.7%</p>
+              </div>
+            </div>
+            <p class="source-tag" style="margin-top:var(--space-3);">Source: EPA National Greenhouse Gas Inventory, April 2024</p>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+          <div class="ad-unit">
+            <p class="ad-label">Advertisement</p>
+            <ins class="adsbygoogle"
+                 style="display:block;width:300px;height:600px"
+                 data-ad-client="ca-pub-XXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"
+                 data-ad-format="rectangle"></ins>
+          </div>
+          <div class="card" style="margin-top:var(--space-6);">
+            <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-3);">Calculate yours</h3>
+            <p style="font-size:var(--text-sm);color:var(--color-muted);margin-bottom:var(--space-4);">See how you compare to these averages with a personalized estimate.</p>
+            <a href="/calculate/annual.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;display:flex;">Annual Calculator →</a>
+          </div>
+          <div class="card" style="margin-top:var(--space-4);">
+            <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-3);">Learn the science</h3>
+            <ul style="display:flex;flex-direction:column;gap:var(--space-2);">
+              <li><a href="/learn/what-is-carbon-footprint.html" style="font-size:var(--text-sm);color:var(--color-accent);">What is a carbon footprint? →</a></li>
+              <li><a href="/learn/carbon-cost-of-food.html" style="font-size:var(--text-sm);color:var(--color-accent);">Why beef is so carbon-intensive →</a></li>
+              <li><a href="/learn/flying-carbon-budget.html" style="font-size:var(--text-sm);color:var(--color-accent);">The carbon math of flying →</a></li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <nav class="footer__links">
+        <a href="/about.html" class="footer__link">About</a>
+        <a href="/methodology.html" class="footer__link">Methodology</a>
+        <a href="/learn/" class="footer__link">Learn</a>
+        <a href="mailto:hello@calculateyourcarbon.com" class="footer__link">Contact</a>
+      </nav>
+      <p class="footer__copy">© 2025 calculateyourcarbon.com — Data sourced from the U.S. EPA and GHG Protocol</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+  <script src="assets/js/calc-engine.js" defer></script>
+  <script src="assets/js/dashboard.js" defer></script>
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => { mobileNav.classList.add('open'); hamburger.setAttribute('aria-expanded','true'); });
+    mobileClose.addEventListener('click', () => { mobileNav.classList.remove('open'); hamburger.setAttribute('aria-expanded','false'); });
+  </script>
+</body>
+</html>

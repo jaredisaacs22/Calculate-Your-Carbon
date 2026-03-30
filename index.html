@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculate Your Carbon Footprint — calculateyourcarbon.com</title>
+  <meta name="description" content="Calculate your personal carbon footprint using EPA data. Free, accurate, and takes 2 minutes. Compare options and get a personalized action plan.">
+  <meta property="og:title" content="Calculate Your Carbon Footprint — calculateyourcarbon.com">
+  <meta property="og:description" content="Powered by EPA eGRID and GHG Protocol data. Calculate, compare, and reduce.">
+  <meta property="og:image" content="https://calculateyourcarbon.com/assets/img/og-image.png">
+  <meta property="og:url" content="https://calculateyourcarbon.com">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://calculateyourcarbon.com/">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Calculate Your Carbon",
+    "url": "https://calculateyourcarbon.com",
+    "description": "Free personal carbon footprint calculator using EPA data",
+    "applicationCategory": "EnvironmentalApplication",
+    "offers": { "@type": "Offer", "price": "0" }
+  }
+  </script>
+  <style>
+    /* Homepage-specific */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: var(--space-24) var(--space-6);
+    }
+
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero__content {
+      max-width: 720px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero__h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-6);
+    }
+
+    .hero__sub {
+      font-size: var(--text-lg);
+      color: var(--color-muted);
+      font-weight: 300;
+      margin-bottom: var(--space-8);
+      line-height: 1.7;
+    }
+
+    .hero__ctas {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-8);
+    }
+
+    .hero__stats {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 100px;
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+    }
+
+    .how-it-works__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-8);
+    }
+
+    .how-step {
+      text-align: center;
+    }
+
+    .how-step__icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(45,106,79,0.08);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin: 0 auto var(--space-4);
+    }
+
+    .how-step h3 {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .how-step p {
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+      line-height: 1.7;
+    }
+
+    .entry-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+
+    .entry-card {
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .entry-card__icon {
+      font-size: 2rem;
+    }
+
+    .entry-card__title {
+      font-size: var(--text-xl);
+      font-weight: 600;
+    }
+
+    .entry-card__desc {
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .entry-card__arrow {
+      color: var(--color-accent);
+      font-size: var(--text-lg);
+      font-weight: 600;
+    }
+
+    .credibility-bar {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-6) 0;
+    }
+
+    .credibility-bar__inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      text-align: center;
+    }
+
+    .credibility-bar__label {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-muted);
+      margin-bottom: var(--space-4);
+    }
+
+    .credibility-pills {
+      display: flex;
+      gap: var(--space-3);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .credibility-pill {
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid var(--color-border);
+      border-radius: 100px;
+      font-size: var(--text-xs);
+      font-weight: 500;
+      color: var(--color-muted);
+      background: var(--color-bg);
+    }
+
+    @media (max-width: 768px) {
+      .how-it-works__grid,
+      .entry-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Navigation -->
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo" aria-label="calculateyourcarbon home">calculateyourcarbon</a>
+      <div class="nav__links" role="list">
+        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual Calc</a>
+        <a href="/explore.html" class="nav__link" role="listitem">Explore</a>
+        <a href="/dashboard.html" class="nav__link" role="listitem">Dashboard</a>
+        <a href="/learn/" class="nav__link" role="listitem">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="nav__mobile-overlay" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/dashboard.html" class="nav__link">Dashboard</a>
+    <a href="/learn/" class="nav__link">Learn</a>
+  </div>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <!-- Subtle SVG background -->
+      <svg class="hero__bg" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g opacity="0.04">
+          <path d="M600 100 C500 200, 300 250, 200 400 C100 550, 150 700, 300 750 C450 800, 600 700, 700 600 C800 500, 900 450, 1000 300 C1100 150, 900 50, 800 80 C700 110, 650 80, 600 100Z" fill="#2D6A4F"/>
+          <circle cx="900" cy="600" r="120" fill="#52B788"/>
+          <circle cx="200" cy="200" r="80" fill="#2D6A4F"/>
+        </g>
+      </svg>
+
+      <div class="hero__content">
+        <p class="eyebrow">Know your impact. Change your future.</p>
+        <h1 class="hero__h1" id="hero-heading">Calculate Your<br>Carbon Footprint</h1>
+        <p class="hero__sub">Powered by EPA data and GHG Protocol methodology.<br>Accurate. Free. Takes 2 minutes or 20.</p>
+
+        <div class="hero__ctas">
+          <a href="/calculate/quick.html" class="btn btn-primary btn-lg">Quick Calculation →</a>
+          <a href="/calculate/annual.html" class="btn btn-ghost btn-lg">Full Annual Estimate →</a>
+        </div>
+
+        <div class="hero__stats" role="list" aria-label="Carbon footprint facts">
+          <div class="stat-pill" role="listitem">
+            🌎 <span>16 tons — Average American annual footprint</span>
+            <span class="source-tag">Source: EPA 2022</span>
+          </div>
+          <div class="stat-pill" role="listitem">
+            ✈️ <span>1 flight NYC→LA = ~1,040 lbs CO₂e</span>
+            <span class="source-tag">Source: ICAO</span>
+          </div>
+          <div class="stat-pill" role="listitem">
+            🏠 <span>Home energy = 29% of US emissions</span>
+            <span class="source-tag">Source: EPA 2022</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ad: Leaderboard below hero -->
+    <div class="container">
+      <div class="ad-unit" aria-label="Advertisement">
+        <p class="ad-label">Advertisement</p>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <section class="section" aria-labelledby="how-heading">
+      <div class="container">
+        <div class="section-header text-center">
+          <p class="eyebrow">The process</p>
+          <h2 class="section-heading" id="how-heading">How It Works</h2>
+        </div>
+        <div class="how-it-works__grid">
+          <div class="how-step">
+            <div class="how-step__icon" aria-hidden="true">📋</div>
+            <h3>Answer a few questions</h3>
+            <p>Tell us about your home, travel, diet, and purchases. We handle all the math using real EPA emission factors.</p>
+          </div>
+          <div class="how-step">
+            <div class="how-step__icon" aria-hidden="true">📊</div>
+            <h3>See your footprint</h3>
+            <p>Get a detailed breakdown by category, compared against the US average of 16 tons CO₂e per year.</p>
+          </div>
+          <div class="how-step">
+            <div class="how-step__icon" aria-hidden="true">🎯</div>
+            <h3>Take action</h3>
+            <p>We show you your highest-leverage changes — ranked by impact, not guilt. Every ton saved matters.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculator Entry Cards -->
+    <section class="section-sm" style="background: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);" aria-labelledby="calc-heading">
+      <div class="container">
+        <div class="section-header text-center">
+          <h2 class="section-heading" id="calc-heading">Choose your calculator</h2>
+          <p class="section-subheading" style="margin: 0 auto;">Different tools for different needs. All powered by the same EPA-sourced data.</p>
+        </div>
+        <div class="entry-cards">
+          <a href="/calculate/quick.html" class="card card-hover entry-card" aria-label="Quick Calculation — single topic calculator">
+            <div class="entry-card__icon" aria-hidden="true">⚡</div>
+            <h3 class="entry-card__title">Quick Calculation</h3>
+            <p class="entry-card__desc">What's the footprint of one trip, meal, or purchase? Get an instant answer in under a minute.</p>
+            <span class="entry-card__arrow">→</span>
+          </a>
+          <a href="/calculate/annual.html" class="card card-hover entry-card" aria-label="Annual Footprint — comprehensive yearly calculator">
+            <div class="entry-card__icon" aria-hidden="true">📅</div>
+            <h3 class="entry-card__title">Annual Footprint</h3>
+            <p class="entry-card__desc">What's my total carbon footprint this year? A complete multi-section estimate with a personalized action plan.</p>
+            <span class="entry-card__arrow">→</span>
+          </a>
+          <a href="/explore.html" class="card card-hover entry-card" aria-label="Pre-Planning Explorer — compare two options side by side">
+            <div class="entry-card__icon" aria-hidden="true">🔀</div>
+            <h3 class="entry-card__title">Pre-Planning Explorer</h3>
+            <p class="entry-card__desc">Compare two options before you decide — drive vs. fly, beef vs. chicken, gas vs. electric. See the difference before you choose.</p>
+            <span class="entry-card__arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Credibility Bar -->
+    <div class="credibility-bar" role="complementary" aria-label="Data sources">
+      <div class="credibility-bar__inner">
+        <p class="credibility-bar__label">Calculation data sourced from</p>
+        <div class="credibility-pills" role="list">
+          <span class="credibility-pill" role="listitem">EPA eGRID 2022</span>
+          <span class="credibility-pill" role="listitem">EPA GHG Factors Hub</span>
+          <span class="credibility-pill" role="listitem">GHG Protocol</span>
+          <span class="credibility-pill" role="listitem">IPCC AR6</span>
+          <span class="credibility-pill" role="listitem">ICAO</span>
+          <span class="credibility-pill" role="listitem">USDA</span>
+          <span class="credibility-pill" role="listitem">Poore & Nemecek 2018</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <nav class="footer__links" aria-label="Footer navigation">
+        <a href="/about.html" class="footer__link">About</a>
+        <a href="/methodology.html" class="footer__link">Methodology</a>
+        <a href="/learn/" class="footer__link">Learn</a>
+        <a href="/dashboard.html" class="footer__link">Dashboard</a>
+        <a href="mailto:hello@calculateyourcarbon.com" class="footer__link">Contact</a>
+      </nav>
+      <p class="footer__copy">© 2025 calculateyourcarbon.com — Data sourced from the U.S. EPA and GHG Protocol</p>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+
+    hamburger.addEventListener('click', () => {
+      mobileNav.classList.add('open');
+      hamburger.setAttribute('aria-expanded', 'true');
+    });
+
+    mobileClose.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+
+    // Close on outside click
+    mobileNav.addEventListener('click', (e) => {
+      if (e.target === mobileNav) {
+        mobileNav.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  </script>
+</body>
+</html>

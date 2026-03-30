@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — calculateyourcarbon.com</title>
+  <meta name="description" content="Our mission: make EPA climate data accessible to everyday people. Free, transparent, no sign-up required.">
+  <meta property="og:url" content="https://calculateyourcarbon.com/about.html">
+  <link rel="canonical" href="https://calculateyourcarbon.com/about.html">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">calculateyourcarbon</a>
+      <div class="nav__links">
+        <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+        <a href="/explore.html" class="nav__link">Explore</a>
+        <a href="/dashboard.html" class="nav__link">Dashboard</a>
+        <a href="/learn/" class="nav__link">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav">
+    <button class="nav__mobile-close" id="mobileClose">✕</button>
+    <a href="/" class="nav__link">Home</a>
+    <a href="/methodology.html" class="nav__link">Methodology</a>
+  </div>
+
+  <main id="main">
+    <div style="padding:var(--space-16) 0 var(--space-8);">
+      <div class="container">
+        <p class="eyebrow">About this site</p>
+        <h1 class="section-heading">We believe you can't improve<br>what you can't measure.</h1>
+      </div>
+    </div>
+
+    <div class="container" style="padding-bottom:var(--space-24); max-width: 720px;">
+
+      <div class="card" style="margin-bottom:var(--space-8);">
+        <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-4);">Why this site exists</h2>
+        <p style="line-height:1.8;margin-bottom:var(--space-4);">The EPA publishes detailed, high-quality greenhouse gas emission data. Climate scientists have developed rigorous methodologies for translating that data into meaningful footprint calculations. But most people never see any of it — it lives in dense Excel spreadsheets, technical guidance documents, and academic papers.</p>
+
+        <p style="line-height:1.8;margin-bottom:var(--space-4);">We built calculateyourcarbon.com to change that. Our goal is simple: make the EPA's best available data accessible to anyone with an internet connection, in a form that's fast, accurate, and genuinely useful for decision-making.</p>
+
+        <p style="line-height:1.8;">No sign-up required. No data saved. No apps to download. Just transparent math, real numbers, and honest context.</p>
+      </div>
+
+      <div class="card" style="margin-bottom:var(--space-8);">
+        <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-4);">Our approach</h2>
+
+        <div class="icon-feature" style="margin-bottom:var(--space-6);">
+          <div class="icon-feature__icon" aria-hidden="true">🔢</div>
+          <div class="icon-feature__text">
+            <h3>Real data, not estimates</h3>
+            <p>Every emission factor on this site traces to a primary source: EPA eGRID, the EPA GHG Emission Factors Hub, ICAO, or peer-reviewed research. We link to the source for every number. No proprietary black boxes.</p>
+          </div>
+        </div>
+
+        <div class="icon-feature" style="margin-bottom:var(--space-6);">
+          <div class="icon-feature__icon" aria-hidden="true">⚖️</div>
+          <div class="icon-feature__text">
+            <h3>Honest about limitations</h3>
+            <p>All carbon footprint calculations are estimates. Diet data has ±30% uncertainty. eGRID averages mask sub-state variation. We document every assumption and limitation on our <a href="/methodology.html" style="color:var(--color-accent);">methodology page</a>.</p>
+          </div>
+        </div>
+
+        <div class="icon-feature" style="margin-bottom:var(--space-6);">
+          <div class="icon-feature__icon" aria-hidden="true">🎯</div>
+          <div class="icon-feature__text">
+            <h3>Focus on high-leverage choices</h3>
+            <p>The evidence on which individual actions matter most is clear. We design our calculators and recommendations around that evidence — not around what's easiest to recommend or what makes people feel good.</p>
+          </div>
+        </div>
+
+        <div class="icon-feature">
+          <div class="icon-feature__icon" aria-hidden="true">🔒</div>
+          <div class="icon-feature__text">
+            <h3>No data collection</h3>
+            <p>All calculations happen in your browser. We don't store, transmit, or sell your footprint data. We don't require an account. Your numbers are yours.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:var(--space-8);">
+        <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-4);">Methodology transparency</h2>
+        <p style="line-height:1.8;margin-bottom:var(--space-4);">Every calculation formula, every emission factor, and every data source is documented on our <a href="/methodology.html" style="color:var(--color-accent);">methodology page</a>. The calculation engine itself is unminified JavaScript in <code style="background:var(--color-bg);padding:2px 6px;border-radius:4px;">assets/js/calc-engine.js</code> — open your browser's developer tools to read it directly.</p>
+        <a href="/methodology.html" class="btn btn-ghost btn-sm">Read full methodology →</a>
+      </div>
+
+      <div class="card">
+        <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-4);">Get in touch</h2>
+        <p style="line-height:1.8;margin-bottom:var(--space-4);">Found an error in our data? Have a suggestion for a new calculator feature? Noticed a methodology concern? We want to hear from you.</p>
+        <p>
+          <a href="mailto:hello@calculateyourcarbon.com" class="btn btn-primary btn-sm">hello@calculateyourcarbon.com</a>
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <nav class="footer__links">
+        <a href="/about.html" class="footer__link">About</a>
+        <a href="/methodology.html" class="footer__link">Methodology</a>
+        <a href="/learn/" class="footer__link">Learn</a>
+        <a href="mailto:hello@calculateyourcarbon.com" class="footer__link">Contact</a>
+      </nav>
+      <p class="footer__copy">© 2025 calculateyourcarbon.com — Data sourced from the U.S. EPA and GHG Protocol</p>
+    </div>
+  </footer>
+  <script>
+    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileNav').classList.add('open'));
+    document.getElementById('mobileClose').addEventListener('click', () => document.getElementById('mobileNav').classList.remove('open'));
+  </script>
+</body>
+</html>

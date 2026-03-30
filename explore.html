@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Planning Carbon Explorer — calculateyourcarbon.com</title>
+  <meta name="description" content="Compare two real-world options side by side before you decide. Fly vs. drive, beef vs. chicken, gas vs. electric. See the carbon difference instantly.">
+  <meta property="og:title" content="Pre-Planning Carbon Explorer — calculateyourcarbon.com">
+  <meta property="og:url" content="https://calculateyourcarbon.com/explore.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://calculateyourcarbon.com/explore.html">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">calculateyourcarbon</a>
+      <div class="nav__links">
+        <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+        <a href="/explore.html" class="nav__link active">Explore</a>
+        <a href="/dashboard.html" class="nav__link">Dashboard</a>
+        <a href="/learn/" class="nav__link">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav">
+    <button class="nav__mobile-close" id="mobileClose">✕</button>
+    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/explore.html" class="nav__link active">Explore</a>
+    <a href="/dashboard.html" class="nav__link">Dashboard</a>
+    <a href="/learn/" class="nav__link">Learn</a>
+  </div>
+
+  <main id="main">
+    <div style="padding: var(--space-16) 0 var(--space-8); text-align:center;">
+      <div class="container">
+        <p class="eyebrow">Before you decide</p>
+        <h1 class="section-heading">Pre-Planning Explorer</h1>
+        <p class="section-subheading" style="margin:0 auto;">Compare two real options side by side. See the carbon difference before you choose — no account needed.</p>
+      </div>
+    </div>
+
+    <div class="container" style="padding-bottom:var(--space-24);">
+
+      <!-- Step 1: Pick decision type -->
+      <div id="exp-step-1">
+        <h2 style="font-size:var(--text-xl);font-weight:600;margin-bottom:var(--space-6);">What are you deciding?</h2>
+        <div class="category-grid" role="radiogroup" aria-label="Select a decision type">
+          <button class="category-card" data-type="travel" role="radio" aria-checked="false">
+            <span class="category-card__icon" aria-hidden="true">🚗</span>
+            <span class="category-card__label">Getting There</span>
+            <span style="font-size:var(--text-xs);color:var(--color-muted);">Drive vs. train vs. fly</span>
+          </button>
+          <button class="category-card" data-type="food" role="radio" aria-checked="false">
+            <span class="category-card__icon" aria-hidden="true">🍽️</span>
+            <span class="category-card__label">What to Eat</span>
+            <span style="font-size:var(--text-xs);color:var(--color-muted);">Compare any two foods</span>
+          </button>
+          <button class="category-card" data-type="home" role="radio" aria-checked="false">
+            <span class="category-card__icon" aria-hidden="true">🏠</span>
+            <span class="category-card__label">Home Decision</span>
+            <span style="font-size:var(--text-xs);color:var(--color-muted);">Appliances, heating</span>
+          </button>
+          <button class="category-card" data-type="purchase" role="radio" aria-checked="false">
+            <span class="category-card__icon" aria-hidden="true">🛒</span>
+            <span class="category-card__label">What to Buy</span>
+            <span style="font-size:var(--text-xs);color:var(--color-muted);">New vs. secondhand</span>
+          </button>
+          <button class="category-card" data-type="trip" role="radio" aria-checked="false">
+            <span class="category-card__icon" aria-hidden="true">✈️</span>
+            <span class="category-card__label">Trip Planning</span>
+            <span style="font-size:var(--text-xs);color:var(--color-muted);">All modes compared</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Inputs -->
+      <div id="exp-step-2" style="display:none;">
+        <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-6);">
+          <button class="btn btn-ghost btn-sm" id="exp-back-btn">← Back</button>
+          <h2 id="exp-step2-label" style="font-size:var(--text-xl);font-weight:600;"></h2>
+        </div>
+
+        <div id="compare-inputs">
+          <!-- Populated by JS -->
+        </div>
+
+        <div style="margin-top:var(--space-6);">
+          <button class="btn btn-primary btn-lg" id="compare-btn">Compare →</button>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div id="exp-result" style="display:none; margin-top:var(--space-8);">
+        <!-- Populated by JS -->
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <nav class="footer__links">
+        <a href="/about.html" class="footer__link">About</a>
+        <a href="/methodology.html" class="footer__link">Methodology</a>
+        <a href="/learn/" class="footer__link">Learn</a>
+        <a href="mailto:hello@calculateyourcarbon.com" class="footer__link">Contact</a>
+      </nav>
+      <p class="footer__copy">© 2025 calculateyourcarbon.com — Data sourced from the U.S. EPA and GHG Protocol</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/calc-engine.js"></script>
+  <script src="assets/js/explorer.js"></script>
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => { mobileNav.classList.add('open'); hamburger.setAttribute('aria-expanded','true'); });
+    mobileClose.addEventListener('click', () => { mobileNav.classList.remove('open'); hamburger.setAttribute('aria-expanded','false'); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Methodology & Data Sources — calculateyourcarbon.com</title>
+  <meta name="description" content="Full transparency on our calculation methodology, data sources, emission factors, and known limitations. Sourced from EPA eGRID, GHG Protocol, IPCC AR6, and more.">
+  <meta property="og:url" content="https://calculateyourcarbon.com/methodology.html">
+  <link rel="canonical" href="https://calculateyourcarbon.com/methodology.html">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">calculateyourcarbon</a>
+      <div class="nav__links">
+        <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+        <a href="/explore.html" class="nav__link">Explore</a>
+        <a href="/dashboard.html" class="nav__link">Dashboard</a>
+        <a href="/learn/" class="nav__link">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav">
+    <button class="nav__mobile-close" id="mobileClose">✕</button>
+    <a href="/" class="nav__link">Home</a>
+    <a href="/learn/" class="nav__link">Learn</a>
+  </div>
+
+  <main id="main">
+    <div style="padding:var(--space-16) 0 var(--space-8);">
+      <div class="container">
+        <p class="eyebrow">Transparency</p>
+        <h1 class="section-heading">Methodology & Data Sources</h1>
+        <p class="section-subheading">Every number on this site is traceable to a primary source. This page explains exactly how we calculate carbon footprints and where our data comes from.</p>
+      </div>
+    </div>
+
+    <div class="container" style="padding-bottom:var(--space-24);max-width:860px;">
+
+      <!-- Section 1: Data Sources -->
+      <section aria-labelledby="sources-heading">
+        <h2 id="sources-heading" style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-6);">1. Our Data Sources</h2>
+        <div class="table-wrapper card">
+          <table aria-label="Data sources used for calculations">
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>What We Use It For</th>
+                <th>Last Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>EPA eGRID 2022</strong></td>
+                <td>State-level electricity emission factors (lbs CO₂e/kWh) for all 50 states + DC</td>
+                <td>2024 (2022 data)</td>
+              </tr>
+              <tr>
+                <td><strong>EPA GHG Emission Factors Hub</strong></td>
+                <td>Combustion factors for natural gas, heating oil, propane, gasoline, diesel</td>
+                <td>2024</td>
+              </tr>
+              <tr>
+                <td><strong>EPA WARM Model v15</strong></td>
+                <td>Waste reduction & recycling emission factors; landfill methane avoidance</td>
+                <td>2023</td>
+              </tr>
+              <tr>
+                <td><strong>EPA EEIO Model</strong></td>
+                <td>Consumer spending → lifecycle emissions (goods & services categories)</td>
+                <td>2023</td>
+              </tr>
+              <tr>
+                <td><strong>EPA GHG Equivalencies Calculator</strong></td>
+                <td>Result context: miles driven, smartphones charged, tree-years, gallons gas</td>
+                <td>2024</td>
+              </tr>
+              <tr>
+                <td><strong>GHG Protocol</strong></td>
+                <td>Scope 1/2/3 methodology framework; corporate and personal accounting standards</td>
+                <td>2015 (current)</td>
+              </tr>
+              <tr>
+                <td><strong>IPCC AR6 (2021)</strong></td>
+                <td>Global Warming Potentials: CH₄ × 27.9, N₂O × 273 (100-year GWP)</td>
+                <td>2021</td>
+              </tr>
+              <tr>
+                <td><strong>ICAO Carbon Emissions Calculator</strong></td>
+                <td>Flight emission factors by haul length and cabin class; includes RFI ~2.0</td>
+                <td>2023</td>
+              </tr>
+              <tr>
+                <td><strong>Poore & Nemecek 2018 (Science)</strong></td>
+                <td>Food lifecycle emission factors (kg CO₂e per kg food); diet archetypes</td>
+                <td>2018</td>
+              </tr>
+              <tr>
+                <td><strong>EPA National GHG Inventory</strong></td>
+                <td>US total emissions by sector; trends 2005–2022; US average benchmarks</td>
+                <td>2024 (2022 data)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- Section 2: Calculation Methods -->
+      <section aria-labelledby="methods-heading">
+        <h2 id="methods-heading" style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-6);">2. How Each Category Is Calculated</h2>
+
+        <div class="card" style="margin-bottom:var(--space-6);">
+          <h3 style="font-weight:600;margin-bottom:var(--space-3);">Electricity</h3>
+          <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-3);">Formula: <code style="background:var(--color-bg);padding:2px 6px;border-radius:4px;font-family:monospace;">lbs_CO₂e = monthly_kWh × 12 × EGRID_FACTOR[state]</code></p>
+          <p style="font-size:var(--text-sm);">We use the EPA eGRID 2022 state-level output emission factor for each state. If a user enters a dollar bill amount instead of kWh, we estimate kWh using the US average electricity price of $0.13/kWh. Vermont (0.057 lbs/kWh) to West Virginia (1.817 lbs/kWh) represent a 32× range.</p>
+        </div>
+
+        <div class="card" style="margin-bottom:var(--space-6);">
+          <h3 style="font-weight:600;margin-bottom:var(--space-3);">Natural Gas</h3>
+          <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-3);">Formula: <code style="background:var(--color-bg);padding:2px 6px;border-radius:4px;font-family:monospace;">lbs_CO₂e = monthly_therms × 12 × 11.7</code></p>
+          <p style="font-size:var(--text-sm);">Factor: 11.7 lbs CO₂e per therm. Source: EPA GHG Emission Factors Hub, Table 1 (Stationary Combustion). Includes CH₄ and N₂O in addition to CO₂.</p>
+        </div>
+
+        <div class="card" style="margin-bottom:var(--space-6);">
+          <h3 style="font-weight:600;margin-bottom:var(--space-3);">Personal Vehicle (Gasoline/Diesel)</h3>
+          <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-3);">Formula: <code style="background:var(--color-bg);padding:2px 6px;border-radius:4px;font-family:monospace;">lbs_CO₂e = (annual_miles / MPG) × 19.60</code></p>
+          <p style="font-size:var(--text-sm);">Gasoline factor: 19.60 lbs CO₂e/gallon. Diesel: 22.51 lbs/gallon. Source: EPA GHG Emission Factors Hub, Table 2 (Mobile Combustion). EV calculation uses 0.346 kWh/mile (EPA avg efficiency) × state eGRID factor.</p>
+        </div>
+
+        <div class="card" style="margin-bottom:var(--space-6);">
+          <h3 style="font-weight:600;margin-bottom:var(--space-3);">Flights</h3>
+          <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-3);">Formula: <code style="background:var(--color-bg);padding:2px 6px;border-radius:4px;font-family:monospace;">kg_CO₂e = distance_km × factor[haul][cabin] × num_trips × 2</code></p>
+          <p style="font-size:var(--text-sm);">Factors (kg CO₂e per passenger-km): Short haul economy: 0.255 · Medium: 0.195 · Long: 0.147 · Business multiplier: ~2.7× economy. Source: ICAO Carbon Emissions Calculator methodology. RFI (radiative forcing index) of approximately 2.0 is already incorporated in these factors. Multiply by 2 for round trips.</p>
+        </div>
+
+        <div class="card" style="margin-bottom:var(--space-6);">
+          <h3 style="font-weight:600;margin-bottom:var(--space-3);">Diet</h3>
+          <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-3);">Formula: <code style="background:var(--color-bg);padding:2px 6px;border-radius:4px;font-family:monospace;">lbs_CO₂e = diet_archetype_kg × 2.20462</code></p>
+          <p style="font-size:var(--text-sm);">Diet archetypes sourced from Poore & Nemecek 2018 (Science) and Oxford University food systems research. Individual food factors range from 0.90 kg CO₂e/kg (lentils) to 99.48 (beef). Lifecycle includes land use change, farm, processing, transport, retail, packaging, and food loss.</p>
+        </div>
+
+        <div class="card" style="margin-bottom:var(--space-6);">
+          <h3 style="font-weight:600;margin-bottom:var(--space-3);">Consumer Goods & Spending</h3>
+          <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-3);">Formula: <code style="background:var(--color-bg);padding:2px 6px;border-radius:4px;font-family:monospace;">lbs_CO₂e = annual_spend_$ × spending_factor[category]</code></p>
+          <p style="font-size:var(--text-sm);">Factors from EPA Environmentally Extended Input-Output (EEIO) model: Clothing 0.78 lbs/$, Electronics 0.58, Furniture 0.43, Food service 0.52, Services 0.34. Source: EPA USEEIO v2.0.</p>
+        </div>
+
+        <div class="card">
+          <h3 style="font-weight:600;margin-bottom:var(--space-3);">Recycling & Waste</h3>
+          <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-3);">Regular recycler saves ~440 lbs CO₂e/year vs. no recycling. Composting saves ~220 lbs CO₂e/year.</p>
+          <p style="font-size:var(--text-sm);">Source: EPA WARM Model v15. Savings represent avoided methane from landfill decomposition, plus manufacturing benefits of recycled materials. Aluminum recycling has the highest per-ton savings (9.13 tons CO₂e saved per ton recycled).</p>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- Section 3: Units -->
+      <section aria-labelledby="units-heading">
+        <h2 id="units-heading" style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-4);">3. Units & Conversions</h2>
+        <div class="card">
+          <ul style="display:flex;flex-direction:column;gap:var(--space-3);font-size:var(--text-sm);">
+            <li>All primary results expressed in <strong>lbs CO₂e</strong> for US audience familiarity, with metric tonnes shown for context</li>
+            <li><strong>CO₂e (CO₂ equivalent)</strong>: converts all greenhouse gases to a common unit using Global Warming Potential (GWP)</li>
+            <li><strong>GWP values (IPCC AR6, 100-year):</strong> CO₂ = 1 · CH₄ = 27.9 · N₂O = 273 · HFC-134a = 1,530</li>
+            <li><strong>1 metric ton</strong> = 1,000 kg = 2,204.62 lbs</li>
+            <li><strong>1 US short ton</strong> = 2,000 lbs = 907 kg</li>
+            <li>We display tons as US short tons (÷ 2,000) throughout the site unless otherwise noted</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- Section 4: Limitations -->
+      <section aria-labelledby="limits-heading">
+        <h2 id="limits-heading" style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-4);">4. Limitations & Assumptions</h2>
+        <div class="card">
+          <ul style="display:flex;flex-direction:column;gap:var(--space-4);font-size:var(--text-sm);">
+            <li><strong>Regional variation within states:</strong> eGRID state-level averages mask sub-state variation. Your utility may have a very different fuel mix than the state average — particularly in states with a mix of municipal and investor-owned utilities.</li>
+            <li><strong>Diet factors have high uncertainty:</strong> Poore & Nemecek (2018) found that production method (conventional vs. organic, land use history, farming practices) causes ±30% variation even within a single food category. Our factors use median lifecycle values.</li>
+            <li><strong>Spending-based emissions are approximate:</strong> The EPA EEIO model maps spending categories to emission intensities at an industry level. Individual products within a category vary substantially. A sustainably produced cotton shirt differs greatly from fast fashion.</li>
+            <li><strong>Flight radiative forcing:</strong> We use ICAO's RFI factor of ~2.0. Academic consensus suggests the true climate impact may be higher (Lee et al. 2021 estimates 3.8× CO₂-only), but this remains an area of active research. Our estimates are conservative.</li>
+            <li><strong>Results are estimates, not precise measurements:</strong> Individual carbon footprints cannot be measured exactly. All results should be treated as approximations useful for relative comparison and decision-making, not precise audit figures.</li>
+            <li><strong>Scope 3 completeness:</strong> Our annual calculator captures the major Scope 3 categories but does not include all indirect emissions (e.g., emissions from financial investments, government services consumed, full supply chain of all purchases).</li>
+          </ul>
+        </div>
+      </section>
+
+      <div style="margin-top:var(--space-8);">
+        <a href="/about.html" class="btn btn-ghost">About this site →</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <nav class="footer__links">
+        <a href="/about.html" class="footer__link">About</a>
+        <a href="/methodology.html" class="footer__link">Methodology</a>
+        <a href="/learn/" class="footer__link">Learn</a>
+        <a href="mailto:hello@calculateyourcarbon.com" class="footer__link">Contact</a>
+      </nav>
+      <p class="footer__copy">© 2025 calculateyourcarbon.com — Data sourced from the U.S. EPA and GHG Protocol</p>
+    </div>
+  </footer>
+  <script>
+    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileNav').classList.add('open'));
+    document.getElementById('mobileClose').addEventListener('click', () => document.getElementById('mobileNav').classList.remove('open'));
+  </script>
+</body>
+</html>

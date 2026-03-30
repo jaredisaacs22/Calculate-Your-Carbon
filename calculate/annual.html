@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Annual Carbon Footprint Calculator — calculateyourcarbon.com</title>
+  <meta name="description" content="Calculate your complete annual carbon footprint across home energy, transportation, diet, and shopping. Powered by EPA data with a personalized action plan.">
+  <meta property="og:title" content="Annual Carbon Footprint Calculator — calculateyourcarbon.com">
+  <meta property="og:url" content="https://calculateyourcarbon.com/calculate/annual.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://calculateyourcarbon.com/calculate/annual.html">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    .page-header { padding: var(--space-16) 0 var(--space-8); }
+    .annual-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: var(--space-8);
+      align-items: start;
+    }
+    .annual-sidebar { position: sticky; top: 80px; }
+    #results-section { display: none; }
+    @media (max-width: 900px) {
+      .annual-layout { grid-template-columns: 1fr; }
+      .annual-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">calculateyourcarbon</a>
+      <div class="nav__links">
+        <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link active">Annual Calc</a>
+        <a href="/explore.html" class="nav__link">Explore</a>
+        <a href="/dashboard.html" class="nav__link">Dashboard</a>
+        <a href="/learn/" class="nav__link">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav">
+    <button class="nav__mobile-close" id="mobileClose">✕</button>
+    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+    <a href="/calculate/annual.html" class="nav__link active">Annual Calc</a>
+    <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/dashboard.html" class="nav__link">Dashboard</a>
+    <a href="/learn/" class="nav__link">Learn</a>
+  </div>
+
+  <main id="main">
+    <div class="page-header">
+      <div class="container">
+        <p class="eyebrow">Full annual estimate</p>
+        <h1 class="section-heading">Annual Carbon Footprint</h1>
+        <p class="section-subheading" style="margin:0 auto;">A complete picture of your yearly emissions across home, travel, food, and shopping.</p>
+      </div>
+    </div>
+
+    <div class="container" style="padding-bottom: var(--space-24);">
+
+      <!-- Form section -->
+      <div id="form-section">
+        <!-- Progress bar -->
+        <div class="progress-steps" role="list" aria-label="Calculator progress">
+          <div class="progress-step active" role="listitem">
+            <span class="progress-step__num" aria-hidden="true">1</span>
+            <span class="progress-step__label">Home Energy</span>
+          </div>
+          <div class="progress-step__divider" aria-hidden="true"></div>
+          <div class="progress-step" role="listitem">
+            <span class="progress-step__num" aria-hidden="true">2</span>
+            <span class="progress-step__label">Transportation</span>
+          </div>
+          <div class="progress-step__divider" aria-hidden="true"></div>
+          <div class="progress-step" role="listitem">
+            <span class="progress-step__num" aria-hidden="true">3</span>
+            <span class="progress-step__label">Diet</span>
+          </div>
+          <div class="progress-step__divider" aria-hidden="true"></div>
+          <div class="progress-step" role="listitem">
+            <span class="progress-step__num" aria-hidden="true">4</span>
+            <span class="progress-step__label">Shopping & Waste</span>
+          </div>
+        </div>
+
+        <div class="annual-layout">
+          <div>
+            <!-- Step 1: Home Energy -->
+            <div class="annual-step active card" id="step-1" aria-labelledby="step1-heading">
+              <h2 id="step1-heading" style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-8);">🏠 Home Energy</h2>
+
+              <div class="form-group">
+                <label class="form-label" for="an-state">What state do you live in?
+                  <span class="tooltip-wrap"><span class="tooltip-icon">?</span><span class="tooltip-box">Your state determines your electricity's carbon intensity based on EPA eGRID 2022 data.</span></span>
+                </label>
+                <select class="form-select" id="an-state">
+                  <option value="AL">Alabama (0.793 lbs/kWh)</option>
+                  <option value="AK">Alaska (1.225 lbs/kWh)</option>
+                  <option value="AZ">Arizona (0.644 lbs/kWh)</option>
+                  <option value="AR">Arkansas (0.932 lbs/kWh)</option>
+                  <option value="CA">California (0.433 lbs/kWh)</option>
+                  <option value="CO">Colorado (1.012 lbs/kWh)</option>
+                  <option value="CT">Connecticut (0.381 lbs/kWh)</option>
+                  <option value="DE">Delaware (0.795 lbs/kWh)</option>
+                  <option value="FL">Florida (0.843 lbs/kWh)</option>
+                  <option value="GA">Georgia (0.794 lbs/kWh)</option>
+                  <option value="HI">Hawaii (1.525 lbs/kWh)</option>
+                  <option value="ID">Idaho (0.215 lbs/kWh)</option>
+                  <option value="IL">Illinois (0.565 lbs/kWh)</option>
+                  <option value="IN">Indiana (1.378 lbs/kWh)</option>
+                  <option value="IA">Iowa (0.785 lbs/kWh)</option>
+                  <option value="KS">Kansas (1.083 lbs/kWh)</option>
+                  <option value="KY">Kentucky (1.566 lbs/kWh)</option>
+                  <option value="LA">Louisiana (0.921 lbs/kWh)</option>
+                  <option value="ME">Maine (0.261 lbs/kWh)</option>
+                  <option value="MD">Maryland (0.665 lbs/kWh)</option>
+                  <option value="MA">Massachusetts (0.482 lbs/kWh)</option>
+                  <option value="MI">Michigan (0.943 lbs/kWh)</option>
+                  <option value="MN">Minnesota (0.714 lbs/kWh)</option>
+                  <option value="MS">Mississippi (0.958 lbs/kWh)</option>
+                  <option value="MO">Missouri (1.356 lbs/kWh)</option>
+                  <option value="MT">Montana (0.607 lbs/kWh)</option>
+                  <option value="NE">Nebraska (0.943 lbs/kWh)</option>
+                  <option value="NV">Nevada (0.676 lbs/kWh)</option>
+                  <option value="NH">New Hampshire (0.325 lbs/kWh)</option>
+                  <option value="NJ">New Jersey (0.373 lbs/kWh)</option>
+                  <option value="NM">New Mexico (1.156 lbs/kWh)</option>
+                  <option value="NY">New York (0.371 lbs/kWh)</option>
+                  <option value="NC">North Carolina (0.757 lbs/kWh)</option>
+                  <option value="ND">North Dakota (1.285 lbs/kWh)</option>
+                  <option value="OH">Ohio (1.099 lbs/kWh)</option>
+                  <option value="OK">Oklahoma (0.893 lbs/kWh)</option>
+                  <option value="OR">Oregon (0.246 lbs/kWh)</option>
+                  <option value="PA">Pennsylvania (0.728 lbs/kWh)</option>
+                  <option value="RI">Rhode Island (0.624 lbs/kWh)</option>
+                  <option value="SC">South Carolina (0.617 lbs/kWh)</option>
+                  <option value="SD">South Dakota (0.266 lbs/kWh)</option>
+                  <option value="TN">Tennessee (0.649 lbs/kWh)</option>
+                  <option value="TX" selected>Texas (0.879 lbs/kWh)</option>
+                  <option value="UT">Utah (1.222 lbs/kWh)</option>
+                  <option value="VT">Vermont (0.057 lbs/kWh)</option>
+                  <option value="VA">Virginia (0.638 lbs/kWh)</option>
+                  <option value="WA">Washington (0.153 lbs/kWh)</option>
+                  <option value="WV">West Virginia (1.817 lbs/kWh)</option>
+                  <option value="WI">Wisconsin (0.916 lbs/kWh)</option>
+                  <option value="WY">Wyoming (1.691 lbs/kWh)</option>
+                  <option value="DC">Washington DC (0.665 lbs/kWh)</option>
+                </select>
+                <p class="source-tag">Source: EPA eGRID 2022</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-kwh">Monthly electricity usage (kWh)</label>
+                <input type="number" class="form-input" id="an-kwh" placeholder="e.g. 900" min="0">
+                <p class="form-hint">Check your utility bill. US average is ~900 kWh/month.</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-bill">Or monthly electricity bill ($)</label>
+                <input type="number" class="form-input" id="an-bill" placeholder="e.g. 120 — we'll estimate kWh at $0.13/kWh" min="0">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-heating-fuel">Home heating fuel</label>
+                <select class="form-select" id="an-heating-fuel">
+                  <option value="none">No separate heating / included in electricity</option>
+                  <option value="natural_gas">Natural gas</option>
+                  <option value="heating_oil">Heating oil</option>
+                  <option value="propane">Propane</option>
+                  <option value="electric">Electric (heat pump / baseboard)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-heating-amount">Monthly heating usage</label>
+                <input type="number" class="form-input" id="an-heating-amount" placeholder="Therms (gas), gallons (oil/propane), or kWh (electric)" min="0">
+                <p class="form-hint">Find on your utility bill. Gas: ~100 therms/month in winter. Oil: ~80 gal/month.</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-home-size">Home size (sq ft) <em style="font-weight:300;color:var(--color-muted);">— optional</em></label>
+                <input type="number" class="form-input" id="an-home-size" placeholder="e.g. 1800" min="0">
+                <p class="form-hint">Used for benchmarking your energy use against similar homes.</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-solar">Do you have solar panels?</label>
+                <select class="form-select" id="an-solar">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="solar-offset-field" style="display:none;">
+                <label class="form-label" for="an-solar-offset">Estimated monthly solar generation (kWh)</label>
+                <input type="number" class="form-input" id="an-solar-offset" placeholder="e.g. 400" min="0">
+              </div>
+            </div>
+
+            <!-- Step 2: Transportation -->
+            <div class="annual-step card" id="step-2" style="display:none;" aria-labelledby="step2-heading">
+              <h2 id="step2-heading" style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-8);">🚗 Transportation</h2>
+
+              <div class="form-group">
+                <label class="form-label" for="an-has-vehicle">Do you own or regularly drive a car?</label>
+                <select class="form-select" id="an-has-vehicle">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              <div id="vehicle-fields">
+                <div class="form-group">
+                  <label class="form-label" for="an-vehicle-type">Vehicle type</label>
+                  <select class="form-select" id="an-vehicle-type">
+                    <option value="gasoline">Gasoline</option>
+                    <option value="diesel">Diesel</option>
+                    <option value="hybrid">Hybrid (HEV)</option>
+                    <option value="phev">Plug-in Hybrid (PHEV)</option>
+                    <option value="ev">Full Electric (EV)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="an-miles">Annual miles driven</label>
+                  <input type="number" class="form-input" id="an-miles" placeholder="e.g. 12000 (US avg ~13,500)" min="0">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="an-mpg">Fuel economy (MPG)</label>
+                  <input type="number" class="form-input" id="an-mpg" placeholder="Leave blank for vehicle class average" min="1">
+                  <p class="form-hint">Find on your window sticker or fueleconomy.gov</p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-transit">Public transit usage</label>
+                <select class="form-select" id="an-transit">
+                  <option value="never">Never / rarely</option>
+                  <option value="sometimes">Sometimes (a few times/month)</option>
+                  <option value="often">Often (weekly commute)</option>
+                </select>
+              </div>
+
+              <div style="background:var(--color-bg);border-radius:var(--radius-md);padding:var(--space-6);margin-bottom:var(--space-6);">
+                <h3 style="font-size:var(--text-base);font-weight:600;margin-bottom:var(--space-4);">✈️ Flights last year</h3>
+                <div class="grid-3" style="gap:var(--space-4);">
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="an-short-flights">Short-haul<br><small style="font-weight:300;color:var(--color-muted);">&lt;3 hrs</small></label>
+                    <input type="number" class="form-input" id="an-short-flights" value="0" min="0">
+                  </div>
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="an-medium-flights">Medium-haul<br><small style="font-weight:300;color:var(--color-muted);">3–6 hrs</small></label>
+                    <input type="number" class="form-input" id="an-medium-flights" value="0" min="0">
+                  </div>
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="an-long-flights">Long-haul<br><small style="font-weight:300;color:var(--color-muted);">&gt;6 hrs</small></label>
+                    <input type="number" class="form-input" id="an-long-flights" value="0" min="0">
+                  </div>
+                </div>
+                <p class="source-tag" style="margin-top:var(--space-3);">Round trips. Source: ICAO Carbon Calculator (includes radiative forcing)</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-cabin">Typical cabin class</label>
+                <select class="form-select" id="an-cabin">
+                  <option value="economy" selected>Economy</option>
+                  <option value="business">Business</option>
+                  <option value="first">First</option>
+                </select>
+                <p class="form-hint">Business class has ~2.7× higher emissions than economy per seat. Source: ICAO</p>
+              </div>
+            </div>
+
+            <!-- Step 3: Diet -->
+            <div class="annual-step card" id="step-3" style="display:none;" aria-labelledby="step3-heading">
+              <h2 id="step3-heading" style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-8);">🍽️ Diet</h2>
+
+              <div class="form-group">
+                <label class="form-label" for="an-diet">Which best describes your diet?</label>
+                <select class="form-select" id="an-diet">
+                  <option value="meat_heavy">Meat-heavy (beef most days) — ~3,300 kg CO₂e/yr</option>
+                  <option value="omnivore" selected>Average omnivore — ~2,500 kg CO₂e/yr</option>
+                  <option value="low_meat">Low meat (chicken/fish focused) — ~1,900 kg CO₂e/yr</option>
+                  <option value="pescatarian">Pescatarian — ~1,700 kg CO₂e/yr</option>
+                  <option value="vegetarian">Vegetarian — ~1,400 kg CO₂e/yr</option>
+                  <option value="vegan">Vegan — ~1,100 kg CO₂e/yr</option>
+                </select>
+                <p class="source-tag">Source: Poore & Nemecek 2018 (Science), Oxford University</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-beef">How often do you specifically eat beef?</label>
+                <select class="form-select" id="an-beef">
+                  <option value="daily">Daily</option>
+                  <option value="few_per_week">A few times per week</option>
+                  <option value="sometimes" selected>Sometimes (once a week or less)</option>
+                  <option value="rarely">Rarely</option>
+                  <option value="never">Never</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-food-waste">How much food do you estimate you waste?</label>
+                <select class="form-select" id="an-food-waste">
+                  <option value="low">Less than average</option>
+                  <option value="avg" selected>About average (~30% of food purchased)</option>
+                  <option value="high">More than average</option>
+                </select>
+                <p class="form-hint">US households waste ~30% of food purchased. Source: USDA</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="an-local">Do you primarily shop local/seasonal/organic?</label>
+                <select class="form-select" id="an-local">
+                  <option value="yes">Yes, mostly</option>
+                  <option value="sometimes" selected>Sometimes</option>
+                  <option value="no">No, mostly conventional</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Step 4: Shopping & Waste -->
+            <div class="annual-step card" id="step-4" style="display:none;" aria-labelledby="step4-heading">
+              <h2 id="step4-heading" style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-8);">🛒 Shopping & Waste</h2>
+              <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">Annual spending estimates help calculate embedded carbon in goods. Leave blank if you're not sure — we'll use conservative averages.</p>
+
+              <div class="grid-3" style="gap:var(--space-4);">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="an-clothing">Clothing & apparel ($)</label>
+                  <input type="number" class="form-input" id="an-clothing" placeholder="e.g. 800" min="0">
+                  <p class="form-hint">0.78 lbs CO₂e per $</p>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="an-electronics">Electronics ($)</label>
+                  <input type="number" class="form-input" id="an-electronics" placeholder="e.g. 400" min="0">
+                  <p class="form-hint">0.58 lbs CO₂e per $</p>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="an-furniture">Furniture & home goods ($)</label>
+                  <input type="number" class="form-input" id="an-furniture" placeholder="e.g. 300" min="0">
+                  <p class="form-hint">0.43 lbs CO₂e per $</p>
+                </div>
+              </div>
+              <p class="source-tag" style="margin-top:var(--space-3);">Source: EPA Environmentally Extended Input-Output (EEIO) Model</p>
+
+              <div style="margin-top:var(--space-8);">
+                <div class="form-group">
+                  <label class="form-label" for="an-recycles">Do you recycle regularly?</label>
+                  <select class="form-select" id="an-recycles">
+                    <option value="yes">Yes — most paper, plastic, glass, metal</option>
+                    <option value="sometimes">Sometimes</option>
+                    <option value="no">No</option>
+                  </select>
+                  <p class="form-hint">Regular recycling saves ~440 lbs CO₂e/year. Source: EPA WARM v15</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="an-composts">Do you compost food scraps?</label>
+                  <select class="form-select" id="an-composts">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                  </select>
+                  <p class="form-hint">Composting saves ~220 lbs CO₂e/year from landfill methane. Source: EPA WARM v15</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Navigation buttons -->
+            <div style="display:flex;gap:var(--space-4);margin-top:var(--space-6);">
+              <button class="btn btn-ghost" id="back-btn-2" style="display:none;">← Back</button>
+              <button class="btn btn-primary btn-lg" id="next-btn">Next →</button>
+              <button class="btn btn-primary btn-lg" id="calc-annual-btn" style="display:none;">Calculate My Footprint →</button>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <aside class="annual-sidebar">
+            <div class="card">
+              <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-3);">Did you know?</h3>
+              <p style="font-size:var(--text-sm);color:var(--color-muted);">The average American produces 16 tons of CO₂e per year — 3× the global average and 8× the Paris Agreement target.</p>
+              <p class="source-tag" style="margin-top:var(--space-3);">Source: EPA 2022 / IPCC</p>
+            </div>
+            <div class="ad-unit" style="margin-top:var(--space-6);">
+              <p class="ad-label">Advertisement</p>
+              <ins class="adsbygoogle"
+                   style="display:block;width:280px;height:250px"
+                   data-ad-client="ca-pub-XXXXXXXXXX"
+                   data-ad-slot="XXXXXXXXXX"></ins>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div id="results-section">
+        <h2 style="font-family:var(--font-heading);font-size:var(--text-3xl);text-align:center;margin-bottom:var(--space-8);">Your Annual Carbon Footprint</h2>
+
+        <div id="r-alert"></div>
+
+        <!-- Hero result -->
+        <div class="result-hero card">
+          <div style="margin-bottom:var(--space-3);">
+            <span id="r-level-badge" class="badge badge-mid">—</span>
+          </div>
+          <div id="r-total-tons" class="result-number result-mid">—</div>
+          <div class="result-unit">tons of CO₂e per year</div>
+
+          <div style="margin-top:var(--space-6);max-width:480px;margin-left:auto;margin-right:auto;">
+            <p class="form-label" style="margin-bottom:var(--space-2);">vs. US Average (16 tons)</p>
+            <div class="compare-bar">
+              <div id="r-avg-bar-fill" class="compare-bar__fill compare-bar__fill-mid" style="width:0%"></div>
+            </div>
+            <p id="r-avg-label" class="source-tag" style="text-align:left;margin-top:var(--space-1);"></p>
+          </div>
+        </div>
+
+        <!-- Breakdown -->
+        <div class="card" style="margin-top:var(--space-6);">
+          <h3 style="font-weight:600;font-size:var(--text-xl);margin-bottom:var(--space-6);">Breakdown by Category</h3>
+          <div id="r-breakdown"></div>
+          <p class="source-tag" style="margin-top:var(--space-4);">Source: EPA eGRID 2022, ICAO, Poore & Nemecek 2018, EPA EEIO</p>
+        </div>
+
+        <!-- Ad between score and breakdown -->
+        <div class="ad-unit">
+          <p class="ad-label">Advertisement</p>
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        </div>
+
+        <!-- Equivalencies -->
+        <div class="card" style="margin-top:var(--space-6);">
+          <h3 style="font-weight:600;font-size:var(--text-xl);margin-bottom:var(--space-6);">What does this mean?</h3>
+          <div id="r-equiv"></div>
+        </div>
+
+        <!-- Top Actions -->
+        <div style="margin-top:var(--space-8);">
+          <h3 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">Your Top High-Impact Actions</h3>
+          <p style="color:var(--color-muted);margin-bottom:var(--space-6);">Ranked by CO₂e savings — specific to your footprint, not generic tips.</p>
+          <div id="r-actions"></div>
+        </div>
+
+        <!-- Explore CTA -->
+        <div class="card" style="margin-top:var(--space-6);background:rgba(45,106,79,0.04);border-color:rgba(45,106,79,0.2);">
+          <h3 style="font-weight:600;margin-bottom:var(--space-3);">Compare alternatives side by side</h3>
+          <p style="color:var(--color-muted);margin-bottom:var(--space-4);">The Pre-Planning Explorer lets you see exactly how much you'd save by switching — before you decide.</p>
+          <a href="/explore.html" class="btn btn-primary">Open the Explorer →</a>
+        </div>
+
+        <!-- Share -->
+        <div class="card" style="margin-top:var(--space-6);">
+          <h3 style="font-weight:600;margin-bottom:var(--space-4);">Share Your Result</h3>
+          <textarea id="r-share-text" rows="3" style="width:100%;border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:var(--space-3) var(--space-4);font:inherit;font-size:var(--text-sm);color:var(--color-muted);background:var(--color-bg);resize:none;"></textarea>
+          <div class="share-actions" style="margin-top:var(--space-4);">
+            <button class="btn btn-ghost btn-sm" id="copy-share">Copy</button>
+            <button class="btn btn-ghost btn-sm" id="share-twitter">Share to X/Twitter</button>
+          </div>
+        </div>
+
+        <!-- Ad below results -->
+        <div class="ad-unit" style="margin-top:var(--space-8);">
+          <p class="ad-label">Advertisement</p>
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        </div>
+
+        <div style="margin-top:var(--space-6);">
+          <button class="btn btn-ghost" id="recalc-btn">← Recalculate</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <nav class="footer__links">
+        <a href="/about.html" class="footer__link">About</a>
+        <a href="/methodology.html" class="footer__link">Methodology</a>
+        <a href="/learn/" class="footer__link">Learn</a>
+        <a href="mailto:hello@calculateyourcarbon.com" class="footer__link">Contact</a>
+      </nav>
+      <p class="footer__copy">© 2025 calculateyourcarbon.com — Data sourced from the U.S. EPA and GHG Protocol</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/calc-engine.js"></script>
+  <script src="../assets/js/annual-calc.js"></script>
+  <script>
+    // Mobile nav
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => { mobileNav.classList.add('open'); hamburger.setAttribute('aria-expanded','true'); });
+    mobileClose.addEventListener('click', () => { mobileNav.classList.remove('open'); hamburger.setAttribute('aria-expanded','false'); });
+
+    // Show/hide annual step divs (annual-calc.js manages visibility via display property)
+    // Override: calc-step class not used here — direct style manipulation in JS
+    document.querySelectorAll('.annual-step').forEach(s => {
+      if (!s.classList.contains('active')) s.style.display = 'none';
+      else s.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

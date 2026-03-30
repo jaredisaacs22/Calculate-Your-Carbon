@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn About Carbon Footprints — calculateyourcarbon.com</title>
+  <meta name="description" content="Plain English guides to carbon footprints, climate science, and high-impact actions. Backed by EPA data and peer-reviewed research.">
+  <meta property="og:title" content="Learn About Carbon Footprints — calculateyourcarbon.com">
+  <meta property="og:url" content="https://calculateyourcarbon.com/learn/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://calculateyourcarbon.com/learn/">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    .article-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+    .article-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      padding: var(--space-6);
+      text-decoration: none;
+    }
+    .article-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    .article-card__topic {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+    }
+    .article-card__title {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      line-height: 1.3;
+      color: var(--color-text);
+    }
+    .article-card__excerpt {
+      font-size: var(--text-sm);
+      color: var(--color-muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .article-card__read {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-accent);
+    }
+    @media (max-width: 900px) { .article-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .article-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">calculateyourcarbon</a>
+      <div class="nav__links">
+        <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+        <a href="/explore.html" class="nav__link">Explore</a>
+        <a href="/dashboard.html" class="nav__link">Dashboard</a>
+        <a href="/learn/" class="nav__link active">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav">
+    <button class="nav__mobile-close" id="mobileClose">✕</button>
+    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/dashboard.html" class="nav__link">Dashboard</a>
+    <a href="/learn/" class="nav__link active">Learn</a>
+  </div>
+
+  <main id="main">
+    <div style="padding: var(--space-16) 0 var(--space-12); text-align:center;">
+      <div class="container">
+        <p class="eyebrow">Education hub</p>
+        <h1 class="section-heading">Learn About Carbon</h1>
+        <p class="section-subheading" style="margin:0 auto;">Plain English explanations of climate science, emission factors, and the actions that actually move the needle — all backed by research.</p>
+      </div>
+    </div>
+
+    <div class="container" style="padding-bottom:var(--space-24);">
+      <div class="article-grid" role="list">
+
+        <a href="/learn/what-is-carbon-footprint.html" class="card card-hover article-card" role="listitem" aria-label="Read: What Is a Carbon Footprint? A Plain English Guide">
+          <div class="article-card__topic">Foundations</div>
+          <h2 class="article-card__title">What Is a Carbon Footprint? A Plain English Guide</h2>
+          <p class="article-card__excerpt">Scope 1, 2, and 3 emissions explained. What CO₂e means. Why personal measurement is the first step to meaningful change.</p>
+          <span class="article-card__read">Read article →</span>
+        </a>
+
+        <a href="/learn/why-electricity-has-carbon-footprint.html" class="card card-hover article-card" role="listitem" aria-label="Read: Why Your Electricity Bill Has a Carbon Footprint">
+          <div class="article-card__topic">Home Energy</div>
+          <h2 class="article-card__title">Why Your Electricity Bill Has a Carbon Footprint (And Why It Depends on Your State)</h2>
+          <p class="article-card__excerpt">Understanding eGRID, regional grid differences, and why Vermont emits 20× less per kWh than West Virginia.</p>
+          <span class="article-card__read">Read article →</span>
+        </a>
+
+        <a href="/learn/carbon-cost-of-food.html" class="card card-hover article-card" role="listitem" aria-label="Read: The Carbon Cost of Food">
+          <div class="article-card__topic">Diet & Food</div>
+          <h2 class="article-card__title">The Carbon Cost of Food: Why Beef Is 20× More Polluting Than Vegetables</h2>
+          <p class="article-card__excerpt">Lifecycle assessment explained. Ruminant methane. Land use change. The actual numbers from Poore & Nemecek's landmark 2018 study.</p>
+          <span class="article-card__read">Read article →</span>
+        </a>
+
+        <a href="/learn/flying-carbon-budget.html" class="card card-hover article-card" role="listitem" aria-label="Read: Flying Is the Fastest Way to Blow Your Carbon Budget">
+          <div class="article-card__topic">Transportation</div>
+          <h2 class="article-card__title">Flying Is the Fastest Way to Blow Your Carbon Budget — Here's the Math</h2>
+          <p class="article-card__excerpt">Per-mile emissions vs. car vs. train. Radiative forcing. How one business-class transatlantic flight can exceed an entire year's diet savings.</p>
+          <span class="article-card__read">Read article →</span>
+        </a>
+
+        <a href="/learn/how-to-reduce-carbon-footprint.html" class="card card-hover article-card" role="listitem" aria-label="Read: How to Actually Reduce Your Carbon Footprint">
+          <div class="article-card__topic">Action</div>
+          <h2 class="article-card__title">How to Actually Reduce Your Carbon Footprint (Ranked by Impact)</h2>
+          <p class="article-card__excerpt">Evidence-based ranking from Wynes & Nicholas 2017. Going car-free, flying less, and diet change — the difference between high and low-impact actions is enormous.</p>
+          <span class="article-card__read">Read article →</span>
+        </a>
+
+        <a href="/learn/what-does-one-ton-co2-look-like.html" class="card card-hover article-card" role="listitem" aria-label="Read: What Does 1 Ton of CO₂ Actually Look Like?">
+          <div class="article-card__topic">Concepts</div>
+          <h2 class="article-card__title">What Does 1 Ton of CO₂ Actually Look Like?</h2>
+          <p class="article-card__excerpt">A visual and conceptual explainer. How big is the number? What everyday activities produce a ton of CO₂? Why the scale is so hard to grasp.</p>
+          <span class="article-card__read">Read article →</span>
+        </a>
+
+      </div>
+
+      <!-- CTA banner -->
+      <div class="card" style="margin-top:var(--space-12);text-align:center;background:rgba(45,106,79,0.04);border-color:rgba(45,106,79,0.2);">
+        <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-3);">Ready to calculate yours?</h2>
+        <p style="color:var(--color-muted);margin-bottom:var(--space-6);">Knowledge is step one. Measurement is step two.</p>
+        <div style="display:flex;gap:var(--space-4);justify-content:center;flex-wrap:wrap;">
+          <a href="/calculate/quick.html" class="btn btn-primary">Quick Calculation →</a>
+          <a href="/calculate/annual.html" class="btn btn-ghost">Full Annual Estimate →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <nav class="footer__links">
+        <a href="/about.html" class="footer__link">About</a>
+        <a href="/methodology.html" class="footer__link">Methodology</a>
+        <a href="/learn/" class="footer__link">Learn</a>
+        <a href="mailto:hello@calculateyourcarbon.com" class="footer__link">Contact</a>
+      </nav>
+      <p class="footer__copy">© 2025 calculateyourcarbon.com — Data sourced from the U.S. EPA and GHG Protocol</p>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => { mobileNav.classList.add('open'); hamburger.setAttribute('aria-expanded','true'); });
+    mobileClose.addEventListener('click', () => { mobileNav.classList.remove('open'); hamburger.setAttribute('aria-expanded','false'); });
+  </script>
+</body>
+</html>

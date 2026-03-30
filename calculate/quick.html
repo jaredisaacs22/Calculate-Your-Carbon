@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Carbon Calculator — calculateyourcarbon.com</title>
+  <meta name="description" content="Instantly calculate the carbon footprint of any single activity — a trip, meal, purchase, or flight. Powered by EPA data.">
+  <meta property="og:title" content="Quick Carbon Calculator — calculateyourcarbon.com">
+  <meta property="og:description" content="Instant carbon footprint calculation for any single activity. EPA data, free.">
+  <meta property="og:url" content="https://calculateyourcarbon.com/calculate/quick.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://calculateyourcarbon.com/calculate/quick.html">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    .page-header {
+      padding: var(--space-16) 0 var(--space-12);
+      text-align: center;
+    }
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: var(--space-8);
+      align-items: start;
+    }
+    .calc-main { min-width: 0; }
+    .calc-sidebar { position: sticky; top: 80px; }
+
+    @media (max-width: 900px) {
+      .calc-layout { grid-template-columns: 1fr; }
+      .calc-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">calculateyourcarbon</a>
+      <div class="nav__links">
+        <a href="/calculate/quick.html" class="nav__link active">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+        <a href="/explore.html" class="nav__link">Explore</a>
+        <a href="/dashboard.html" class="nav__link">Dashboard</a>
+        <a href="/learn/" class="nav__link">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav">
+    <button class="nav__mobile-close" id="mobileClose">✕</button>
+    <a href="/calculate/quick.html" class="nav__link active">Quick Calc</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/dashboard.html" class="nav__link">Dashboard</a>
+    <a href="/learn/" class="nav__link">Learn</a>
+  </div>
+
+  <main id="main">
+    <div class="page-header">
+      <div class="container">
+        <p class="eyebrow">Single activity</p>
+        <h1 class="section-heading">Quick Carbon Calculator</h1>
+        <p class="section-subheading" style="margin: 0 auto;">Calculate the footprint of any single trip, meal, or purchase. Results in seconds.</p>
+      </div>
+    </div>
+
+    <div class="container" style="padding-bottom: var(--space-24);">
+      <div class="calc-layout">
+        <!-- Main calc area -->
+        <div class="calc-main">
+          <!-- Step 1: Category selection -->
+          <div class="calc-step active" id="step-1">
+            <h2 style="font-family: var(--font-heading); font-size: var(--text-2xl); margin-bottom: var(--space-6);">What would you like to calculate?</h2>
+            <div class="category-grid" role="radiogroup" aria-label="Select a category">
+              <button class="category-card" data-category="driving" role="radio" aria-checked="false" tabindex="0">
+                <span class="category-card__icon" aria-hidden="true">🚗</span>
+                <span class="category-card__label">Driving</span>
+              </button>
+              <button class="category-card" data-category="flying" role="radio" aria-checked="false" tabindex="0">
+                <span class="category-card__icon" aria-hidden="true">✈️</span>
+                <span class="category-card__label">Flying</span>
+              </button>
+              <button class="category-card" data-category="home_energy" role="radio" aria-checked="false" tabindex="0">
+                <span class="category-card__icon" aria-hidden="true">🏠</span>
+                <span class="category-card__label">Home Energy</span>
+              </button>
+              <button class="category-card" data-category="food" role="radio" aria-checked="false" tabindex="0">
+                <span class="category-card__icon" aria-hidden="true">🍽️</span>
+                <span class="category-card__label">A Meal</span>
+              </button>
+              <button class="category-card" data-category="purchase" role="radio" aria-checked="false" tabindex="0">
+                <span class="category-card__icon" aria-hidden="true">🛒</span>
+                <span class="category-card__label">A Purchase</span>
+              </button>
+              <button class="category-card" data-category="waste" role="radio" aria-checked="false" tabindex="0">
+                <span class="category-card__icon" aria-hidden="true">♻️</span>
+                <span class="category-card__label">Waste</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2: Inputs -->
+          <div class="calc-step" id="step-2">
+            <button class="btn btn-ghost btn-sm" id="back-btn" style="margin-bottom: var(--space-6);">← Back to categories</button>
+            <div class="card" id="input-area">
+              <!-- Populated by JS -->
+            </div>
+            <div style="margin-top: var(--space-6); display: flex; gap: var(--space-4);">
+              <button class="btn btn-primary btn-lg" id="calc-btn">Calculate →</button>
+            </div>
+          </div>
+
+          <!-- Result Panel -->
+          <div class="result-panel" id="result-panel" style="display: none; margin-top: var(--space-8);">
+            <div class="result-hero card">
+              <div id="result-number" class="result-number result-ok">—</div>
+              <div id="result-unit" class="result-unit">lbs of CO₂e</div>
+              <div id="result-context" class="result-context"></div>
+
+              <!-- Compare bar -->
+              <div style="margin-top: var(--space-6);">
+                <p class="form-label" style="text-align:left; margin-bottom: var(--space-2);">Compared to US average</p>
+                <div class="compare-bar">
+                  <div id="result-compare-fill" class="compare-bar__fill compare-bar__fill-ok" style="width: 0%"></div>
+                </div>
+                <p id="result-compare-label" class="source-tag" style="text-align:left; margin-top: var(--space-1);"></p>
+              </div>
+            </div>
+
+            <!-- What this means -->
+            <div class="card" style="margin-top: var(--space-6);">
+              <h3 style="font-weight:600; margin-bottom: var(--space-4);">What this means</h3>
+              <div id="result-meaning"></div>
+              <div id="result-equiv"></div>
+            </div>
+
+            <!-- Action tips collapsible -->
+            <div class="collapsible" style="margin-top: var(--space-6);">
+              <button class="collapsible__trigger" aria-expanded="false">
+                Want to reduce this?
+              </button>
+              <div class="collapsible__body">
+                <ul id="action-tips" style="padding-left: var(--space-6); list-style: disc;">
+                  <!-- Populated by JS -->
+                </ul>
+                <div style="margin-top: var(--space-6);">
+                  <a href="/calculate/annual.html" class="btn btn-primary" style="margin-right: var(--space-4);">Do your full annual footprint →</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action row -->
+            <div style="display: flex; gap: var(--space-4); margin-top: var(--space-6); flex-wrap: wrap;">
+              <button class="btn btn-ghost" id="reset-btn">Calculate something else</button>
+              <button class="btn btn-ghost" id="share-btn">Share Result</button>
+            </div>
+
+            <!-- Ad below results -->
+            <div class="ad-unit">
+              <p class="ad-label">Advertisement</p>
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-client="ca-pub-XXXXXXXXXX"
+                   data-ad-slot="XXXXXXXXXX"
+                   data-ad-format="auto"
+                   data-full-width-responsive="true"></ins>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar ad (desktop) -->
+        <aside class="calc-sidebar" aria-label="Sidebar advertisement">
+          <div class="ad-unit">
+            <p class="ad-label">Advertisement</p>
+            <ins class="adsbygoogle"
+                 style="display:block;width:300px;height:250px"
+                 data-ad-client="ca-pub-XXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"
+                 data-ad-format="rectangle"></ins>
+          </div>
+          <div class="card" style="margin-top: var(--space-4);">
+            <h3 style="font-size: var(--text-sm); font-weight: 600; margin-bottom: var(--space-3);">Want the full picture?</h3>
+            <p style="font-size: var(--text-sm); color: var(--color-muted); margin-bottom: var(--space-4);">The annual calculator covers all categories and gives you a ranked action plan.</p>
+            <a href="/calculate/annual.html" class="btn btn-primary btn-sm" style="width:100%; justify-content:center;">Full Annual Estimate →</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <nav class="footer__links">
+        <a href="/about.html" class="footer__link">About</a>
+        <a href="/methodology.html" class="footer__link">Methodology</a>
+        <a href="/learn/" class="footer__link">Learn</a>
+        <a href="mailto:hello@calculateyourcarbon.com" class="footer__link">Contact</a>
+      </nav>
+      <p class="footer__copy">© 2025 calculateyourcarbon.com — Data sourced from the U.S. EPA and GHG Protocol</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/calc-engine.js" defer></script>
+  <script src="../assets/js/quick-calc.js" defer></script>
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileClose = document.getElementById('mobileClose');
+    hamburger.addEventListener('click', () => { mobileNav.classList.add('open'); hamburger.setAttribute('aria-expanded', 'true'); });
+    mobileClose.addEventListener('click', () => { mobileNav.classList.remove('open'); hamburger.setAttribute('aria-expanded', 'false'); });
+  </script>
+</body>
+</html>
