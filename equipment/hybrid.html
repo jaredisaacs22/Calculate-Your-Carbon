@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BESS + Generator Hybrid Modeler — calculateyourcarbon.com</title>
+  <meta name="description" content="Model fuel, emissions, and cost savings from pairing a battery energy storage system with a diesel generator under a 24-hour load profile.">
+  <link rel="canonical" href="https://calculateyourcarbon.com/equipment/hybrid.html">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    .page-header { padding:var(--space-16) var(--space-6) var(--space-8); max-width:760px; margin:0 auto; text-align:center; }
+    .page-header h1 { font-family:var(--font-heading); font-size:clamp(1.75rem,4vw,2.75rem); margin-bottom:var(--space-3); }
+    .page-header p  { color:var(--color-muted); font-size:var(--text-base); line-height:1.7; }
+
+    .modeler { max-width:1000px; margin:0 auto; padding:0 var(--space-6) var(--space-16); }
+
+    /* Step panels */
+    .step { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:var(--space-6); margin-bottom:var(--space-6); }
+    .step__header { display:flex; align-items:center; gap:var(--space-4); margin-bottom:var(--space-5); }
+    .step__num { width:32px; height:32px; border-radius:50%; background:var(--color-accent); color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:var(--text-sm); flex-shrink:0; }
+    .step__title { font-family:var(--font-heading); font-size:var(--text-xl); }
+
+    .inputs-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:var(--space-5); }
+    .form-group { display:flex; flex-direction:column; gap:var(--space-2); }
+    .form-group label { font-size:var(--text-sm); font-weight:500; }
+    .form-group select, .form-group input { padding:var(--space-3) var(--space-4); border:1px solid var(--color-border); border-radius:var(--radius); font-size:var(--text-base); background:var(--color-bg); }
+
+    /* Load chart */
+    canvas { width:100%!important; }
+    .chart-hint { font-size:var(--text-xs); color:var(--color-muted); margin-top:var(--space-2); }
+    .load-stats { display:flex; gap:var(--space-4); flex-wrap:wrap; margin-top:var(--space-4); }
+    .load-stat { font-size:var(--text-sm); }
+    .load-stat strong { color:var(--color-accent); }
+
+    .max-kw-row { display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-3); font-size:var(--text-sm); }
+    .max-kw-row input { width:80px; }
+
+    /* Results */
+    #results { padding:var(--space-6); background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); margin-bottom:var(--space-8); }
+    #results h2 { font-family:var(--font-heading); font-size:var(--text-2xl); margin-bottom:var(--space-6); }
+
+    .results-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--space-5); margin-bottom:var(--space-8); }
+    .result-category { background:var(--color-bg); border:1px solid var(--color-border); border-radius:var(--radius); padding:var(--space-5); }
+    .result-category h3 { font-size:var(--text-sm); text-transform:uppercase; letter-spacing:.08em; color:var(--color-muted); margin-bottom:var(--space-4); }
+    .result-row { display:flex; justify-content:space-between; align-items:baseline; gap:var(--space-3); padding:var(--space-2) 0; border-bottom:1px solid var(--color-border); font-size:var(--text-sm); }
+    .result-row:last-child { border:none; }
+    .result-row__label { color:var(--color-muted); }
+    .result-row__val { font-weight:600; }
+    .result-row--savings .result-row__val { color: #2D6A4F; }
+
+    .chart-section { margin-bottom:var(--space-8); }
+    .chart-section h3 { font-family:var(--font-heading); font-size:var(--text-lg); margin-bottom:var(--space-4); }
+
+    .bess-meta { font-size:var(--text-xs); color:var(--color-muted); margin-top:var(--space-4); }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">calculateyourcarbon</a>
+      <div class="nav__links" role="list">
+        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual Calc</a>
+        <a href="/equipment/" class="nav__link nav__link--active" role="listitem">Equipment</a>
+        <a href="/explore.html" class="nav__link" role="listitem">Explore</a>
+        <a href="/dashboard.html" class="nav__link" role="listitem">Dashboard</a>
+        <a href="/learn/" class="nav__link" role="listitem">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav" role="dialog" aria-modal="true">
+    <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
+    <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/dashboard.html" class="nav__link">Dashboard</a>
+    <a href="/learn/" class="nav__link">Learn</a>
+  </div>
+
+  <main id="main">
+    <div class="page-header">
+      <p class="eyebrow">Equipment Tools</p>
+      <h1>BESS + Generator Hybrid Modeler</h1>
+      <p>Select a generator and battery system, draw or load a 24-hour load profile, then run a simulation to see fuel, emissions, and cost savings from the hybrid dispatch strategy.</p>
+    </div>
+
+    <div class="modeler">
+
+      <!-- Step 1: Equipment selection -->
+      <div class="step">
+        <div class="step__header">
+          <div class="step__num">1</div>
+          <div class="step__title">Select Equipment</div>
+        </div>
+        <div class="inputs-row">
+          <div class="form-group">
+            <label for="gen-select">Generator</label>
+            <select id="gen-select"><option value="">— Select generator —</option></select>
+          </div>
+          <div class="form-group">
+            <label for="bess-select">BESS System</label>
+            <select id="bess-select"><option value="">— Select BESS —</option></select>
+          </div>
+          <div class="form-group">
+            <label for="fuel-price">Diesel price (USD/L)</label>
+            <input type="number" id="fuel-price" value="1.35" step="0.05" min="0.5" max="5">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Load profile -->
+      <div class="step">
+        <div class="step__header">
+          <div class="step__num">2</div>
+          <div class="step__title">Load Profile</div>
+        </div>
+
+        <div class="inputs-row" style="margin-bottom:var(--space-5)">
+          <div class="form-group">
+            <label for="profile-select">Load preset profiles</label>
+            <select id="profile-select"><option value="">— Load a preset —</option></select>
+          </div>
+          <div class="form-group" style="justify-content:flex-end">
+            <label style="opacity:0">or</label>
+            <a href="/equipment/load-profiles.html" class="btn btn-ghost" style="text-align:center">Build custom profile →</a>
+          </div>
+        </div>
+
+        <div class="max-kw-row">
+          <label for="load-max-kw">Chart max kW:</label>
+          <input type="number" id="load-max-kw" value="200" min="10" max="5000" step="10">
+          <span style="color:var(--color-muted);font-size:var(--text-xs)">Drag bars to edit load</span>
+        </div>
+        <canvas id="load-chart" height="180" aria-label="24-hour load profile"></canvas>
+        <p class="chart-hint">Click and drag on the chart to draw your load profile.</p>
+        <div class="load-stats">
+          <div class="load-stat">Peak: <strong id="load-peak">—</strong></div>
+          <div class="load-stat">Avg: <strong id="load-avg">—</strong></div>
+          <div class="load-stat">Load factor: <strong id="load-lf">—</strong></div>
+        </div>
+      </div>
+
+      <!-- Step 3: Run -->
+      <div style="text-align:center;margin-bottom:var(--space-8)">
+        <button id="simulate-btn" class="btn btn-primary btn-lg" onclick="runSimulation()">Run Simulation</button>
+      </div>
+
+      <!-- Results -->
+      <section id="results" hidden aria-label="Simulation results">
+        <h2>Simulation Results</h2>
+
+        <div class="results-grid">
+          <div class="result-category">
+            <h3>Fuel Consumption</h3>
+            <div class="result-row"><span class="result-row__label">Generator only</span><span class="result-row__val" id="r-fuel-baseline">—</span></div>
+            <div class="result-row"><span class="result-row__label">Hybrid system</span><span class="result-row__val" id="r-fuel-hybrid">—</span></div>
+            <div class="result-row result-row--savings"><span class="result-row__label">Fuel saved</span><span class="result-row__val" id="r-fuel-saved">—</span></div>
+          </div>
+          <div class="result-category">
+            <h3>CO₂e Emissions</h3>
+            <div class="result-row"><span class="result-row__label">Generator only</span><span class="result-row__val" id="r-co2-baseline">—</span></div>
+            <div class="result-row"><span class="result-row__label">Hybrid system</span><span class="result-row__val" id="r-co2-hybrid">—</span></div>
+            <div class="result-row result-row--savings"><span class="result-row__label">Emissions avoided</span><span class="result-row__val" id="r-co2-saved">—</span></div>
+          </div>
+          <div class="result-category">
+            <h3>Fuel Cost</h3>
+            <div class="result-row"><span class="result-row__label">Generator only</span><span class="result-row__val" id="r-cost-baseline">—</span></div>
+            <div class="result-row"><span class="result-row__label">Hybrid system</span><span class="result-row__val" id="r-cost-hybrid">—</span></div>
+            <div class="result-row result-row--savings"><span class="result-row__label">Cost saved</span><span class="result-row__val" id="r-cost-saved">—</span></div>
+          </div>
+          <div class="result-category">
+            <h3>Generator Runtime</h3>
+            <div class="result-row"><span class="result-row__label">Without BESS</span><span class="result-row__val" id="r-runtime-baseline">—</span></div>
+            <div class="result-row"><span class="result-row__label">With BESS</span><span class="result-row__val" id="r-runtime-hybrid">—</span></div>
+            <div class="result-row result-row--savings"><span class="result-row__label">Runtime reduction</span><span class="result-row__val" id="r-runtime-saved">—</span></div>
+            <div class="result-row"><span class="result-row__label">BESS cycles used</span><span class="result-row__val" id="r-bess-cycles">—</span></div>
+            <div class="result-row"><span class="result-row__label">Generator starts (hybrid)</span><span class="result-row__val" id="r-gen-starts">—</span></div>
+            <div class="result-row result-row--savings"><span class="result-row__label">Start cycles avoided</span><span class="result-row__val" id="r-gen-starts-saved">—</span></div>
+          </div>
+        </div>
+
+        <div class="chart-section">
+          <h3>Hourly Fuel Consumption</h3>
+          <p style="font-size:var(--text-xs);color:var(--color-muted);margin-top:0">Green background = generator running in hybrid scenario.</p>
+          <canvas id="results-chart" height="200" aria-label="Hourly fuel consumption comparison"></canvas>
+        </div>
+
+        <div class="chart-section">
+          <h3>Battery State of Charge</h3>
+          <canvas id="soc-chart" height="180" aria-label="BESS state of charge over 24 hours"></canvas>
+        </div>
+
+        <p class="bess-meta">
+          Dispatch strategy: generator held at 75% load (optimal diesel efficiency). BESS charges on excess, discharges on shortfall. Generator turns off when BESS SOC is above 65% and load has been below 30% for 2+ consecutive hours.
+          CO₂e factor: 2.63 kg/L diesel (EPA GHG Factors Hub 2024).
+          <a href="/methodology.html">Full methodology →</a>
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <a href="/" class="footer__logo">calculateyourcarbon</a>
+        <p class="footer__tagline">Accurate carbon tools powered by EPA &amp; GHG Protocol data.</p>
+      </div>
+      <nav class="footer__nav">
+        <a href="/calculate/quick.html">Quick Calc</a>
+        <a href="/calculate/annual.html">Annual Calc</a>
+        <a href="/equipment/">Equipment</a>
+        <a href="/explore.html">Explore</a>
+        <a href="/learn/">Learn</a>
+        <a href="/methodology.html">Methodology</a>
+        <a href="/about.html">About</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="../assets/js/equipment-api.js"></script>
+  <script src="../assets/js/hybrid.js"></script>
+</body>
+</html>
