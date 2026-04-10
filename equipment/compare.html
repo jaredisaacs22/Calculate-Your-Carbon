@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generator Comparison Tool — calculateyourcarbon.com</title>
+  <meta name="description" content="Compare diesel generators from Atlas Copco, Aggreko, and Himoinsa on fuel consumption, hourly cost, and CO₂e per kWh.">
+  <link rel="canonical" href="https://calculateyourcarbon.com/equipment/compare.html">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    .page-header { padding: var(--space-16) var(--space-6) var(--space-8); max-width:760px; margin:0 auto; text-align:center; }
+    .page-header h1 { font-family:var(--font-heading); font-size:clamp(1.75rem,4vw,2.75rem); margin-bottom:var(--space-3); }
+    .page-header p  { color:var(--color-muted); font-size:var(--text-base); line-height:1.7; }
+
+    .compare-form {
+      max-width: 900px;
+      margin: 0 auto var(--space-8);
+      padding: 0 var(--space-6);
+    }
+    .compare-form__selects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    .compare-form__controls {
+      display: flex;
+      gap: var(--space-6);
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-6);
+    }
+    .form-group { display:flex; flex-direction:column; gap:var(--space-2); flex:1; min-width:160px; }
+    .form-group label { font-size:var(--text-sm); font-weight:500; }
+    .form-group select, .form-group input { padding: var(--space-3) var(--space-4); border:1px solid var(--color-border); border-radius:var(--radius); font-size:var(--text-base); background:var(--color-bg); }
+    .load-display { font-weight:700; font-size:var(--text-xl); color:var(--color-accent); margin-left:var(--space-2); }
+
+    #error-msg { background:#fff3cd; border:1px solid #ffc107; border-radius:var(--radius); padding:var(--space-4); color:#856404; margin-bottom:var(--space-4); }
+
+    /* Result cards */
+    #result-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-5);
+      margin-bottom: var(--space-8);
+    }
+    .compare-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-top: 4px solid var(--color-accent);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+    }
+    .compare-card__oem   { font-size:var(--text-xs); font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:var(--space-1); }
+    .compare-card__model { font-family:var(--font-heading); font-size:var(--text-xl); margin-bottom:var(--space-1); }
+    .compare-card__rating{ font-size:var(--text-sm); color:var(--color-muted); margin-bottom:var(--space-5); }
+    .compare-card__metrics { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-3) var(--space-4); }
+    .compare-card__metrics dt { font-size:var(--text-xs); color:var(--color-muted); margin-bottom:2px; }
+    .compare-card__metrics dd { font-size:var(--text-base); font-weight:600; margin:0; }
+
+    .chart-wrapper { max-width:700px; margin: 0 auto var(--space-8); padding: 0 var(--space-6); }
+    canvas { width:100% !important; }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">calculateyourcarbon</a>
+      <div class="nav__links" role="list">
+        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual Calc</a>
+        <a href="/equipment/" class="nav__link nav__link--active" role="listitem">Equipment</a>
+        <a href="/explore.html" class="nav__link" role="listitem">Explore</a>
+        <a href="/dashboard.html" class="nav__link" role="listitem">Dashboard</a>
+        <a href="/learn/" class="nav__link" role="listitem">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
+    <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/dashboard.html" class="nav__link">Dashboard</a>
+    <a href="/learn/" class="nav__link">Learn</a>
+  </div>
+
+  <main id="main">
+    <div class="page-header">
+      <p class="eyebrow">Equipment Tools</p>
+      <h1>Generator Comparison</h1>
+      <p>Select 2–4 generators, set a load point, and compare fuel consumption, hourly cost, and CO₂e/kWh side-by-side. Fuel curve chart shows full load-range performance.</p>
+    </div>
+
+    <section class="compare-form" aria-label="Comparison inputs">
+      <p id="error-msg" hidden role="alert"></p>
+
+      <div class="compare-form__selects">
+        <div class="form-group">
+          <label for="gen-1">Generator A</label>
+          <select id="gen-1" class="gen-select"><option value="">— Select generator —</option></select>
+        </div>
+        <div class="form-group">
+          <label for="gen-2">Generator B</label>
+          <select id="gen-2" class="gen-select"><option value="">— Select generator —</option></select>
+        </div>
+        <div class="form-group">
+          <label for="gen-3">Generator C (optional)</label>
+          <select id="gen-3" class="gen-select"><option value="">— Optional —</option></select>
+        </div>
+        <div class="form-group">
+          <label for="gen-4">Generator D (optional)</label>
+          <select id="gen-4" class="gen-select"><option value="">— Optional —</option></select>
+        </div>
+      </div>
+
+      <div class="compare-form__controls">
+        <div class="form-group">
+          <label for="load-slider">Load point: <span id="load-display" class="load-display">75%</span></label>
+          <input type="range" id="load-slider" min="25" max="100" step="5" value="75">
+        </div>
+        <div class="form-group" style="max-width:160px">
+          <label for="fuel-price">Fuel price (USD/L)</label>
+          <input type="number" id="fuel-price" value="1.35" step="0.05" min="0.5" max="5">
+        </div>
+        <button id="compare-btn" class="btn btn-primary">Compare Generators</button>
+      </div>
+    </section>
+
+    <section id="results" hidden aria-label="Comparison results" style="max-width:900px;margin:0 auto;padding:0 var(--space-6) var(--space-16)">
+      <h2 style="font-family:var(--font-heading);margin-bottom:var(--space-6)">Results</h2>
+      <div id="result-cards"></div>
+      <div class="chart-wrapper">
+        <canvas id="fuel-curve-chart" aria-label="Fuel consumption curve chart"></canvas>
+      </div>
+      <p style="font-size:var(--text-xs);color:var(--color-muted)">Fuel consumption data from OEM published spec sheets. CO₂e uses EPA GHG Factors Hub 2024: 2.63 kg CO₂e/L diesel. <a href="/methodology.html">Full methodology →</a></p>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <a href="/" class="footer__logo">calculateyourcarbon</a>
+        <p class="footer__tagline">Accurate carbon tools powered by EPA &amp; GHG Protocol data.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Footer navigation">
+        <a href="/calculate/quick.html">Quick Calc</a>
+        <a href="/calculate/annual.html">Annual Calc</a>
+        <a href="/equipment/">Equipment</a>
+        <a href="/explore.html">Explore</a>
+        <a href="/learn/">Learn</a>
+        <a href="/methodology.html">Methodology</a>
+        <a href="/about.html">About</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="../assets/js/equipment-api.js"></script>
+  <script src="../assets/js/compare.js"></script>
+</body>
+</html>

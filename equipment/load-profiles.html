@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Load Profile Builder — calculateyourcarbon.com</title>
+  <meta name="description" content="Browse and build 24-hour load profiles for construction, events, telecom, industrial, and oil &amp; gas applications.">
+  <link rel="canonical" href="https://calculateyourcarbon.com/equipment/load-profiles.html">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    .page-header { padding:var(--space-16) var(--space-6) var(--space-8); max-width:760px; margin:0 auto; text-align:center; }
+    .page-header h1 { font-family:var(--font-heading); font-size:clamp(1.75rem,4vw,2.75rem); margin-bottom:var(--space-3); }
+    .page-header p  { color:var(--color-muted); font-size:var(--text-base); line-height:1.7; }
+
+    .layout { display:grid; grid-template-columns:300px 1fr; gap:var(--space-8); max-width:1200px; margin:0 auto; padding:0 var(--space-6) var(--space-16); }
+    @media(max-width:900px) { .layout { grid-template-columns:1fr; } }
+
+    /* Sector tabs */
+    .sector-tabs { display:flex; gap:var(--space-2); flex-wrap:wrap; margin-bottom:var(--space-6); }
+    .sector-tab { padding:var(--space-2) var(--space-4); border:1px solid var(--color-border); border-radius:100px; font-size:var(--text-sm); text-decoration:none; color:var(--color-muted); transition:border-color .15s,color .15s; white-space:nowrap; }
+    .sector-tab:hover, .sector-tab--active { border-color:var(--color-accent); color:var(--color-accent); background:rgba(45,106,79,.06); }
+
+    /* Profile gallery */
+    .profile-gallery { display:flex; flex-direction:column; gap:var(--space-3); }
+    .profile-card { text-align:left; background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius); padding:var(--space-4); cursor:pointer; width:100%; transition:border-color .15s; }
+    .profile-card:hover, .profile-card--active { border-color:var(--color-accent); }
+    .profile-card--active { background:rgba(45,106,79,.05); }
+    .profile-card__name   { font-weight:600; margin-bottom:var(--space-1); }
+    .profile-card__sector { font-size:var(--text-xs); color:var(--color-muted); margin-bottom:var(--space-2); }
+    .profile-card__stats  { font-size:var(--text-xs); color:var(--color-muted); }
+
+    /* Editor */
+    .editor { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:var(--space-6); }
+    .editor h2 { font-family:var(--font-heading); font-size:var(--text-xl); margin-bottom:var(--space-5); }
+    canvas { width:100%!important; cursor:crosshair; }
+    .editor-hint { font-size:var(--text-xs); color:var(--color-muted); margin-top:var(--space-2); margin-bottom:var(--space-5); }
+
+    .stats-row { display:flex; gap:var(--space-5); flex-wrap:wrap; margin-bottom:var(--space-6); }
+    .stat-box { flex:1; min-width:100px; background:var(--color-bg); border:1px solid var(--color-border); border-radius:var(--radius); padding:var(--space-3) var(--space-4); }
+    .stat-box__label { font-size:var(--text-xs); color:var(--color-muted); margin-bottom:2px; }
+    .stat-box__value { font-size:var(--text-lg); font-weight:700; color:var(--color-accent); }
+
+    .editor-fields { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); margin-bottom:var(--space-5); }
+    @media(max-width:600px) { .editor-fields { grid-template-columns:1fr; } }
+    .form-group { display:flex; flex-direction:column; gap:var(--space-2); }
+    .form-group label { font-size:var(--text-sm); font-weight:500; }
+    .form-group input, .form-group select, .form-group textarea { padding:var(--space-3) var(--space-4); border:1px solid var(--color-border); border-radius:var(--radius); font-size:var(--text-base); background:var(--color-bg); }
+
+    .editor-actions { display:flex; gap:var(--space-3); flex-wrap:wrap; }
+    .max-kw-row { display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-3); font-size:var(--text-sm); }
+    .max-kw-row input { width:80px; }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo">calculateyourcarbon</a>
+      <div class="nav__links" role="list">
+        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual Calc</a>
+        <a href="/equipment/" class="nav__link nav__link--active" role="listitem">Equipment</a>
+        <a href="/explore.html" class="nav__link" role="listitem">Explore</a>
+        <a href="/dashboard.html" class="nav__link" role="listitem">Dashboard</a>
+        <a href="/learn/" class="nav__link" role="listitem">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav" role="dialog" aria-modal="true">
+    <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
+    <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/dashboard.html" class="nav__link">Dashboard</a>
+    <a href="/learn/" class="nav__link">Learn</a>
+  </div>
+
+  <main id="main">
+    <div class="page-header">
+      <p class="eyebrow">Equipment Tools</p>
+      <h1>Load Profile Builder</h1>
+      <p>Browse preset 24-hour load profiles by sector, or drag-and-draw your own. Save custom profiles to use in the BESS + Generator Hybrid Modeler.</p>
+    </div>
+
+    <div class="layout">
+      <!-- Left: Gallery -->
+      <aside>
+        <div id="sector-tabs" class="sector-tabs" role="tablist" aria-label="Filter by sector"></div>
+        <div id="profile-gallery" class="profile-gallery" role="list"></div>
+      </aside>
+
+      <!-- Right: Editor -->
+      <div class="editor" role="region" aria-label="Profile editor">
+        <h2>Profile Editor</h2>
+
+        <div class="max-kw-row">
+          <label for="max-kw-input">Chart max kW:</label>
+          <input type="number" id="max-kw-input" value="100" min="10" max="5000" step="10">
+          <span style="color:var(--color-muted);font-size:var(--text-xs)">Drag bars to set hourly demand</span>
+        </div>
+
+        <canvas id="profile-chart" height="200" aria-label="Editable 24-hour load profile chart"></canvas>
+        <p class="editor-hint">Click and drag on the chart to draw your load profile.</p>
+
+        <div class="stats-row" aria-label="Profile statistics">
+          <div class="stat-box"><div class="stat-box__label">Peak</div><div class="stat-box__value" id="stat-peak">—</div></div>
+          <div class="stat-box"><div class="stat-box__label">Average</div><div class="stat-box__value" id="stat-avg">—</div></div>
+          <div class="stat-box"><div class="stat-box__label">Load Factor</div><div class="stat-box__value" id="stat-lf">—</div></div>
+          <div class="stat-box" style="flex:2"><div class="stat-box__label">Energy</div><div class="stat-box__value" id="stat-energy" style="font-size:var(--text-base)">—</div></div>
+        </div>
+
+        <div class="editor-fields">
+          <div class="form-group">
+            <label for="profile-name">Profile name</label>
+            <input type="text" id="profile-name" placeholder="e.g. My Construction Site">
+          </div>
+          <div class="form-group">
+            <label for="profile-sector">Sector</label>
+            <select id="profile-sector">
+              <option value="construction">Construction</option>
+              <option value="events">Events / Entertainment</option>
+              <option value="telecom">Telecom / Remote</option>
+              <option value="oil_gas">Oil &amp; Gas</option>
+              <option value="industrial">Industrial / Critical Power</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label for="profile-description">Description (optional)</label>
+            <textarea id="profile-description" rows="2" placeholder="Describe this load profile…"></textarea>
+          </div>
+        </div>
+
+        <div class="editor-actions">
+          <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
+          <button class="btn btn-ghost" onclick="useInHybrid()">Use in Hybrid Modeler →</button>
+          <button class="btn btn-ghost" onclick="flatProfile()">Set Flat Load</button>
+          <button class="btn btn-ghost" onclick="clearProfile()">Clear</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <a href="/" class="footer__logo">calculateyourcarbon</a>
+        <p class="footer__tagline">Accurate carbon tools powered by EPA &amp; GHG Protocol data.</p>
+      </div>
+      <nav class="footer__nav">
+        <a href="/calculate/quick.html">Quick Calc</a>
+        <a href="/calculate/annual.html">Annual Calc</a>
+        <a href="/equipment/">Equipment</a>
+        <a href="/explore.html">Explore</a>
+        <a href="/learn/">Learn</a>
+        <a href="/methodology.html">Methodology</a>
+        <a href="/about.html">About</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="../assets/js/equipment-api.js"></script>
+  <script src="../assets/js/load-profile.js"></script>
+</body>
+</html>

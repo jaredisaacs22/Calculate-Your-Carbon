@@ -1125,3 +1125,115 @@ input[type="range"]::-moz-range-thumb {
   body { background: white; }
   .card { box-shadow: none; border: 1px solid #ccc; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   EQUIPMENT SECTION — Generator Comparison, BESS Hybrid, Load Profiles
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Active nav link */
+.nav__link--active {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* ── Compare cards grid ── */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+}
+
+.compare-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 4px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.compare-card__metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3) var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.compare-card__metrics dt {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  margin-bottom: 2px;
+}
+
+.compare-card__metrics dd {
+  font-size: var(--text-base);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ── Load profile bar chart drag area ── */
+#profile-chart,
+#load-chart {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+/* ── Profile gallery card ── */
+.profile-card {
+  text-align: left;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  cursor: pointer;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.profile-card:hover {
+  border-color: var(--color-accent);
+}
+
+.profile-card--active {
+  border-color: var(--color-accent);
+  background: rgba(45, 106, 79, 0.05);
+}
+
+/* ── Hybrid modeler result rows ── */
+.result-row--savings .result-row__val {
+  color: var(--color-accent);
+}
+
+/* ── Sector tabs (load profile page) ── */
+.sector-tabs {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-6);
+}
+
+.sector-tab {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  font-size: var(--text-sm);
+  text-decoration: none;
+  color: var(--color-muted);
+  transition: border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.sector-tab:hover,
+.sector-tab--active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(45, 106, 79, 0.06);
+}
+
+/* ── Responsive: stack layout on narrow screens ── */
+@media (max-width: 900px) {
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

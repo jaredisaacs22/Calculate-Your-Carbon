@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipment Carbon & Fuel Calculator — calculateyourcarbon.com</title>
+  <meta name="description" content="Compare generator fuel consumption, model BESS+generator hybrid savings, and build load profiles for construction, events, telecom, and industrial applications.">
+  <link rel="canonical" href="https://calculateyourcarbon.com/equipment/">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    .equipment-hero {
+      padding: var(--space-24) var(--space-6) var(--space-16);
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .equipment-hero h1 { font-family: var(--font-heading); font-size: clamp(2rem,5vw,3.25rem); line-height:1.15; margin-bottom:var(--space-5); }
+    .equipment-hero p  { font-size:var(--text-lg); color:var(--color-muted); margin-bottom:var(--space-8); line-height:1.7; }
+
+    .tool-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-6);
+      max-width: var(--max-width);
+      margin: 0 auto var(--space-16);
+      padding: 0 var(--space-6);
+    }
+    .tool-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .tool-card:hover { border-color: var(--color-accent); box-shadow: 0 4px 20px rgba(0,0,0,.08); }
+    .tool-card__icon { font-size: 2rem; margin-bottom: var(--space-4); }
+    .tool-card__title { font-family: var(--font-heading); font-size: var(--text-xl); margin-bottom: var(--space-2); }
+    .tool-card__desc  { font-size: var(--text-sm); color: var(--color-muted); line-height:1.6; }
+    .tool-card__arrow { margin-top: var(--space-4); font-weight:600; color: var(--color-accent); }
+
+    .sector-section {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-12) var(--space-6);
+    }
+    .sector-section__inner { max-width: var(--max-width); margin: 0 auto; }
+    .sector-section h2 { font-family: var(--font-heading); font-size: var(--text-2xl); margin-bottom: var(--space-3); }
+    .sector-section p  { color: var(--color-muted); margin-bottom: var(--space-8); }
+    .sector-chips { display:flex; gap:var(--space-3); flex-wrap:wrap; }
+    .sector-chip {
+      padding: var(--space-2) var(--space-5);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 100px;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--color-muted);
+      transition: border-color .15s, color .15s;
+    }
+    .sector-chip:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+    .data-freshness {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: var(--space-6);
+      font-size: var(--text-xs);
+      color: var(--color-muted);
+    }
+    #freshness-indicator { font-weight: 500; }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo" aria-label="calculateyourcarbon home">calculateyourcarbon</a>
+      <div class="nav__links" role="list">
+        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick Calc</a>
+        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual Calc</a>
+        <a href="/equipment/" class="nav__link nav__link--active" role="listitem">Equipment</a>
+        <a href="/explore.html" class="nav__link" role="listitem">Explore</a>
+        <a href="/dashboard.html" class="nav__link" role="listitem">Dashboard</a>
+        <a href="/learn/" class="nav__link" role="listitem">Learn</a>
+      </div>
+      <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="nav__mobile-overlay" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
+    <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/dashboard.html" class="nav__link">Dashboard</a>
+    <a href="/learn/" class="nav__link">Learn</a>
+  </div>
+
+  <main id="main">
+    <div class="equipment-hero">
+      <p class="eyebrow">Equipment &amp; Industrial</p>
+      <h1>Generator &amp; BESS<br>Carbon Calculators</h1>
+      <p>Compare diesel generators from Atlas Copco, Aggreko, and Himoinsa side-by-side. Model fuel and emission savings from pairing a battery energy storage system with a generator under real load profiles.</p>
+      <div style="display:flex;gap:var(--space-4);justify-content:center;flex-wrap:wrap;">
+        <a href="/equipment/compare.html" class="btn btn-primary btn-lg">Compare Generators →</a>
+        <a href="/equipment/hybrid.html" class="btn btn-ghost btn-lg">Model Hybrid System →</a>
+      </div>
+    </div>
+
+    <div class="tool-cards">
+      <a href="/equipment/compare.html" class="tool-card">
+        <div class="tool-card__icon">⚡</div>
+        <div class="tool-card__title">Generator Comparison</div>
+        <p class="tool-card__desc">Compare 2–4 generators side-by-side on fuel consumption, hourly cost, and CO₂e per kWh at any load point. Data sourced from OEM spec sheets.</p>
+        <div class="tool-card__arrow">Compare now →</div>
+      </a>
+      <a href="/equipment/hybrid.html" class="tool-card">
+        <div class="tool-card__icon">🔋</div>
+        <div class="tool-card__title">BESS + Generator Hybrid</div>
+        <p class="tool-card__desc">Model 24-hour fuel and emission savings when pairing a battery with a generator. See hour-by-hour dispatch, SOC trace, and payback analysis.</p>
+        <div class="tool-card__arrow">Model hybrid →</div>
+      </a>
+      <a href="/equipment/load-profiles.html" class="tool-card">
+        <div class="tool-card__icon">📊</div>
+        <div class="tool-card__title">Load Profile Builder</div>
+        <p class="tool-card__desc">Browse pre-built 24-hour load profiles for construction, events, telecom, and industrial sites — or drag-and-draw your own custom profile.</p>
+        <div class="tool-card__arrow">Build profile →</div>
+      </a>
+    </div>
+
+    <section class="sector-section" aria-label="Browse by sector">
+      <div class="sector-section__inner">
+        <h2>Browse by Sector</h2>
+        <p>Pre-built load profiles and representative equipment for every application.</p>
+        <div class="sector-chips">
+          <a href="/equipment/load-profiles.html?sector=construction" class="sector-chip">🏗 Construction</a>
+          <a href="/equipment/load-profiles.html?sector=events" class="sector-chip">🎵 Events &amp; Entertainment</a>
+          <a href="/equipment/load-profiles.html?sector=telecom" class="sector-chip">📡 Telecom &amp; Remote</a>
+          <a href="/equipment/load-profiles.html?sector=oil_gas" class="sector-chip">🛢 Oil &amp; Gas</a>
+          <a href="/equipment/load-profiles.html?sector=industrial" class="sector-chip">🏭 Industrial &amp; Critical Power</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="data-freshness">
+      Equipment data: <span id="freshness-indicator">checking…</span>
+      · <a href="/methodology.html">Methodology</a>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <a href="/" class="footer__logo">calculateyourcarbon</a>
+        <p class="footer__tagline">Accurate carbon tools powered by EPA &amp; GHG Protocol data.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Footer navigation">
+        <a href="/calculate/quick.html">Quick Calc</a>
+        <a href="/calculate/annual.html">Annual Calc</a>
+        <a href="/equipment/">Equipment</a>
+        <a href="/explore.html">Explore</a>
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/learn/">Learn</a>
+        <a href="/methodology.html">Methodology</a>
+        <a href="/about.html">About</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="../assets/js/equipment-api.js"></script>
+  <script>
+    // Mobile nav
+    document.getElementById('hamburger').addEventListener('click', function() {
+      document.getElementById('mobileNav').classList.toggle('is-open');
+      this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'false' ? 'true' : 'false');
+    });
+    document.getElementById('mobileClose').addEventListener('click', function() {
+      document.getElementById('mobileNav').classList.remove('is-open');
+      document.getElementById('hamburger').setAttribute('aria-expanded', 'false');
+    });
+
+    // Data freshness indicator
+    getScrapeStatus().then(status => {
+      const dates = Object.values(status)
+        .map(s => s.last_run)
+        .filter(Boolean)
+        .map(d => new Date(d));
+      if (dates.length === 0) {
+        document.getElementById('freshness-indicator').textContent = 'seed data loaded';
+        return;
+      }
+      const latest = new Date(Math.max(...dates));
+      const days = Math.floor((Date.now() - latest) / 86400000);
+      document.getElementById('freshness-indicator').textContent =
+        days === 0 ? 'updated today' : `last updated ${days} day${days !== 1 ? 's' : ''} ago`;
+    }).catch(() => {
+      document.getElementById('freshness-indicator').textContent = 'seed data loaded';
+    });
+  </script>
+</body>
+</html>
