@@ -1,6 +1,7 @@
 /**
  * compare.js — Generator Comparison Tool
- * Calls GET /api/generators and POST /api/generators/compare
+ * Calls GET /api/generators, GET /api/generators/{id}/fuel-curve,
+ *        POST /api/comparisons, GET /api/comparisons/{uuid}
  */
 
 let allGenerators = [];
@@ -12,7 +13,7 @@ async function init() {
   try {
     allGenerators = await getGenerators();
     populateDropdowns();
-    restoreFromURL();
+    await restoreFromURL();
   } catch (e) {
     showError('Could not load generator data. Is the API running? ' + e.message);
   }
@@ -21,7 +22,6 @@ async function init() {
 function populateDropdowns() {
   const selects = document.querySelectorAll('.gen-select');
   selects.forEach(sel => {
-    const placeholder = sel.querySelector('option[value=""]');
     // Group by OEM
     const byOEM = {};
     allGenerators.forEach(g => {
@@ -41,8 +41,27 @@ function populateDropdowns() {
   });
 }
 
-function restoreFromURL() {
+async function restoreFromURL() {
   const params = new URLSearchParams(location.search);
+
+  // Restore from a saved comparison session UUID
+  if (params.get('session')) {
+    try {
+      const session = await getComparison(params.get('session'));
+      const ids = session.generator_ids;
+      const selects = document.querySelectorAll('.gen-select');
+      selects.forEach((sel, i) => { if (ids[i]) sel.value = ids[i]; });
+      document.getElementById('load-slider').value = session.load_pct;
+      document.getElementById('fuel-price').value = session.fuel_price_per_liter;
+      updateLoadDisplay();
+      renderResults(session.results_cache);
+      return;
+    } catch (e) {
+      showError('Could not restore saved session: ' + e.message);
+    }
+  }
+
+  // Fallback: restore from plain query params (legacy shareable URL)
   if (params.get('ids')) {
     const ids = params.get('ids').split(',');
     const selects = document.querySelectorAll('.gen-select');
@@ -71,19 +90,39 @@ async function runComparison() {
 
   setLoading(true);
   try {
-    const result = await compareGenerators(ids, loadPct, fuelPrice);
-    renderResults(result);
+    // Run comparison + persist session in parallel
+    const [result, session] = await Promise.all([
+      compareGenerators(ids, loadPct, fuelPrice),
+      saveComparison({ generator_ids: ids, load_pct: loadPct, fuel_price_per_liter: fuelPrice }),
+    ]);
 
-    // Update URL (shareable)
-    const url = new URL(location);
-    url.searchParams.set('ids', ids.join(','));
-    url.searchParams.set('load', loadPct);
-    url.searchParams.set('fuel', fuelPrice);
-    history.replaceState(null, '', url);
+    renderResults(result);
+    setShareURL(session.session_uuid);
   } catch (e) {
     showError('Comparison failed: ' + e.message);
   } finally {
     setLoading(false);
+  }
+}
+
+function setShareURL(uuid) {
+  const url = new URL(location);
+  // Remove old params, use session UUID instead
+  url.searchParams.delete('ids');
+  url.searchParams.delete('load');
+  url.searchParams.delete('fuel');
+  url.searchParams.set('session', uuid);
+  history.replaceState(null, '', url);
+
+  const shareBtn = document.getElementById('share-btn');
+  if (shareBtn) {
+    shareBtn.hidden = false;
+    shareBtn.onclick = () => {
+      navigator.clipboard.writeText(url.toString()).then(() => {
+        shareBtn.textContent = 'Copied!';
+        setTimeout(() => { shareBtn.textContent = 'Copy link'; }, 2000);
+      });
+    };
   }
 }
 
@@ -110,27 +149,32 @@ function renderResults(result) {
         <div><dt>Noise</dt><dd>${g.noise_db_at_7m ? g.noise_db_at_7m + ' dB(A)' : '—'}</dd></div>
         <div><dt>Emissions std</dt><dd>${g.emissions_standard || '—'}</dd></div>
       </dl>`;
+    if (g.generator_id === result.winner_by_efficiency) {
+      card.innerHTML += `<div class="compare-card__badge compare-card__badge--efficiency">Most efficient</div>`;
+    }
+    if (g.generator_id === result.winner_by_cost) {
+      card.innerHTML += `<div class="compare-card__badge compare-card__badge--cost">Lowest cost</div>`;
+    }
     cardsEl.appendChild(card);
   });
 
-  // Fuel curve chart
-  renderFuelCurveChart(ids_from_result(result));
-}
-
-function ids_from_result(result) {
-  return result.generators.map(g => g.generator_id);
+  // Fuel curve chart — uses smooth interpolated endpoint
+  renderFuelCurveChart(result.generators.map(g => g.generator_id));
 }
 
 async function renderFuelCurveChart(genIds) {
-  const gens = await Promise.all(genIds.map(id => getGenerator(id)));
-  const labels = ['25%', '50%', '75%', '100%'];
-  const datasets = gens.map((g, i) => ({
-    label: `${g.oem} ${g.model}`,
-    data: ['25', '50', '75', '100'].map(k => g.fuel_curve?.[k] ?? null),
+  // Fetch interpolated fuel curves (21 points at 5% increments) in parallel
+  const curves = await Promise.all(genIds.map(id => getFuelCurve(id)));
+
+  const labels = curves[0].interpolated.map(pt => pt.load_pct + '%');
+  const datasets = curves.map((curve, i) => ({
+    label: `${curve.oem} ${curve.model}`,
+    data: curve.interpolated.map(pt => pt.consumption_l_hr),
     borderColor: CHART_COLORS[i],
     backgroundColor: CHART_COLORS[i] + '22',
     tension: 0.3,
     fill: false,
+    pointRadius: 2,
   }));
 
   const ctx = document.getElementById('fuel-curve-chart').getContext('2d');
@@ -143,6 +187,11 @@ async function renderFuelCurveChart(genIds) {
       plugins: {
         legend: { position: 'bottom' },
         title: { display: true, text: 'Fuel Consumption vs Load (L/hr)', font: { size: 14 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} L/hr`,
+          },
+        },
       },
       scales: {
         y: { title: { display: true, text: 'Fuel Consumption (L/hr)' } },
@@ -150,6 +199,14 @@ async function renderFuelCurveChart(genIds) {
       },
     },
   });
+
+  // Show optimal load points
+  const optimalEl = document.getElementById('optimal-load-info');
+  if (optimalEl) {
+    optimalEl.innerHTML = curves.map((c, i) =>
+      `<span style="color:${CHART_COLORS[i]}">&#9632;</span> ${c.oem} ${c.model}: best efficiency at <strong>${c.optimal_load_pct}% load</strong> (${c.interpolated.find(p => p.load_pct === c.optimal_load_pct)?.kwh_per_liter?.toFixed(2) ?? '—'} kWh/L)`
+    ).join('<br>');
+  }
 }
 
 function showError(msg) {

@@ -177,11 +177,14 @@
             <div class="result-row"><span class="result-row__label">With BESS</span><span class="result-row__val" id="r-runtime-hybrid">—</span></div>
             <div class="result-row result-row--savings"><span class="result-row__label">Runtime reduction</span><span class="result-row__val" id="r-runtime-saved">—</span></div>
             <div class="result-row"><span class="result-row__label">BESS cycles used</span><span class="result-row__val" id="r-bess-cycles">—</span></div>
+            <div class="result-row"><span class="result-row__label">Generator starts (hybrid)</span><span class="result-row__val" id="r-gen-starts">—</span></div>
+            <div class="result-row result-row--savings"><span class="result-row__label">Start cycles avoided</span><span class="result-row__val" id="r-gen-starts-saved">—</span></div>
           </div>
         </div>
 
         <div class="chart-section">
           <h3>Hourly Fuel Consumption</h3>
+          <p style="font-size:var(--text-xs);color:var(--color-muted);margin-top:0">Green background = generator running in hybrid scenario.</p>
           <canvas id="results-chart" height="200" aria-label="Hourly fuel consumption comparison"></canvas>
         </div>
 
@@ -191,7 +194,7 @@
         </div>
 
         <p class="bess-meta">
-          Dispatch strategy: generator held at 75% load (optimal diesel efficiency). BESS charges on excess, discharges on shortfall. Generator turns off when BESS can cover load alone.
+          Dispatch strategy: generator held at 75% load (optimal diesel efficiency). BESS charges on excess, discharges on shortfall. Generator turns off when BESS SOC is above 65% and load has been below 30% for 2+ consecutive hours.
           CO₂e factor: 2.63 kg/L diesel (EPA GHG Factors Hub 2024).
           <a href="/methodology.html">Full methodology →</a>
         </p>

@@ -35,6 +35,10 @@ def run_simulation(req: SimulationRequest, db: Session = Depends(get_db)):
     if len(hourly_kw) != 24:
         raise HTTPException(status_code=422, detail="hourly_kw must have exactly 24 values")
 
+    # Merge user dispatch config with defaults
+    d = req.dispatch or {}
+    cfg = d if isinstance(d, dict) else d.model_dump()
+
     return hybrid_sim.simulate(
         gen_kw=gen.kw_rating,
         fuel_curve=gen.fuel_curve,
@@ -46,4 +50,10 @@ def run_simulation(req: SimulationRequest, db: Session = Depends(get_db)):
         hourly_kw=hourly_kw,
         fuel_price=req.fuel_price_per_liter,
         fuel_type=gen.fuel_type,
+        target_load_pct=cfg.get("target_load_pct", hybrid_sim.DEFAULT_TARGET_LOAD_PCT),
+        min_load_pct=cfg.get("min_load_pct", hybrid_sim.DEFAULT_MIN_LOAD_PCT),
+        soc_low_threshold=cfg.get("soc_low_threshold", hybrid_sim.DEFAULT_SOC_LOW_THRESHOLD),
+        soc_high_threshold=cfg.get("soc_high_threshold", hybrid_sim.DEFAULT_SOC_HIGH_THRESHOLD),
+        consec_low_before_stop=cfg.get("consec_low_before_stop", hybrid_sim.DEFAULT_CONSEC_LOW_BEFORE_STOP),
+        min_off_hours=cfg.get("min_off_hours", hybrid_sim.DEFAULT_MIN_OFF_HOURS),
     )

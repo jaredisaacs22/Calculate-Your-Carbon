@@ -66,12 +66,30 @@ async function saveLoadProfile({ name, sector, description, hourly_kw }) {
   });
 }
 
+/** Get interpolated fuel curve at 5% increments for a generator */
+async function getFuelCurve(id) {
+  return _fetch(`/generators/${id}/fuel-curve`);
+}
+
 /** Run hybrid simulation */
-async function runHybridSimulation({ generator_id, bess_id, load_profile_id, custom_hourly_kw, fuel_price_per_liter }) {
+async function runHybridSimulation({ generator_id, bess_id, load_profile_id, custom_hourly_kw, fuel_price_per_liter, dispatch }) {
   return _fetch('/hybrid/simulate', {
     method: 'POST',
-    body: JSON.stringify({ generator_id, bess_id, load_profile_id, custom_hourly_kw, fuel_price_per_liter }),
+    body: JSON.stringify({ generator_id, bess_id, load_profile_id, custom_hourly_kw, fuel_price_per_liter, dispatch }),
   });
+}
+
+/** Save a comparison session and return { session_uuid, ... } */
+async function saveComparison({ generator_ids, load_pct, fuel_price_per_liter }) {
+  return _fetch('/comparisons', {
+    method: 'POST',
+    body: JSON.stringify({ generator_ids, load_pct, fuel_price_per_liter }),
+  });
+}
+
+/** Load a saved comparison session by UUID */
+async function getComparison(uuid) {
+  return _fetch(`/comparisons/${uuid}`);
 }
 
 /** Get scraper status */

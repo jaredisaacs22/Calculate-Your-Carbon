@@ -1,3 +1,4 @@
+import numpy as np
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
@@ -50,6 +51,59 @@ def get_generator(gen_id: int, db: Session = Depends(get_db)):
     if not g or not g.is_active:
         raise HTTPException(status_code=404, detail="Generator not found")
     return g
+
+
+@router.get("/{gen_id}/fuel-curve")
+def get_fuel_curve(gen_id: int, db: Session = Depends(get_db)):
+    """
+    Return the generator's fuel curve with:
+    - raw OEM data points
+    - interpolated curve at every 5% load (0–100) for smooth chart rendering
+    - efficiency curve (kWh/L at each point)
+    - optimal load point (best kWh/L)
+    """
+    g = db.get(Generator, gen_id)
+    if not g or not g.is_active:
+        raise HTTPException(status_code=404, detail="Generator not found")
+    if not g.fuel_curve:
+        raise HTTPException(status_code=422, detail="Generator has no fuel curve data")
+
+    # Raw points
+    raw = [
+        {"load_pct": float(k), "consumption": float(v)}
+        for k, v in sorted(g.fuel_curve.items(), key=lambda x: float(x[0]))
+    ]
+
+    # Interpolated at 5% steps from 0 to 100
+    load_steps = list(range(0, 105, 5))
+    interpolated = []
+    for lp in load_steps:
+        fuel = interpolate_fuel_rate(float(lp), g.fuel_curve)
+        kw_out = g.kw_rating * (lp / 100.0)
+        efficiency = round(kw_out / fuel, 3) if fuel > 0 and lp > 0 else 0.0
+        interpolated.append({
+            "load_pct": lp,
+            "consumption": round(fuel, 3),
+            "kw_output": round(kw_out, 2),
+            "kwh_per_liter": efficiency,
+            "co2e_kg_per_hr": round(fuel * DIESEL_CO2E, 3),
+        })
+
+    # Find optimal load (best kWh/L, ignore 0% point)
+    best = max(interpolated[1:], key=lambda p: p["kwh_per_liter"])
+
+    return {
+        "generator_id": g.id,
+        "oem": g.oem,
+        "model": g.model,
+        "kw_rating": g.kw_rating,
+        "fuel_type": g.fuel_type,
+        "fuel_unit": "L/hr",
+        "raw_points": raw,
+        "interpolated_curve": interpolated,
+        "optimal_load_pct": best["load_pct"],
+        "optimal_kwh_per_liter": best["kwh_per_liter"],
+    }
 
 
 @router.post("/compare", response_model=CompareResponse)

@@ -177,14 +177,37 @@ function renderResults(r) {
   document.getElementById('r-runtime-hybrid').textContent   = r.hybrid.runtime_hours + ' hrs';
   document.getElementById('r-runtime-saved').textContent    = r.savings.runtime_reduction_hours + ' hrs saved';
   document.getElementById('r-bess-cycles').textContent = r.hybrid.bess_cycles + ' cycles';
+  document.getElementById('r-gen-starts').textContent = r.hybrid.gen_starts + (r.hybrid.gen_starts === 1 ? ' start' : ' starts');
+  const startsSaved = r.savings.gen_starts_reduction;
+  document.getElementById('r-gen-starts-saved').textContent = startsSaved > 0 ? startsSaved + ' fewer starts' : '0 (same)';
+  document.getElementById('r-gen-starts-saved').parentElement.style.display = startsSaved >= 0 ? '' : 'none';
 
   renderResultsCharts(r);
 }
 
+/** Chart.js plugin: shade chart area green where generator is running in hybrid */
+const genRunningPlugin = {
+  id: 'genRunningBg',
+  beforeDraw(chart, _args, opts) {
+    if (!opts.runningHours) return;
+    const { ctx, chartArea: area, scales } = chart;
+    if (!area) return;
+    const n = opts.runningHours.length;
+    const slotW = (area.right - area.left) / n;
+    ctx.save();
+    opts.runningHours.forEach((running, i) => {
+      if (!running) return;
+      ctx.fillStyle = 'rgba(45,106,79,0.10)';
+      ctx.fillRect(area.left + i * slotW, area.top, slotW, area.bottom - area.top);
+    });
+    ctx.restore();
+  },
+};
+
 function renderResultsCharts(r) {
   const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
 
-  // Fuel comparison chart
+  // Fuel comparison chart with generator-running background shading
   const ctx1 = document.getElementById('results-chart').getContext('2d');
   if (resultsChart) resultsChart.destroy();
   resultsChart = new Chart(ctx1, {
@@ -201,12 +224,14 @@ function renderResultsCharts(r) {
       plugins: {
         legend: { position: 'bottom' },
         title: { display: true, text: 'Hourly Fuel Consumption (L/hr)', font: { size: 14 } },
+        genRunningBg: { runningHours: r.hybrid.hourly_gen_running },
       },
       scales: {
         y: { min: 0, title: { display: true, text: 'L/hr' } },
         x: { title: { display: true, text: 'Hour of Day' } },
       },
     },
+    plugins: [genRunningPlugin],
   });
 
   // BESS SOC chart

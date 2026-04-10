@@ -5,9 +5,10 @@ from alembic import context
 
 from app.database import Base
 # Import all models so Alembic can detect them
-import app.models.generator  # noqa
-import app.models.bess        # noqa
-import app.models.load_profile  # noqa
+import app.models.generator          # noqa
+import app.models.bess               # noqa
+import app.models.load_profile       # noqa
+import app.models.comparison_session  # noqa
 
 config = context.config
 
