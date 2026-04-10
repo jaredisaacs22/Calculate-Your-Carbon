@@ -12,10 +12,13 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Playwright browsers
+# Install Playwright browsers (needed for OEM scrapers)
 RUN playwright install chromium --with-deps
 
 COPY . .
 
-# Run Alembic migrations then start server
-CMD ["sh", "-c", "alembic upgrade head && python seed_data.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+RUN chmod +x entrypoint.sh
+
+# PORT env var is set automatically by Render; defaults to 8000
+EXPOSE 8000
+CMD ["./entrypoint.sh"]

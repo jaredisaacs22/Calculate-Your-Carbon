@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: calculateyourcarbon-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/health
+    # Use "starter" ($7/mo) for always-on; "free" for testing (sleeps after 15 min)
+    plan: starter
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: carboncalc-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SCRAPER_USER_AGENT
+        value: "Mozilla/5.0 (compatible; CarbonCalcBot/1.0; +https://calculateyourcarbon.com)"
+    domains:
+      - api.calculateyourcarbon.com
+
+databases:
+  - name: carboncalc-db
+    databaseName: carboncalc
+    user: app
+    # Free tier: 90-day trial, then $7/mo. Upgrade to "starter" for production.
+    plan: free

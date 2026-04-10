@@ -1,0 +1,76 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/**"
+
+jobs:
+  lint-and-import:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies (no Playwright browsers in CI)
+        run: |
+          pip install --no-cache-dir -r requirements.txt
+          # Skip browser download — scrapers aren't tested in CI
+          python -m playwright install --dry-run 2>/dev/null || true
+
+      - name: Verify all app modules import cleanly
+        env:
+          DATABASE_URL: "postgresql://ci:ci@localhost/ci"
+        run: |
+          python -c "
+          import app.main
+          import app.calculators.fuel
+          import app.calculators.emissions
+          import app.calculators.hybrid_sim
+          print('All imports OK')
+          "
+
+      - name: Run calculator unit tests
+        run: |
+          python -c "
+          from app.calculators.fuel import interpolate_fuel_rate
+          from app.calculators.hybrid_sim import simulate
+
+          curve = {'25': 3.2, '50': 5.8, '75': 8.1, '100': 10.9}
+
+          # Fuel interpolation
+          assert abs(interpolate_fuel_rate(50, curve) - 5.8) < 0.01
+          assert abs(interpolate_fuel_rate(75, curve) - 8.1) < 0.01
+
+          # Hybrid simulation (no DB needed)
+          result = simulate(
+              gen_kw=100,
+              fuel_curve=curve,
+              capacity_kwh=200,
+              power_kw=50,
+              rte=0.92,
+              min_soc=0.20,
+              max_soc=0.95,
+              hourly_kw=[60]*24,
+              fuel_price=1.35,
+          )
+          assert result['savings']['fuel_liters'] >= 0
+          assert len(result['hybrid']['hourly_gen_running']) == 24
+          print('All calculator tests passed')
+          "

@@ -9,8 +9,8 @@
   ],
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://api.calculateyourcarbon.com/api/$1"
+      "source": "/api/:path*",
+      "destination": "https://api.calculateyourcarbon.com/api/:path*"
     }
   ]
 }
