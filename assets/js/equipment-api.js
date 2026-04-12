@@ -5,7 +5,16 @@
 
 const API_BASE = '/api';
 
-async function _fetch(path, options = {}) {
+// Render free tier cold-starts after ~15 min idle — retry up to 4x before giving up.
+const _MAX_RETRIES = 4;
+const _RETRY_DELAY_MS = 8000;
+
+function _sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function _fetch(path, options = {}, _attempt = 0) {
+  // Show warm-up notice on first retry
+  if (_attempt === 1) _showWarmingUp();
+
   let resp;
   try {
     resp = await fetch(API_BASE + path, {
@@ -13,14 +22,43 @@ async function _fetch(path, options = {}) {
       ...options,
     });
   } catch (networkErr) {
+    if (_attempt < _MAX_RETRIES) {
+      await _sleep(_RETRY_DELAY_MS);
+      return _fetch(path, options, _attempt + 1);
+    }
+    _hideWarmingUp();
     _showApiOffline();
     throw new Error('API unavailable — backend not reachable');
   }
+
   if (!resp.ok) {
+    // 502/503/504 = server starting up — retry
+    if ([502, 503, 504].includes(resp.status) && _attempt < _MAX_RETRIES) {
+      if (_attempt === 0) _showWarmingUp();
+      await _sleep(_RETRY_DELAY_MS);
+      return _fetch(path, options, _attempt + 1);
+    }
+    _hideWarmingUp();
     const err = await resp.json().catch(() => ({ detail: resp.statusText }));
     throw new Error(err.detail || `HTTP ${resp.status}`);
   }
+
+  _hideWarmingUp();
   return resp.json();
+}
+
+function _showWarmingUp() {
+  if (document.getElementById('_api-warming-banner')) return;
+  const b = document.createElement('div');
+  b.id = '_api-warming-banner';
+  b.style.cssText = 'position:fixed;top:64px;left:0;right:0;z-index:9000;background:#856404;color:#fff;text-align:center;padding:10px 16px;font-size:14px;font-weight:600;letter-spacing:.02em';
+  b.innerHTML = 'Backend starting up — this takes ~30 seconds on first load. Retrying\u2026';
+  document.body.prepend(b);
+}
+
+function _hideWarmingUp() {
+  const b = document.getElementById('_api-warming-banner');
+  if (b) b.remove();
 }
 
 function _showApiOffline() {
@@ -28,7 +66,7 @@ function _showApiOffline() {
   const b = document.createElement('div');
   b.id = '_api-offline-banner';
   b.style.cssText = 'position:fixed;top:64px;left:0;right:0;z-index:9000;background:#BF3A2B;color:#fff;text-align:center;padding:10px 16px;font-size:14px;font-weight:600;letter-spacing:.02em';
-  b.innerHTML = 'API OFFLINE — Equipment tools require the backend server. <a href="/methodology.html" style="color:#fff;text-decoration:underline">Learn more</a>';
+  b.innerHTML = 'API OFFLINE — Could not reach backend after multiple retries. <a href="/methodology.html" style="color:#fff;text-decoration:underline">Learn more</a>';
   document.body.prepend(b);
 }
 
