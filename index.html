@@ -440,6 +440,9 @@
         hamburger.setAttribute('aria-expanded', 'false');
       }
     });
+
+    // Pre-warm the Render backend so Equipment pages load instantly
+    fetch('https://calculateyourcarbon-api.onrender.com/api/health', { mode: 'cors' }).catch(() => {});
   </script>
 </body>
 </html>

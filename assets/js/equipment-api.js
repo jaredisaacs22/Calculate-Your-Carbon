@@ -9,6 +9,10 @@ const API_BASE = 'https://calculateyourcarbon-api.onrender.com/api';
 const _MAX_RETRIES = 4;
 const _RETRY_DELAY_MS = 8000;
 
+// Pre-warm: fire a health ping immediately so the backend wakes up
+// while the user is still reading the page. Silently ignored if it fails.
+fetch(API_BASE + '/health', { mode: 'cors' }).catch(() => {});
+
 function _sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function _fetch(path, options = {}, _attempt = 0) {
