@@ -3,7 +3,7 @@
  * Talks to FastAPI backend at /api/*
  */
 
-const API_BASE = '/api';
+const API_BASE = 'https://calculateyourcarbon-api.onrender.com/api';
 
 // Render free tier cold-starts after ~15 min idle — retry up to 4x before giving up.
 const _MAX_RETRIES = 4;

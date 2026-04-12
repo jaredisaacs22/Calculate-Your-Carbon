@@ -7,10 +7,5 @@
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, immutable" }]
     }
   ],
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://calculateyourcarbon-api.onrender.com/api/:path*"
-    }
-  ]
+  "rewrites": []
 }
