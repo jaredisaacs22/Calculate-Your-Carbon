@@ -149,10 +149,15 @@ function renderResults(result) {
         <div><dt>Noise</dt><dd>${g.noise_db_at_7m ? g.noise_db_at_7m + ' dB(A)' : '—'}</dd></div>
         <div><dt>Emissions std</dt><dd>${g.emissions_standard || '—'}</dd></div>
       </dl>`;
-    if (g.generator_id === result.winner_by_efficiency) {
+    // winners may come from compare endpoint or results_cache
+    const winEff = result.winner_by_efficiency ??
+      result.generators.reduce((a, b) => a.g_co2e_per_kwh < b.g_co2e_per_kwh ? a : b).generator_id;
+    const winCost = result.winner_by_cost ??
+      result.generators.reduce((a, b) => a.cost_per_hour < b.cost_per_hour ? a : b).generator_id;
+    if (g.generator_id === winEff) {
       card.innerHTML += `<div class="compare-card__badge compare-card__badge--efficiency">Most efficient</div>`;
     }
-    if (g.generator_id === result.winner_by_cost) {
+    if (g.generator_id === winCost) {
       card.innerHTML += `<div class="compare-card__badge compare-card__badge--cost">Lowest cost</div>`;
     }
     cardsEl.appendChild(card);

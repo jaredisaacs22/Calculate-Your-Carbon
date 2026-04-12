@@ -55,3 +55,5 @@ class CompareResponse(BaseModel):
     load_pct: float
     fuel_price_per_liter: float
     generators: list[GeneratorMetrics]
+    winner_by_efficiency: int   # generator_id with best g_co2e_per_kwh
+    winner_by_cost: int         # generator_id with lowest cost_per_hour

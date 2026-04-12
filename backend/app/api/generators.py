@@ -83,7 +83,7 @@ def get_fuel_curve(gen_id: int, db: Session = Depends(get_db)):
         efficiency = round(kw_out / fuel, 3) if fuel > 0 and lp > 0 else 0.0
         interpolated.append({
             "load_pct": lp,
-            "consumption": round(fuel, 3),
+            "consumption_l_hr": round(fuel, 3),
             "kw_output": round(kw_out, 2),
             "kwh_per_liter": efficiency,
             "co2e_kg_per_hr": round(fuel * DIESEL_CO2E, 3),
@@ -100,7 +100,7 @@ def get_fuel_curve(gen_id: int, db: Session = Depends(get_db)):
         "fuel_type": g.fuel_type,
         "fuel_unit": "L/hr",
         "raw_points": raw,
-        "interpolated_curve": interpolated,
+        "interpolated": interpolated,
         "optimal_load_pct": best["load_pct"],
         "optimal_kwh_per_liter": best["kwh_per_liter"],
     }
@@ -142,4 +142,6 @@ def compare_generators(req: CompareRequest, db: Session = Depends(get_db)):
         load_pct=req.load_pct,
         fuel_price_per_liter=req.fuel_price_per_liter,
         generators=results,
+        winner_by_efficiency=min(results, key=lambda g: g.g_co2e_per_kwh).generator_id,
+        winner_by_cost=min(results, key=lambda g: g.cost_per_hour).generator_id,
     )
