@@ -10,7 +10,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://api.calculateyourcarbon.com/api/:path*"
+      "destination": "https://calculate-your-carbon.onrender.com/api/:path*"
     }
   ]
 }
