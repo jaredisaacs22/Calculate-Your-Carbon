@@ -1,6 +1,7 @@
 """
 Base scraper — shared fetch helpers used by all OEM scrapers.
 Uses httpx for static pages and Playwright for JS-rendered pages.
+Playwright is optional — only installed when ENABLE_SCRAPERS=true.
 """
 import asyncio
 import re
@@ -8,6 +9,12 @@ import time
 from typing import Optional
 import httpx
 from bs4 import BeautifulSoup
+
+try:
+    from playwright.async_api import async_playwright
+    PLAYWRIGHT_AVAILABLE = True
+except ImportError:
+    PLAYWRIGHT_AVAILABLE = False
 
 DEFAULT_UA = "Mozilla/5.0 (compatible; CarbonCalcBot/1.0; +https://calculateyourcarbon.com)"
 REQUEST_DELAY = 2.0   # seconds between requests (polite crawling)

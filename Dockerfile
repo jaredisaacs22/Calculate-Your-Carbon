@@ -1,5 +1,6 @@
-# Root-level Dockerfile — delegates to backend/
-# Render Web Service uses this when Root Directory is not set to backend/
+# Root-level Dockerfile for Render
+# Playwright/Chromium excluded from default build to fit free-tier build limits.
+# Scrapers use ENABLE_SCRAPERS=true env var to lazy-install at runtime if needed.
 FROM python:3.12-slim
 
 WORKDIR /app
@@ -9,9 +10,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY backend/requirements.txt .
+# Install everything except playwright browser binaries
 RUN pip install --no-cache-dir -r requirements.txt
-
-RUN playwright install chromium --with-deps
 
 COPY backend/ .
 
