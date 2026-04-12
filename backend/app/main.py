@@ -18,11 +18,16 @@ app = FastAPI(
     version="1.1.0",
 )
 
+import os
+_raw = os.getenv("CORS_ORIGINS", "*")
+_origins = [o.strip() for o in _raw.split(",")] if _raw != "*" else ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # Tighten in production to your domain
+    allow_origins=_origins,
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True,
 )
 
 app.include_router(generators.router,   prefix="/api/generators",    tags=["Generators"])

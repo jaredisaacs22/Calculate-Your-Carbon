@@ -6,15 +6,30 @@
 const API_BASE = '/api';
 
 async function _fetch(path, options = {}) {
-  const resp = await fetch(API_BASE + path, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-    ...options,
-  });
+  let resp;
+  try {
+    resp = await fetch(API_BASE + path, {
+      headers: { 'Content-Type': 'application/json', ...options.headers },
+      ...options,
+    });
+  } catch (networkErr) {
+    _showApiOffline();
+    throw new Error('API unavailable — backend not reachable');
+  }
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({ detail: resp.statusText }));
     throw new Error(err.detail || `HTTP ${resp.status}`);
   }
   return resp.json();
+}
+
+function _showApiOffline() {
+  if (document.getElementById('_api-offline-banner')) return;
+  const b = document.createElement('div');
+  b.id = '_api-offline-banner';
+  b.style.cssText = 'position:fixed;top:64px;left:0;right:0;z-index:9000;background:#BF3A2B;color:#fff;text-align:center;padding:10px 16px;font-size:14px;font-weight:600;letter-spacing:.02em';
+  b.innerHTML = 'API OFFLINE — Equipment tools require the backend server. <a href="/methodology.html" style="color:#fff;text-decoration:underline">Learn more</a>';
+  document.body.prepend(b);
 }
 
 /** List generators with optional filters { oem, fuel_type, min_kw, max_kw } */

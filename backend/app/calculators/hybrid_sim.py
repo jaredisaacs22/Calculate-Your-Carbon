@@ -156,18 +156,29 @@ def _hybrid(
             runtime   += 1.0
             load_pcts.append(100.0)
         else:
-            # Gen at target load; BESS absorbs excess or covers shortfall
-            fuel   = interpolate_fuel_rate(target_load_pct, fuel_curve)
-            delta  = opt_kw - demand
+            # Gen running, demand within gen capacity
+            delta = opt_kw - demand   # positive → gen over-produces at target load
             if delta >= 0:
-                charge   = min(delta * rte, max_kwh - soc_kwh, power_kw * rte)
-                soc_kwh += charge
+                # Gen would over-produce; charge BESS with the surplus
+                can_charge = min(delta * rte, max_kwh - soc_kwh, power_kw * rte)
+                if can_charge > 0:
+                    # BESS absorbs surplus → hold generator at optimal target
+                    fuel = interpolate_fuel_rate(target_load_pct, fuel_curve)
+                    soc_kwh += can_charge
+                    load_pcts.append(target_load_pct)
+                else:
+                    # BESS full — throttle generator down to match demand exactly
+                    effective_pct = max(25.0, min(100.0, (demand / gen_kw) * 100.0))
+                    fuel = interpolate_fuel_rate(effective_pct, fuel_curve)
+                    load_pcts.append(effective_pct)
             else:
-                discharge       = min(abs(delta) / rte, available_discharge)
-                soc_kwh        -= discharge
+                # demand > opt_kw but still within gen capacity; BESS covers gap
+                fuel = interpolate_fuel_rate(target_load_pct, fuel_curve)
+                discharge = min(abs(delta) / rte, available_discharge)
+                soc_kwh -= discharge
                 total_discharge += discharge
+                load_pcts.append(target_load_pct)
             runtime += 1.0
-            load_pcts.append(target_load_pct)
 
         # Clamp SOC
         soc_kwh = max(min_kwh, min(max_kwh, soc_kwh))
