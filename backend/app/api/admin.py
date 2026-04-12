@@ -78,6 +78,45 @@ def scrape_status():
     return _scrape_status
 
 
+@router.get("/db-status")
+def db_status(db: Session = Depends(get_db)):
+    """Check what tables exist and row counts."""
+    from app.models.bess import BESSSystem
+    from app.models.load_profile import LoadProfile
+    try:
+        gen_count = db.query(Generator).count()
+        bess_count = db.query(BESSSystem).count()
+        lp_count = db.query(LoadProfile).count()
+        return {
+            "generators": gen_count,
+            "bess_systems": bess_count,
+            "load_profiles": lp_count,
+            "status": "connected",
+        }
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
+
+
+@router.post("/seed")
+def trigger_seed(db: Session = Depends(get_db)):
+    """Manually trigger the seed script."""
+    import sys, os
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+    try:
+        from seed_data import seed
+        seed()
+        from app.models.bess import BESSSystem
+        from app.models.load_profile import LoadProfile
+        return {
+            "status": "success",
+            "generators": db.query(Generator).count(),
+            "bess_systems": db.query(BESSSystem).count(),
+            "load_profiles": db.query(LoadProfile).count(),
+        }
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
+
+
 @router.post("/scrape/{oem}")
 def trigger_scrape(oem: str, background_tasks: BackgroundTasks):
     if oem not in SCRAPER_MAP:
