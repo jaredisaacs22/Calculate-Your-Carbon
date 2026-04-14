@@ -1,32 +1,41 @@
 /**
  * compare.js — Generator Comparison Tool
- * Calls GET /api/generators, GET /api/generators/{id}/fuel-curve,
- *        POST /api/comparisons, GET /api/comparisons/{uuid}
  */
 
 let allGenerators = [];
 let fuelCurveChart = null;
-
 const CHART_COLORS = ['#2D6A4F', '#E76F51', '#3A86FF', '#8338EC'];
 
 async function init() {
+  setDropdownLoading(true);
   try {
     allGenerators = await getGenerators();
     populateDropdowns();
     await restoreFromURL();
   } catch (e) {
-    showError('Could not load generator data. Is the API running? ' + e.message);
+    showError('Could not load generator list. The API may be starting up — please refresh in 30 seconds.');
+  } finally {
+    setDropdownLoading(false);
   }
+}
+
+function setDropdownLoading(on) {
+  document.querySelectorAll('.gen-select').forEach(sel => {
+    sel.disabled = on;
+    if (on) {
+      sel.innerHTML = '<option>Loading generators…</option>';
+    }
+  });
 }
 
 function populateDropdowns() {
   const selects = document.querySelectorAll('.gen-select');
-  selects.forEach(sel => {
-    // Group by OEM
+  selects.forEach((sel, idx) => {
+    sel.innerHTML = idx === 0 || idx === 1
+      ? '<option value="">— Select generator —</option>'
+      : '<option value="">— Optional —</option>';
     const byOEM = {};
-    allGenerators.forEach(g => {
-      (byOEM[g.oem] = byOEM[g.oem] || []).push(g);
-    });
+    allGenerators.forEach(g => { (byOEM[g.oem] = byOEM[g.oem] || []).push(g); });
     Object.entries(byOEM).forEach(([oem, gens]) => {
       const group = document.createElement('optgroup');
       group.label = oem;
@@ -43,29 +52,23 @@ function populateDropdowns() {
 
 async function restoreFromURL() {
   const params = new URLSearchParams(location.search);
-
-  // Restore from a saved comparison session UUID
   if (params.get('session')) {
     try {
       const session = await getComparison(params.get('session'));
       const ids = session.generator_ids;
-      const selects = document.querySelectorAll('.gen-select');
-      selects.forEach((sel, i) => { if (ids[i]) sel.value = ids[i]; });
+      document.querySelectorAll('.gen-select').forEach((sel, i) => { if (ids[i]) sel.value = ids[i]; });
       document.getElementById('load-slider').value = session.load_pct;
       document.getElementById('fuel-price').value = session.fuel_price_per_liter;
       updateLoadDisplay();
-      renderResults(session.results_cache);
+      if (session.results_cache) renderResults(session.results_cache);
       return;
-    } catch (e) {
-      showError('Could not restore saved session: ' + e.message);
-    }
+    } catch (e) { /* session expired — fall through */ }
   }
-
-  // Fallback: restore from plain query params (legacy shareable URL)
   if (params.get('ids')) {
-    const ids = params.get('ids').split(',');
-    const selects = document.querySelectorAll('.gen-select');
-    selects.forEach((sel, i) => { if (ids[i]) sel.value = ids[i]; });
+    params.get('ids').split(',').forEach((id, i) => {
+      const sel = document.querySelectorAll('.gen-select')[i];
+      if (sel) sel.value = id;
+    });
   }
   if (params.get('load')) document.getElementById('load-slider').value = params.get('load');
   if (params.get('fuel')) document.getElementById('fuel-price').value = params.get('fuel');
@@ -73,31 +76,26 @@ async function restoreFromURL() {
 }
 
 function updateLoadDisplay() {
-  const v = document.getElementById('load-slider').value;
-  document.getElementById('load-display').textContent = v + '%';
+  document.getElementById('load-display').textContent = document.getElementById('load-slider').value + '%';
 }
 
 async function runComparison() {
-  const selects = [...document.querySelectorAll('.gen-select')];
-  const ids = selects.map(s => parseInt(s.value)).filter(v => !isNaN(v));
-  if (ids.length < 2) {
-    showError('Select at least 2 generators to compare.');
-    return;
-  }
+  const ids = [...document.querySelectorAll('.gen-select')]
+    .map(s => parseInt(s.value)).filter(v => !isNaN(v));
+  if (ids.length < 2) { showError('Select at least 2 generators to compare.'); return; }
 
   const loadPct = parseFloat(document.getElementById('load-slider').value);
   const fuelPrice = parseFloat(document.getElementById('fuel-price').value) || 1.35;
 
   setLoading(true);
   try {
-    // Run comparison + persist session in parallel
-    const [result, session] = await Promise.all([
-      compareGenerators(ids, loadPct, fuelPrice),
-      saveComparison({ generator_ids: ids, load_pct: loadPct, fuel_price_per_liter: fuelPrice }),
-    ]);
-
+    const result = await compareGenerators(ids, loadPct, fuelPrice);
     renderResults(result);
-    setShareURL(session.session_uuid);
+
+    // Save session in background — don't let it block or break comparison display
+    saveComparison({ generator_ids: ids, load_pct: loadPct, fuel_price_per_liter: fuelPrice })
+      .then(session => session?.session_uuid && setShareURL(session.session_uuid))
+      .catch(() => {}); // non-fatal
   } catch (e) {
     showError('Comparison failed: ' + e.message);
   } finally {
@@ -107,33 +105,34 @@ async function runComparison() {
 
 function setShareURL(uuid) {
   const url = new URL(location);
-  // Remove old params, use session UUID instead
   url.searchParams.delete('ids');
   url.searchParams.delete('load');
   url.searchParams.delete('fuel');
   url.searchParams.set('session', uuid);
   history.replaceState(null, '', url);
-
-  const shareBtn = document.getElementById('share-btn');
-  if (shareBtn) {
-    shareBtn.hidden = false;
-    shareBtn.onclick = () => {
-      navigator.clipboard.writeText(url.toString()).then(() => {
-        shareBtn.textContent = 'Copied!';
-        setTimeout(() => { shareBtn.textContent = 'Copy link'; }, 2000);
-      });
-    };
+  const btn = document.getElementById('share-btn');
+  if (btn) {
+    btn.hidden = false;
+    btn.onclick = () => navigator.clipboard.writeText(url.toString()).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy link'; }, 2000);
+    });
   }
 }
 
 function renderResults(result) {
-  const container = document.getElementById('results');
-  container.hidden = false;
-
-  // Cards
+  document.getElementById('results').hidden = false;
   const cardsEl = document.getElementById('result-cards');
   cardsEl.innerHTML = '';
   result.generators.forEach((g, i) => {
+    const winEff = result.winner_by_efficiency ??
+      result.generators.reduce((a, b) => a.g_co2e_per_kwh < b.g_co2e_per_kwh ? a : b).generator_id;
+    const winCost = result.winner_by_cost ??
+      result.generators.reduce((a, b) => a.cost_per_hour < b.cost_per_hour ? a : b).generator_id;
+    const badges = [
+      g.generator_id === winEff ? '<div class="compare-card__badge compare-card__badge--efficiency">Most efficient</div>' : '',
+      g.generator_id === winCost ? '<div class="compare-card__badge compare-card__badge--cost">Lowest cost</div>' : '',
+    ].join('');
     const card = document.createElement('div');
     card.className = 'compare-card';
     card.style.borderTopColor = CHART_COLORS[i];
@@ -148,77 +147,55 @@ function renderResults(result) {
         <div><dt>gCO₂e/kWh</dt><dd>${g.g_co2e_per_kwh} g</dd></div>
         <div><dt>Noise</dt><dd>${g.noise_db_at_7m ? g.noise_db_at_7m + ' dB(A)' : '—'}</dd></div>
         <div><dt>Emissions std</dt><dd>${g.emissions_standard || '—'}</dd></div>
-      </dl>`;
-    // winners may come from compare endpoint or results_cache
-    const winEff = result.winner_by_efficiency ??
-      result.generators.reduce((a, b) => a.g_co2e_per_kwh < b.g_co2e_per_kwh ? a : b).generator_id;
-    const winCost = result.winner_by_cost ??
-      result.generators.reduce((a, b) => a.cost_per_hour < b.cost_per_hour ? a : b).generator_id;
-    if (g.generator_id === winEff) {
-      card.innerHTML += `<div class="compare-card__badge compare-card__badge--efficiency">Most efficient</div>`;
-    }
-    if (g.generator_id === winCost) {
-      card.innerHTML += `<div class="compare-card__badge compare-card__badge--cost">Lowest cost</div>`;
-    }
+      </dl>${badges}`;
     cardsEl.appendChild(card);
   });
-
-  // Fuel curve chart — uses smooth interpolated endpoint
   renderFuelCurveChart(result.generators.map(g => g.generator_id));
 }
 
 async function renderFuelCurveChart(genIds) {
-  // Fetch interpolated fuel curves (21 points at 5% increments) in parallel
-  const curves = await Promise.all(genIds.map(id => getFuelCurve(id)));
-
-  const labels = curves[0].interpolated.map(pt => pt.load_pct + '%');
-  const datasets = curves.map((curve, i) => ({
-    label: `${curve.oem} ${curve.model}`,
-    data: curve.interpolated.map(pt => pt.consumption_l_hr),
-    borderColor: CHART_COLORS[i],
-    backgroundColor: CHART_COLORS[i] + '22',
-    tension: 0.3,
-    fill: false,
-    pointRadius: 2,
-  }));
-
-  const ctx = document.getElementById('fuel-curve-chart').getContext('2d');
-  if (fuelCurveChart) fuelCurveChart.destroy();
-  fuelCurveChart = new Chart(ctx, {
-    type: 'line',
-    data: { labels, datasets },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: 'bottom' },
-        title: { display: true, text: 'Fuel Consumption vs Load (L/hr)', font: { size: 14 } },
-        tooltip: {
-          callbacks: {
-            label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} L/hr`,
-          },
+  try {
+    const curves = await Promise.all(genIds.map(id => getFuelCurve(id)));
+    const labels = curves[0].interpolated.map(pt => pt.load_pct + '%');
+    const datasets = curves.map((curve, i) => ({
+      label: `${curve.oem} ${curve.model}`,
+      data: curve.interpolated.map(pt => pt.consumption_l_hr),
+      borderColor: CHART_COLORS[i],
+      backgroundColor: CHART_COLORS[i] + '22',
+      tension: 0.3, fill: false, pointRadius: 2,
+    }));
+    const ctx = document.getElementById('fuel-curve-chart').getContext('2d');
+    if (fuelCurveChart) fuelCurveChart.destroy();
+    fuelCurveChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' },
+          title: { display: true, text: 'Fuel Consumption vs Load (L/hr)', font: { size: 14 } },
+          tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} L/hr` } },
+        },
+        scales: {
+          y: { title: { display: true, text: 'Fuel (L/hr)' } },
+          x: { title: { display: true, text: 'Load' } },
         },
       },
-      scales: {
-        y: { title: { display: true, text: 'Fuel Consumption (L/hr)' } },
-        x: { title: { display: true, text: 'Load Point' } },
-      },
-    },
-  });
-
-  // Show optimal load points
-  const optimalEl = document.getElementById('optimal-load-info');
-  if (optimalEl) {
-    optimalEl.innerHTML = curves.map((c, i) =>
-      `<span style="color:${CHART_COLORS[i]}">&#9632;</span> ${c.oem} ${c.model}: best efficiency at <strong>${c.optimal_load_pct}% load</strong> (${c.interpolated.find(p => p.load_pct === c.optimal_load_pct)?.kwh_per_liter?.toFixed(2) ?? '—'} kWh/L)`
-    ).join('<br>');
-  }
+    });
+    const optEl = document.getElementById('optimal-load-info');
+    if (optEl) {
+      optEl.innerHTML = curves.map((c, i) =>
+        `<span style="color:${CHART_COLORS[i]}">&#9632;</span> ${c.oem} ${c.model}: best efficiency at <strong>${c.optimal_load_pct}% load</strong>`
+      ).join('<br>');
+    }
+  } catch (e) { /* chart is non-fatal */ }
 }
 
 function showError(msg) {
   const el = document.getElementById('error-msg');
   el.textContent = msg;
   el.hidden = false;
-  setTimeout(() => { el.hidden = true; }, 6000);
+  setTimeout(() => { el.hidden = true; }, 8000);
 }
 
 function setLoading(on) {
@@ -229,11 +206,8 @@ function setLoading(on) {
 
 document.addEventListener('DOMContentLoaded', () => {
   init();
-
   document.getElementById('load-slider').addEventListener('input', updateLoadDisplay);
   document.getElementById('compare-btn').addEventListener('click', runComparison);
-
-  // Mobile nav
   document.getElementById('hamburger')?.addEventListener('click', function () {
     document.getElementById('mobileNav').classList.toggle('is-open');
     this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'false' ? 'true' : 'false');
