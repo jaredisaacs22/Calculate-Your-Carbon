@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon Compare — Every machine has a number — calculateyourcarbon.com</title>
+  <meta name="description" content="Compare anything with an engine — diesel vs electric, buy vs rent. Cost per hour, CO2e, and break-even from OEM data and EPA factors.">
+  <link rel="canonical" href="https://calculateyourcarbon.com/compare/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+:root{
+  --paper:#f6f6f4;
+  --ink:#17181a;
+  --dark:#101114;
+  --dark-paper:#f4f4f1;
+  --amber:#cf9b56;
+  --amber:oklch(.72 .1 60);
+  --mono:'Spline Sans Mono',ui-monospace,monospace;
+  --disp:'Anton',sans-serif;
+  --body:'Archivo',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:#0c0d0f;font-family:var(--body);color:var(--ink)}
+button{font:inherit;border:none;background:none;cursor:pointer;color:inherit}
+a{color:inherit;text-decoration:none}
+
+.app{max-width:430px;margin:0 auto;min-height:100vh;min-height:100dvh;position:relative;background:var(--paper);box-shadow:0 0 60px rgba(0,0,0,.5)}
+.app.dark{background:var(--dark);color:var(--dark-paper)}
+
+/* ── Top bar ── */
+.bar{padding:20px 22px 0;display:flex;justify-content:space-between;align-items:center}
+.bar-word{font:600 10.5px var(--mono);letter-spacing:.22em;cursor:pointer}
+.bar-btn{font:600 10.5px var(--mono);letter-spacing:.1em;border:1px solid currentColor;border-radius:2px;padding:3px 7px;cursor:pointer;background:none;color:inherit}
+
+/* ── Poster hero ── */
+.hero{padding:26px 22px 0}
+.hero-h{font-family:var(--disp);font-size:clamp(52px,17vw,66px);line-height:.92;letter-spacing:.01em;text-transform:uppercase}
+.hero-h .outline{color:transparent;-webkit-text-stroke:2px var(--ink)}
+.hero-sub{display:flex;gap:14px;margin-top:16px;align-items:center}
+.hero-rule{width:44px;height:1px;background:var(--ink);flex:none}
+.hero-p{font-size:13.5px;line-height:1.45;color:rgba(23,24,26,.65);max-width:250px}
+
+/* ── Machine stripe block ── */
+.mstripe{margin:22px 0 0;position:relative;height:190px;background:repeating-linear-gradient(-45deg,#e9e9e5 0 10px,#f1f1ee 10px 20px)}
+.mstripe-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 11px var(--mono);color:rgba(23,24,26,.45);text-align:center;padding:0 30px}
+.mstripe-tag{position:absolute;left:22px;bottom:14px;font:600 10px var(--mono);letter-spacing:.14em;background:var(--ink);color:var(--paper);padding:4px 8px;max-width:calc(100% - 44px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── Marquee ── */
+.marq-wrap{overflow:hidden;background:var(--ink);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.marq{display:flex;gap:0;white-space:nowrap;animation:marq 14s linear infinite;width:max-content}
+.marq div{font-family:var(--disp);font-size:19px;letter-spacing:.04em;padding:8px 0;color:var(--paper)}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ── Spec strip ── */
+.specs{display:flex;justify-content:space-between;border-bottom:1px solid rgba(23,24,26,.15);padding-bottom:14px}
+.spec-v{font:700 17px var(--mono)}
+.spec-l{font:500 9.5px var(--mono);letter-spacing:.12em;color:rgba(23,24,26,.5);margin-top:3px}
+
+/* ── CTAs ── */
+.cta-row{display:flex;gap:10px}
+.cta{flex:1;height:48px;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:600;letter-spacing:.06em;cursor:pointer;text-transform:uppercase}
+.cta.fill{background:var(--ink);color:var(--paper)}
+.cta.ghost{border:1.5px solid var(--ink)}
+
+/* ── Section labels ── */
+.sec-l{font:600 9.5px var(--mono);letter-spacing:.22em;color:rgba(23,24,26,.45)}
+.sec-rule{display:flex;align-items:center;gap:12px;margin:22px 0 8px}
+.sec-rule .line{flex:1;height:1px;background:rgba(23,24,26,.2)}
+
+/* ── Lineup ── */
+.lu-head{padding:20px 22px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px solid var(--ink)}
+.lu-body{padding:20px 22px 140px}
+.lu-item{display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:8px;font-family:var(--disp);text-transform:uppercase;letter-spacing:.01em;user-select:none;-webkit-user-select:none}
+.lu-item:first-child{margin-top:0}
+.lu-name{transition:background .12s,color .12s}
+.lu-item.selA .lu-name{background:var(--ink);color:var(--amber);padding:0 8px}
+.lu-item.selB .lu-name{background:var(--amber);color:var(--ink);padding:0 8px}
+.lu-badge{font:700 11px var(--mono);border:1.5px solid var(--ink);border-radius:99px;padding:3px 8px;letter-spacing:.08em;flex:none}
+.lu-spec{font:500 10px var(--mono);color:rgba(23,24,26,.4);letter-spacing:.04em;margin:2px 0 0;font-family:var(--mono);text-transform:none}
+.lu-note{margin-top:24px;font:500 10.5px var(--mono);color:rgba(23,24,26,.45);line-height:1.6}
+.sz-1{font-size:44px;line-height:1.08}
+.sz-2{font-size:28px;line-height:1.16;color:rgba(23,24,26,.85)}
+.sz-3{font-size:22px;line-height:1.22;color:rgba(23,24,26,.7)}
+
+/* ── Sticky bottom CTA ── */
+.sticky-cta{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:430px;padding:14px 22px 28px;background:linear-gradient(to top,var(--paper) 66%,rgba(246,246,244,0));z-index:40}
+.sticky-btn{height:52px;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:space-between;padding:0 18px;cursor:pointer;width:100%}
+.sticky-btn[disabled]{background:rgba(23,24,26,.12);color:rgba(23,24,26,.45);cursor:default}
+.sticky-btn .t{font-family:var(--disp);font-size:16px;letter-spacing:.05em;text-transform:uppercase}
+.sticky-btn .a{font:700 16px var(--mono);color:var(--amber)}
+.sticky-btn[disabled] .a{color:inherit}
+
+/* ── Dial screen ── */
+.dial-body{padding:20px 22px 140px}
+.dial-h{font-family:var(--disp);font-size:44px;line-height:.96;text-transform:uppercase;margin-bottom:6px}
+.dial-sub{font-size:13px;line-height:1.45;color:rgba(23,24,26,.6);max-width:290px;margin-bottom:22px}
+.dial-row{padding:16px 0;border-bottom:1px solid rgba(23,24,26,.12)}
+.dial-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.dial-label{font-size:14px;font-weight:600;letter-spacing:.02em;text-transform:uppercase}
+.dial-val{font:700 15px var(--mono)}
+.dial-hint{font:500 10px var(--mono);color:rgba(23,24,26,.42);margin-bottom:6px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:rgba(23,24,26,.15)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-9px;background:var(--ink);border:none;border-radius:0;box-shadow:0 2px 6px rgba(0,0,0,.28);cursor:pointer}
+input[type=range]::-moz-range-track{height:4px;background:rgba(23,24,26,.15)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;background:var(--ink);border:none;border-radius:0;cursor:pointer}
+.mode-row{display:flex;gap:10px;margin-top:14px}
+.mode-btn{flex:1;height:46px;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:15px;letter-spacing:.05em;cursor:pointer;border:1.5px solid var(--ink);text-transform:uppercase}
+.mode-btn.on{background:var(--ink);color:var(--paper)}
+.src-block{margin-top:22px;background:var(--ink);color:rgba(246,246,244,.75);padding:15px 16px;font:500 10.5px var(--mono);line-height:1.7}
+.src-block .h{color:var(--amber);font-weight:700;letter-spacing:.14em}
+
+/* ── Results (dark) ── */
+.res-head{padding:20px 22px 0;display:flex;justify-content:space-between;align-items:center}
+.res-hl{font:600 10.5px var(--mono);letter-spacing:.22em;color:rgba(244,244,241,.55)}
+.res-live{font:600 10.5px var(--mono);letter-spacing:.1em;color:var(--amber)}
+.res-hero{padding:18px 22px 0;position:relative}
+.res-win{font-family:var(--disp);font-size:clamp(64px,21vw,84px);line-height:.9;text-transform:uppercase}
+.res-win .amber{color:var(--amber)}
+.res-badge{position:absolute;right:18px;top:26px;width:74px;height:74px;border-radius:99px;border:1.5px solid var(--amber);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(12deg);color:var(--amber)}
+.res-badge .v{font:700 16px var(--mono)}
+.res-badge .l{font:600 8.5px var(--mono);letter-spacing:.1em}
+.res-sub{font-size:13.5px;color:rgba(244,244,241,.6);margin-top:12px;max-width:280px;line-height:1.45}
+.tape{margin-top:20px;border-top:1px solid rgba(244,244,241,.14)}
+.tape-head{display:flex;padding:12px 22px;border-bottom:1px solid rgba(244,244,241,.14);align-items:center}
+.tape-name{flex:1;font-family:var(--disp);font-size:15px;letter-spacing:.03em;text-transform:uppercase;line-height:1.1}
+.tape-name.r{text-align:right}
+.tape-name.win{color:var(--amber)}
+.tape-mid{font:600 10px var(--mono);letter-spacing:.18em;color:rgba(244,244,241,.4);padding:0 8px}
+.tape-row{display:flex;padding:13px 22px;border-bottom:1px solid rgba(244,244,241,.09);align-items:baseline}
+.tape-row:last-child{border-bottom:none}
+.tape-v{flex:1;font:700 19px var(--mono)}
+.tape-v.r{text-align:right}
+.tape-v.win{color:var(--amber)}
+.tape-l{font:500 9.5px var(--mono);letter-spacing:.14em;color:rgba(244,244,241,.4);padding:0 6px;white-space:nowrap}
+.ticket{margin:8px 22px 0;border:1.5px dashed rgba(244,244,241,.3);padding:15px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.ticket .k{font:600 9.5px var(--mono);letter-spacing:.18em;color:rgba(244,244,241,.45)}
+.ticket .t{font-family:var(--disp);font-size:17px;margin-top:5px;letter-spacing:.02em;text-transform:uppercase}
+.ticket .a{font:700 20px var(--mono);color:var(--amber);flex:none}
+.res-ctas{padding:16px 22px 8px;display:flex;gap:10px}
+.res-cta{flex:1;height:48px;background:var(--amber);color:var(--dark);display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700;letter-spacing:.06em;cursor:pointer;text-transform:uppercase}
+.res-sq{width:48px;height:48px;border:1.5px solid rgba(244,244,241,.35);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;font-size:16px}
+.res-src{padding:14px 22px 40px;font:500 9.5px var(--mono);color:rgba(244,244,241,.35);line-height:1.7}
+.res-src a{color:rgba(244,244,241,.55);text-decoration:underline}
+
+/* ── Back chip ── */
+.back{display:inline-flex;align-items:center;gap:6px;font:600 10.5px var(--mono);letter-spacing:.14em;cursor:pointer;padding:4px 0}
+.dark .back{color:rgba(244,244,241,.55)}
+
+/* ── Menu overlay ── */
+.menu{position:fixed;inset:0;background:var(--ink);color:var(--paper);z-index:100;display:none;flex-direction:column;padding:20px 22px}
+.menu.open{display:flex}
+.menu-top{display:flex;justify-content:space-between;align-items:center}
+.menu-links{flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.menu-links a{font-family:var(--disp);font-size:40px;text-transform:uppercase;letter-spacing:.01em;line-height:1.15;color:var(--paper)}
+.menu-links a:hover{color:var(--amber)}
+.menu-foot{font:500 10px var(--mono);color:rgba(246,246,244,.4);line-height:1.7}
+.menu-foot a{color:rgba(246,246,244,.6);text-decoration:underline}
+
+/* ── Toast ── */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;background:var(--amber);color:var(--ink);font:700 11px var(--mono);letter-spacing:.1em;padding:9px 16px;z-index:200;display:none}
+.toast.show{display:block;animation:riseIn .3s ease}
+@keyframes riseIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+
+.screen{display:none;min-height:100vh;min-height:100dvh;flex-direction:column}
+.screen.on{display:flex}
+  </style>
+</head>
+<body>
+<div class="app" id="appRoot">
+
+  <!-- ═══ HOME ═══ -->
+  <div class="screen" id="scr-home">
+    <div class="bar">
+      <div class="bar-word" onclick="location.href='/'">CALCULATEYOURCARBON</div>
+      <button class="bar-btn" onclick="toggleMenu(true)">MENU</button>
+    </div>
+    <div class="hero">
+      <div class="hero-h">Every<br>machine<br>has a<br><span class="outline">number.</span></div>
+      <div class="hero-sub">
+        <div class="hero-rule"></div>
+        <div class="hero-p">Cost and CO₂e for anything with an engine — sourced from OEM sheets and EPA factors.</div>
+      </div>
+    </div>
+    <div class="mstripe">
+      <div class="mstripe-ph">[ machine hero — pick your fighters below ]</div>
+      <div class="mstripe-tag" id="heroTag">UNIT 001 — 20T EXCAVATOR</div>
+    </div>
+    <div class="marq-wrap">
+      <div class="marq">
+        <div id="marq1">DIESEL VS ELECTRIC&nbsp;✱&nbsp;BUY VS RENT&nbsp;✱&nbsp;</div>
+        <div id="marq2">DIESEL VS ELECTRIC&nbsp;✱&nbsp;BUY VS RENT&nbsp;✱&nbsp;</div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:18px 22px 34px;gap:16px">
+      <div class="specs" id="homeSpecs"></div>
+      <div class="cta-row">
+        <button class="cta fill" onclick="go('lineup')">COMPARE TWO</button>
+        <button class="cta ghost" onclick="go('results')">SEE A SAMPLE</button>
+      </div>
+      <div style="font:500 9px var(--mono);color:rgba(23,24,26,.4);line-height:1.6">ESTIMATES ONLY — NOT FOR REGULATORY OR FINANCIAL REPORTING. <a href="/legal.html" style="text-decoration:underline">LEGAL</a></div>
+    </div>
+  </div>
+
+  <!-- ═══ LINEUP ═══ -->
+  <div class="screen" id="scr-lineup">
+    <div class="bar">
+      <button class="back" onclick="go('home')">‹ BACK</button>
+      <button class="bar-btn" onclick="toggleMenu(true)">MENU</button>
+    </div>
+    <div class="lu-head">
+      <div style="font:600 10.5px var(--mono);letter-spacing:.22em">THE LINEUP — PICK TWO</div>
+      <div style="font:600 10.5px var(--mono);letter-spacing:.1em;color:rgba(23,24,26,.45)" id="luCount"></div>
+    </div>
+    <div class="lu-body" id="luBody"></div>
+    <div class="sticky-cta">
+      <button class="sticky-btn" id="luCta" onclick="lineupNext()">
+        <span class="t" id="luCtaText"></span><span class="a">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ DIAL IT IN ═══ -->
+  <div class="screen" id="scr-dial">
+    <div class="bar">
+      <button class="back" onclick="go('lineup')">‹ LINEUP</button>
+      <button class="bar-btn" onclick="toggleMenu(true)">MENU</button>
+    </div>
+    <div class="dial-body">
+      <div class="dial-h">Dial<br>it in.</div>
+      <div class="dial-sub">Pre-filled from OEM spec sheets, EPA emission factors and typical rates. Nudge anything that doesn't match your yard.</div>
+      <div id="dialRows"></div>
+      <div class="dial-row" style="border-bottom:none">
+        <div class="dial-label" style="margin-bottom:4px">Acquisition</div>
+        <div class="mode-row">
+          <button class="mode-btn" id="modeBuy" onclick="setMode('buy')">Buy &amp; own</button>
+          <button class="mode-btn" id="modeRent" onclick="setMode('rent')">Rent monthly</button>
+        </div>
+      </div>
+      <div class="src-block">
+        <span class="h">SOURCE TRAIL</span><br>
+        Duty-cycle burn from OEM published data · CO₂e from EPA GHG Emission Factors Hub · grid intensity from eGRID subregion averages. Third-party data — property of respective owners. Estimates only.
+      </div>
+    </div>
+    <div class="sticky-cta">
+      <button class="sticky-btn" onclick="go('results')">
+        <span class="t">RUN THE NUMBERS</span><span class="a">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ RESULTS ═══ -->
+  <div class="screen" id="scr-results">
+    <div class="res-head">
+      <button class="back" onclick="go('dial')">‹ DIALS</button>
+      <div class="res-live">● LIVE</div>
+    </div>
+    <div style="padding:8px 22px 0"><div class="res-hl" id="resNo">HEAD-TO-HEAD № 001</div></div>
+    <div class="res-hero">
+      <div class="res-win" id="resWin"></div>
+      <div class="res-badge" id="resBadge"><div class="v" id="beBadgeV"></div><div class="l" id="beBadgeL"></div></div>
+      <div class="res-sub" id="resSub"></div>
+    </div>
+    <div class="tape" id="tape"></div>
+    <div class="ticket" id="ticket" style="display:none">
+      <div>
+        <div class="k">ADMIT ONE — INCENTIVE CHECK</div>
+        <div class="t">Clean equipment vouchers · vary by state</div>
+      </div>
+      <div class="a">→</div>
+    </div>
+    <div class="res-ctas">
+      <button class="res-cta" onclick="go('lineup')">NEW MATCHUP</button>
+      <button class="res-sq" onclick="shareLink()" aria-label="Copy share link">↗</button>
+    </div>
+    <div class="res-src">
+      OEM published duty-cycle data · EPA GHG Emission Factors Hub · eGRID subregion intensity. All figures are modelled estimates — actual costs and emissions vary with conditions, utilization and equipment state. Not for regulatory, compliance or financial reporting. Brand and product names are property of their respective owners; no affiliation. <a href="/legal.html">Full legal disclaimer</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ MENU OVERLAY ═══ -->
+<div class="menu" id="menu">
+  <div class="menu-top">
+    <div class="bar-word">CALCULATEYOURCARBON</div>
+    <button class="bar-btn" onclick="toggleMenu(false)">CLOSE</button>
+  </div>
+  <div class="menu-links">
+    <a href="/">Home</a>
+    <a href="/compare/">Compare</a>
+    <a href="/calculate/quick.html">Quick Calc</a>
+    <a href="/calculate/annual.html">Annual Calc</a>
+    <a href="/equipment/">Equipment</a>
+    <a href="/explore.html">Explore</a>
+    <a href="/dashboard.html">Dashboard</a>
+  </div>
+  <div class="menu-foot">ESTIMATES ONLY · THIRD-PARTY DATA PROPERTY OF RESPECTIVE OWNERS · <a href="/legal.html">LEGAL DISCLAIMER</a></div>
+</div>
+
+<div class="toast" id="toast">LINK COPIED</div>
+
+<script>
+/* ── Emission factors: EPA GHG Factors Hub (kg CO2e per gal) + eGRID avg (kg/kWh) ── */
+const CO2 = { diesel: 10.21, gas: 8.887, elec: 0.386 };
+
+const CATALOG = [
+  { id: 'ex-d',  tag: 'EXC', cat: 'Earthmoving', name: '20t Diesel Excavator',    spec: 'Tier 4F diesel · 121 kW · 3.83 gal/hr', fuel: 'diesel', rate: 3.83,   unit: 'hr', maint: 12,   capex: 265000, life: 10000,  rent: 6200 },
+  { id: 'ex-e',  tag: 'EXC', cat: 'Earthmoving', name: '23t Electric Excavator',  spec: '264 kWh pack · 40 kWh/hr',              fuel: 'elec',   rate: 40,     unit: 'hr', maint: 6,    capex: 395000, life: 12000,  rent: 8900 },
+  { id: 'wl-d',  tag: 'LDR', cat: 'Earthmoving', name: '12t Wheel Loader',        spec: 'Tier 4F diesel · 2.70 gal/hr',          fuel: 'diesel', rate: 2.7,    unit: 'hr', maint: 9,    capex: 180000, life: 10000,  rent: 4300 },
+  { id: 'wl-e',  tag: 'LDR', cat: 'Earthmoving', name: 'Electric Wheel Loader',   spec: '282 kWh pack · 28 kWh/hr',              fuel: 'elec',   rate: 28,     unit: 'hr', maint: 5,    capex: 290000, life: 11000,  rent: 6600 },
+  { id: 'pu-g',  tag: 'PU',  cat: 'Vehicles',    name: 'Half-Ton Pickup V6',      spec: '20 mpg combined · 0.050 gal/mi',        fuel: 'gas',    rate: 0.05,   unit: 'mi', maint: 0.09, capex: 58000,  life: 200000, rent: 1150 },
+  { id: 'pu-e',  tag: 'PU',  cat: 'Vehicles',    name: 'Battery Pickup',          spec: '131 kWh pack · 0.48 kWh/mi',            fuel: 'elec',   rate: 0.48,   unit: 'mi', maint: 0.04, capex: 72000,  life: 200000, rent: 1490 },
+  { id: 'suv-h', tag: 'SUV', cat: 'Vehicles',    name: 'Hybrid Crew SUV',         spec: '38 mpg combined · 0.026 gal/mi',        fuel: 'gas',    rate: 0.0263, unit: 'mi', maint: 0.07, capex: 46000,  life: 200000, rent: 890 },
+  { id: 'gen-d', tag: 'GEN', cat: 'Power',       name: '45kW Towable Genset',     spec: 'Diesel · 2.9 gal/hr at 75% load',       fuel: 'diesel', rate: 2.9,    unit: 'hr', maint: 5,    capex: 32000,  life: 15000,  rent: 1250 }
+];
+
+const SECTIONS = [
+  { cat: 'Earthmoving', label: 'HEADLINERS — EARTHMOVING', cls: 'sz-1', first: true },
+  { cat: 'Vehicles',    label: 'ALSO APPEARING — VEHICLES', cls: 'sz-2' },
+  { cat: 'Power',       label: 'OPENING ACT — POWER',       cls: 'sz-3' }
+];
+
+const S = { screen: 'home', sel: ['ex-d', 'ex-e'], mode: 'buy', util: 1400, diesel: 4.15, elec: 0.14, gas: 3.45, matchNo: 1 };
+
+const usd = (n, d) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+const kfmt = (n) => n >= 1000000 ? '$' + (n / 1000000).toFixed(2) + 'M' : '$' + Math.round(n / 1000) + 'k';
+const F1 = (n) => n.toLocaleString('en-US', { maximumFractionDigits: 1 });
+const find = (id) => CATALOG.find((m) => m.id === id);
+
+function fuelWord(m) {
+  if (m.fuel === 'elec') return 'ELECTRIC';
+  if (/hybrid/i.test(m.name)) return 'HYBRID';
+  if (m.fuel === 'diesel') return 'DIESEL';
+  return 'GAS';
+}
+
+function calc(m) {
+  const price = m.fuel === 'diesel' ? S.diesel : m.fuel === 'gas' ? S.gas : S.elec;
+  const energy = m.rate * price;
+  const co2 = m.rate * CO2[m.fuel];
+  const util = m.unit === 'mi' ? S.util * 22 : S.util;
+  const own = S.mode === 'buy' ? m.capex / m.life : (m.rent * 12) / util;
+  const run = energy + m.maint;
+  const perUnit = run + own;
+  return { energy, co2, run, perUnit, yearCost: perUnit * util, yearCo2: co2 * util / 1000, util };
+}
+
+function pair() {
+  const A = find(S.sel[0]) || CATALOG[0];
+  const B = find(S.sel[1]) || CATALOG[1];
+  const ca = calc(A), cb = calc(B);
+  const cheaperB = cb.yearCost < ca.yearCost;
+  const W = cheaperB ? B : A, L = cheaperB ? A : B;
+  const cw = cheaperB ? cb : ca, cl = cheaperB ? ca : cb;
+
+  /* Break-even: winner costs more up front but less to run */
+  let beUnits = 0, beYrs = 0;
+  if (S.mode === 'buy') {
+    const runSave = cl.run - cw.run;
+    const capexGap = W.capex - L.capex;
+    if (runSave > 0 && capexGap > 0) {
+      beUnits = capexGap / runSave;
+      beYrs = beUnits / cw.util;
+    }
+  }
+  return { A, B, ca, cb, W, L, cw, cl, cheaperB, beUnits, beYrs };
+}
+
+/* ── Rendering ── */
+function go(screen) {
+  if (screen === 'results' || screen === 'dial') {
+    if (S.sel.length < 2) { go('lineup'); return; }
+  }
+  if (screen === 'results') S.matchNo++;
+  S.screen = screen;
+  render();
+  window.scrollTo(0, 0);
+}
+
+function render() {
+  document.querySelectorAll('.screen').forEach((el) => el.classList.remove('on'));
+  document.getElementById('scr-' + S.screen).classList.add('on');
+  document.getElementById('appRoot').classList.toggle('dark', S.screen === 'results');
+  if (S.screen === 'home') renderHome();
+  if (S.screen === 'lineup') renderLineup();
+  if (S.screen === 'dial') renderDial();
+  if (S.screen === 'results') renderResults();
+}
+
+function renderHome() {
+  const p = pair();
+  document.getElementById('heroTag').textContent = 'UNIT 001 — ' + p.A.name.toUpperCase();
+  const unit = p.A.unit.toUpperCase();
+  const beTxt = p.beYrs > 0 ? 'BREAK-EVEN ' + p.beYrs.toFixed(1) + ' YRS' : 'WINNER FROM DAY ONE';
+  const m = fuelWord(p.A) + ' VS ' + fuelWord(p.B) + '&nbsp;✱&nbsp;' + (S.mode === 'buy' ? 'BUY' : 'RENT') +
+    '&nbsp;✱&nbsp;' + F1(p.ca.co2) + ' KG/' + unit + ' VS ' + F1(p.cb.co2) + ' KG/' + unit +
+    '&nbsp;✱&nbsp;' + beTxt + '&nbsp;✱&nbsp;';
+  document.getElementById('marq1').innerHTML = m;
+  document.getElementById('marq2').innerHTML = m;
+  document.getElementById('homeSpecs').innerHTML =
+    '<div><div class="spec-v">' + usd(p.ca.perUnit, 2) + '</div><div class="spec-l">PER ' + unit + '</div></div>' +
+    '<div><div class="spec-v">' + F1(p.ca.co2) + ' kg</div><div class="spec-l">CO₂e / ' + unit + '</div></div>' +
+    '<div><div class="spec-v">' + (p.beYrs > 0 ? p.beYrs.toFixed(1) + ' yr' : 'DAY 1') + '</div><div class="spec-l">BREAK-EVEN</div></div>';
+}
+
+function renderLineup() {
+  document.getElementById('luCount').textContent = CATALOG.length + ' MODELS';
+  let html = '';
+  SECTIONS.forEach((sec) => {
+    html += sec.first
+      ? '<div class="sec-l" style="margin-bottom:8px">' + sec.label + '</div>'
+      : '<div class="sec-rule"><div class="sec-l">' + sec.label + '</div><div class="line"></div></div>';
+    CATALOG.filter((mm) => mm.cat === sec.cat)
+      .map((mm) => ({ m: mm, co2: calc(mm).yearCo2 }))
+      .sort((x, y) => y.co2 - x.co2)
+      .forEach(({ m }) => {
+        const i = S.sel.indexOf(m.id);
+        const selCls = i === 0 ? ' selA' : i === 1 ? ' selB' : '';
+        const badge = i >= 0 ? '<span class="lu-badge">' + (i === 0 ? 'A' : 'B') + '</span>' : '';
+        html += '<div class="lu-item ' + sec.cls + selCls + '" onclick="pick(\'' + m.id + '\')">' +
+          '<span class="lu-name">' + m.name + '</span>' + badge + '</div>';
+        if (i >= 0) html += '<div class="lu-spec">' + m.spec + '</div>';
+      });
+  });
+  html += '<div class="lu-note">✱ ORDER = ANNUAL CO₂e AT YOUR UTILIZATION.<br>THE HIGHER THE BILLING, THE MORE IT EMITS.</div>';
+  document.getElementById('luBody').innerHTML = html;
+
+  const btn = document.getElementById('luCta');
+  const txt = document.getElementById('luCtaText');
+  if (S.sel.length === 2) { btn.disabled = false; txt.textContent = 'A VS B — RUN THE NUMBERS'; }
+  else { btn.disabled = true; txt.textContent = 'PICK ' + (2 - S.sel.length) + ' MORE'; }
+}
+
+function pick(id) {
+  const at = S.sel.indexOf(id);
+  if (at >= 0) S.sel.splice(at, 1);
+  else if (S.sel.length < 2) S.sel.push(id);
+  else S.sel[1] = id;
+  renderLineup();
+}
+
+function lineupNext() { if (S.sel.length === 2) go('dial'); }
+
+const SLIDERS = [
+  { key: 'util',   label: 'Utilization', unitFn: () => S.util.toLocaleString() + ' hr/yr', hint: 'BILLABLE ENGINE HOURS · MILES SCALE AT 22×', min: 200, max: 3000, step: 50 },
+  { key: 'diesel', label: 'Diesel',      unitFn: () => usd(S.diesel, 2) + '/gal',          hint: 'DELIVERED TO YARD, INCL. FEES',              min: 2.5, max: 7,    step: 0.05 },
+  { key: 'elec',   label: 'Electricity', unitFn: () => '$' + S.elec.toFixed(2) + '/kWh',   hint: 'COMMERCIAL BLENDED RATE + DEMAND CHARGES',   min: 0.06, max: 0.4, step: 0.01 },
+  { key: 'gas',    label: 'Gasoline',    unitFn: () => usd(S.gas, 2) + '/gal',             hint: 'REGIONAL RETAIL AVERAGE',                    min: 2.5, max: 7,    step: 0.05 }
+];
+
+function renderDial() {
+  document.getElementById('dialRows').innerHTML = SLIDERS.map((s) =>
+    '<div class="dial-row">' +
+      '<div class="dial-top"><div class="dial-label">' + s.label + '</div><div class="dial-val">' + s.unitFn() + '</div></div>' +
+      '<div class="dial-hint">' + s.hint + '</div>' +
+      '<input type="range" min="' + s.min + '" max="' + s.max + '" step="' + s.step + '" value="' + S[s.key] + '" oninput="dial(\'' + s.key + '\',this)">' +
+    '</div>').join('');
+  document.getElementById('modeBuy').classList.toggle('on', S.mode === 'buy');
+  document.getElementById('modeRent').classList.toggle('on', S.mode === 'rent');
+}
+
+function dial(key, input) {
+  S[key] = parseFloat(input.value);
+  const s = SLIDERS.find((x) => x.key === key);
+  input.closest('.dial-row').querySelector('.dial-val').textContent = s.unitFn();
+}
+
+function setMode(m) { S.mode = m; renderDial(); }
+
+function renderResults() {
+  const p = pair();
+  const unit = p.A.unit.toUpperCase();
+  document.getElementById('resNo').textContent = 'HEAD-TO-HEAD № ' + String(S.matchNo).padStart(3, '0');
+
+  document.getElementById('resWin').innerHTML = fuelWord(p.W).replace(/^(.{4})/, '$1<wbr>') + '<br><span class="amber">wins.</span>';
+
+  const badgeV = document.getElementById('beBadgeV'), badgeL = document.getElementById('beBadgeL');
+  if (p.beYrs > 0) { badgeV.textContent = p.beYrs.toFixed(1); badgeL.textContent = 'YRS TO B/E'; }
+  else { badgeV.textContent = 'DAY 1'; badgeL.textContent = 'WINNER'; }
+
+  let sub;
+  const yrSave = Math.abs(Math.round(p.cl.yearCost - p.cw.yearCost));
+  if (S.mode === 'rent') {
+    sub = 'Renting — no capital to pay back. The ' + fuelWord(p.W).toLowerCase() + ' unit is ' + usd(yrSave) + '/yr cheaper all-in.';
+  } else if (p.beYrs > 0) {
+    const gap = p.W.capex - p.L.capex;
+    sub = 'Cheaper to run from ' + (p.A.unit === 'hr' ? 'hour' : 'mile') + ' one. The extra ' + kfmt(gap) + ' up front pays back at ' + (p.A.unit === 'hr' ? 'hour' : 'mile') + ' ' + Math.round(p.beUnits).toLocaleString() + '.';
+  } else {
+    sub = 'Cheaper to buy and cheaper to run — ' + usd(yrSave) + '/yr and ' + F1(p.cl.yearCo2 - p.cw.yearCo2) + ' t CO₂e saved every year.';
+  }
+  document.getElementById('resSub').textContent = sub;
+
+  const winA = !p.cheaperB, winB = p.cheaperB;
+  const row = (l, av, bv, aWin, bWin) =>
+    '<div class="tape-row"><div class="tape-v' + (aWin ? ' win' : '') + '">' + av + '</div>' +
+    '<div class="tape-l">' + l + '</div>' +
+    '<div class="tape-v r' + (bWin ? ' win' : '') + '">' + bv + '</div></div>';
+
+  document.getElementById('tape').innerHTML =
+    '<div class="tape-head">' +
+      '<div class="tape-name' + (winA ? ' win' : '') + '">' + p.A.name + '</div>' +
+      '<div class="tape-mid">TALE OF THE TAPE</div>' +
+      '<div class="tape-name r' + (winB ? ' win' : '') + '">' + p.B.name + '</div>' +
+    '</div>' +
+    row('COST / ' + unit, usd(p.ca.perUnit, 2), usd(p.cb.perUnit, 2), p.ca.perUnit <= p.cb.perUnit, p.cb.perUnit < p.ca.perUnit) +
+    row('CO₂e / ' + unit, F1(p.ca.co2) + ' kg', F1(p.cb.co2) + ' kg', p.ca.co2 <= p.cb.co2, p.cb.co2 < p.ca.co2) +
+    row('ANNUAL COST', kfmt(p.ca.yearCost), kfmt(p.cb.yearCost), winA, winB) +
+    row('10-YR TCO', kfmt(p.ca.yearCost * 10), kfmt(p.cb.yearCost * 10), winA, winB) +
+    row('10-YR CO₂e', Math.round(p.ca.yearCo2 * 10) + ' t', Math.round(p.cb.yearCo2 * 10) + ' t', p.ca.yearCo2 <= p.cb.yearCo2, p.cb.yearCo2 < p.ca.yearCo2);
+
+  document.getElementById('ticket').style.display = p.W.fuel === 'elec' ? 'flex' : 'none';
+}
+
+/* ── Share ── */
+function shareLink() {
+  const u = new URL(location.origin + '/compare/');
+  u.searchParams.set('a', S.sel[0]); u.searchParams.set('b', S.sel[1]);
+  u.searchParams.set('util', S.util); u.searchParams.set('mode', S.mode);
+  u.searchParams.set('d', S.diesel); u.searchParams.set('e', S.elec); u.searchParams.set('g', S.gas);
+  navigator.clipboard.writeText(u.toString()).then(() => {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }).catch(() => {});
+}
+
+function restoreFromURL() {
+  const q = new URLSearchParams(location.search);
+  if (q.get('a') && find(q.get('a'))) S.sel[0] = q.get('a');
+  if (q.get('b') && find(q.get('b'))) S.sel[1] = q.get('b');
+  if (q.get('util')) S.util = Math.max(200, Math.min(3000, parseFloat(q.get('util')) || S.util));
+  if (q.get('mode') === 'rent') S.mode = 'rent';
+  if (q.get('d')) S.diesel = Math.max(2.5, Math.min(7, parseFloat(q.get('d')) || S.diesel));
+  if (q.get('e')) S.elec = Math.max(0.06, Math.min(0.4, parseFloat(q.get('e')) || S.elec));
+  if (q.get('g')) S.gas = Math.max(2.5, Math.min(7, parseFloat(q.get('g')) || S.gas));
+  if (q.get('a') && q.get('b')) S.screen = 'results';
+}
+
+function toggleMenu(open) { document.getElementById('menu').classList.toggle('open', open); }
+
+restoreFromURL();
+render();
+</script>
+</body>
+</html>
