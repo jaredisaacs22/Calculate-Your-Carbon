@@ -24,203 +24,134 @@
   }
   </script>
   <style>
-    /* Homepage-specific */
+    /* ── Hero ── */
     .hero {
-      min-height: 100svh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      padding: var(--space-24) var(--space-6);
+      padding: var(--space-16) 0 0;
+      border-bottom: 1.5px solid var(--color-rule);
     }
-
-    .hero__bg {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .hero__content {
-      max-width: 720px;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero__h1 {
-      font-family: var(--font-heading);
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-      margin-bottom: var(--space-6);
-    }
-
-    .hero__sub {
-      font-size: var(--text-lg);
-      color: var(--color-muted);
-      font-weight: 300;
-      margin-bottom: var(--space-8);
-      line-height: 1.7;
-    }
-
-    .hero__ctas {
-      display: flex;
-      gap: var(--space-4);
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: var(--space-8);
-    }
-
-    .hero__stats {
-      display: flex;
-      gap: var(--space-4);
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .stat-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: var(--space-2) var(--space-4);
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: 100px;
-      font-size: var(--text-sm);
-      color: var(--color-muted);
-    }
-
-    .how-it-works__grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-8);
-    }
-
-    .how-step {
-      text-align: center;
-    }
-
-    .how-step__icon {
-      width: 56px;
-      height: 56px;
-      background: rgba(45,106,79,0.08);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.75rem;
-      margin: 0 auto var(--space-4);
-    }
-
-    .how-step h3 {
-      font-size: var(--text-lg);
-      font-weight: 600;
-      margin-bottom: var(--space-2);
-    }
-
-    .how-step p {
-      font-size: var(--text-sm);
-      color: var(--color-muted);
-      line-height: 1.7;
-    }
-
-    .entry-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-6);
-    }
-
-    .entry-card {
-      padding: var(--space-8);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-4);
-    }
-
-    .entry-card__icon {
-      font-size: 2rem;
-    }
-
-    .entry-card__title {
-      font-size: var(--text-xl);
-      font-weight: 600;
-    }
-
-    .entry-card__desc {
-      font-size: var(--text-sm);
-      color: var(--color-muted);
-      line-height: 1.6;
-      flex: 1;
-    }
-
-    .entry-card__arrow {
-      color: var(--color-accent);
-      font-size: var(--text-lg);
-      font-weight: 600;
-    }
-
-    .credibility-bar {
-      background: var(--color-surface);
-      border-top: 1px solid var(--color-border);
-      border-bottom: 1px solid var(--color-border);
-      padding: var(--space-6) 0;
-    }
-
-    .credibility-bar__inner {
+    .hero__inner {
       max-width: var(--max-width);
       margin: 0 auto;
-      padding: 0 var(--space-6);
-      text-align: center;
+      padding: 0 var(--space-6) var(--space-12);
     }
-
-    .credibility-bar__label {
-      font-size: var(--text-xs);
+    .hero__h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 11vw, 7rem);
+      line-height: .9;
+      letter-spacing: .01em;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--color-muted);
-      margin-bottom: var(--space-4);
+      max-width: 12ch;
     }
-
-    .credibility-pills {
+    .hero__h1 .outline {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--color-text);
+    }
+    .hero__lede {
       display: flex;
+      gap: var(--space-4);
+      align-items: flex-start;
+      margin-top: var(--space-6);
+    }
+    .hero__rule { width: 44px; height: 1px; background: var(--color-rule); flex: none; margin-top: 11px; }
+    .hero__sub { font-size: var(--text-base); line-height: 1.55; color: var(--color-muted); max-width: 46ch; }
+    .hero__ctas { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-8); }
+
+    /* ── Spec strip ── */
+    .spec-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--color-border);
+      margin-top: var(--space-12);
+    }
+    .spec {
+      padding: var(--space-5) var(--space-5) 0 0;
+      border-right: 1px solid var(--color-border);
+    }
+    .spec:last-child { border-right: none; }
+    .spec__v { font: 700 var(--text-xl)/1 var(--font-mono); letter-spacing: -.02em; }
+    .spec__l { font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--space-2); line-height: 1.45; }
+    .spec__s { font: 500 9.5px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--color-faint); margin-top: var(--space-2); }
+
+    /* ── Tool cards ── */
+    .tools { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1.5px solid var(--color-rule); }
+    .tool {
+      display: flex;
+      flex-direction: column;
       gap: var(--space-3);
-      justify-content: center;
-      flex-wrap: wrap;
+      padding: var(--space-6) var(--space-6) var(--space-8);
+      border-right: 1px solid var(--color-border);
+      transition: background .15s;
     }
+    .tool:last-child { border-right: none; }
+    .tool:hover { background: var(--color-surface); }
+    .tool:hover .tool__go { color: var(--color-accent-ink); }
+    .tool__idx { font: 600 10px/1 var(--font-mono); letter-spacing: .2em; color: var(--color-faint); }
+    .tool__t { font-family: var(--font-display); font-size: var(--text-2xl); text-transform: uppercase; line-height: 1; letter-spacing: .01em; }
+    .tool__d { font-size: var(--text-sm); color: var(--color-muted); line-height: 1.6; flex: 1; }
+    .tool__go { font: 700 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; transition: color .15s; }
 
-    .credibility-pill {
-      padding: var(--space-2) var(--space-4);
-      border: 1px solid var(--color-border);
-      border-radius: 100px;
-      font-size: var(--text-xs);
-      font-weight: 500;
+    /* ── Band ── */
+    .band { border-top: 1.5px solid var(--color-rule); }
+    .band__head {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: var(--space-12) var(--space-6) var(--space-8);
+    }
+    .band--dark { background: var(--color-rule); color: var(--color-dark-text); border-top: none; }
+    .band--dark .eyebrow { color: rgba(244,244,241,.45); }
+    .band--dark .tools { border-top-color: rgba(244,244,241,.2); }
+    .band--dark .tool { border-right-color: rgba(244,244,241,.14); }
+    .band--dark .tool:hover { background: rgba(244,244,241,.05); }
+    .band--dark .tool__idx { color: rgba(244,244,241,.4); }
+    .band--dark .tool__d { color: rgba(244,244,241,.6); }
+    .band--dark .tool:hover .tool__go { color: var(--color-accent); }
+
+    /* ── Steps ── */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
+    .step__n {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      line-height: 1;
+      color: var(--color-accent);
+      -webkit-text-stroke: 1px var(--color-text);
+    }
+    .step h3 { font-size: var(--text-base); margin: var(--space-3) 0 var(--space-2); }
+    .step p { font-size: var(--text-sm); color: var(--color-muted); line-height: 1.6; }
+
+    /* ── Sources ── */
+    .sources { border-top: 1.5px solid var(--color-rule); padding: var(--space-8) 0; }
+    .sources__inner { max-width: var(--max-width); margin: 0 auto; padding: 0 var(--space-6); }
+    .sources__list { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-4); }
+    .sources__list span {
+      font: 500 10px/1 var(--font-mono);
+      letter-spacing: .1em;
+      text-transform: uppercase;
       color: var(--color-muted);
-      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      padding: 7px 11px;
     }
 
-    @media (max-width: 768px) {
-      .how-it-works__grid,
-      .entry-cards {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 900px) {
+      .tools, .steps, .spec-strip { grid-template-columns: 1fr; }
+      .tool { border-right: none; border-bottom: 1px solid var(--color-border); }
+      .band--dark .tool { border-right: none; border-bottom-color: rgba(244,244,241,.14); }
+      .spec { border-right: none; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-5); }
+      .hero__h1 { -webkit-text-stroke-width: 1.5px; }
     }
   </style>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
 
-  <!-- Navigation -->
   <nav class="nav" aria-label="Main navigation">
     <div class="nav__inner">
       <a href="/" class="nav__logo" aria-label="calculateyourcarbon home">calculateyourcarbon</a>
       <div class="nav__links" role="list">
-        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick Calc</a>
-        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual Calc</a>
-        <a href="/equipment/" class="nav__link" role="listitem">Equipment</a>
-        <a href="/compare/" class="nav__link" role="listitem">Compare</a>
+        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick</a>
+        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual</a>
         <a href="/explore.html" class="nav__link" role="listitem">Explore</a>
+        <a href="/compare/" class="nav__link" role="listitem">Compare</a>
+        <a href="/equipment/" class="nav__link" role="listitem">Equipment</a>
         <a href="/dashboard.html" class="nav__link" role="listitem">Dashboard</a>
         <a href="/learn/" class="nav__link" role="listitem">Learn</a>
       </div>
@@ -230,58 +161,146 @@
     </div>
   </nav>
 
-  <!-- Mobile Nav -->
   <div class="nav__mobile-overlay" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation menu">
-    <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
-    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
-    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
-    <a href="/equipment/" class="nav__link">Equipment</a>
-    <a href="/compare/" class="nav__link">Compare</a>
+    <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">&#x2715;</button>
+    <a href="/calculate/quick.html" class="nav__link">Quick</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual</a>
     <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
     <a href="/dashboard.html" class="nav__link">Dashboard</a>
     <a href="/learn/" class="nav__link">Learn</a>
   </div>
 
   <main id="main">
-    <!-- Hero -->
+
+    <!-- ═══ HERO ═══ -->
     <section class="hero" aria-labelledby="hero-heading">
-      <!-- Subtle SVG background -->
-      <svg class="hero__bg" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g opacity="0.04">
-          <path d="M600 100 C500 200, 300 250, 200 400 C100 550, 150 700, 300 750 C450 800, 600 700, 700 600 C800 500, 900 450, 1000 300 C1100 150, 900 50, 800 80 C700 110, 650 80, 600 100Z" fill="#2D6A4F"/>
-          <circle cx="900" cy="600" r="120" fill="#52B788"/>
-          <circle cx="200" cy="200" r="80" fill="#2D6A4F"/>
-        </g>
-      </svg>
-
-      <div class="hero__content">
+      <div class="hero__inner">
         <p class="eyebrow">Know your impact. Change your future.</p>
-        <h1 class="hero__h1" id="hero-heading">Calculate Your<br>Carbon Footprint</h1>
-        <p class="hero__sub">Powered by EPA data and GHG Protocol methodology.<br>Accurate. Free. Takes 2 minutes or 20.</p>
-
+        <h1 class="hero__h1" id="hero-heading">Calculate your carbon <span class="outline">footprint.</span></h1>
+        <div class="hero__lede">
+          <div class="hero__rule" aria-hidden="true"></div>
+          <p class="hero__sub">Powered by EPA emission factors and GHG Protocol methodology. Free, sourced, and honest about its margins. Takes two minutes or twenty.</p>
+        </div>
         <div class="hero__ctas">
-          <a href="/calculate/quick.html" class="btn btn-primary btn-lg">Quick Calculation →</a>
-          <a href="/calculate/annual.html" class="btn btn-ghost btn-lg">Full Annual Estimate →</a>
+          <a href="/calculate/quick.html" class="btn btn-primary btn-lg">Quick calculation</a>
+          <a href="/calculate/annual.html" class="btn btn-ghost btn-lg">Full annual estimate</a>
         </div>
 
-        <div class="hero__stats" role="list" aria-label="Carbon footprint facts">
-          <div class="stat-pill" role="listitem">
-            🌎 <span>16 tons — Average American annual footprint</span>
-            <span class="source-tag">Source: EPA 2022</span>
+        <div class="spec-strip">
+          <div class="spec">
+            <div class="spec__v">16 t</div>
+            <div class="spec__l">Average American annual footprint</div>
+            <div class="spec__s">EPA 2022</div>
           </div>
-          <div class="stat-pill" role="listitem">
-            ✈️ <span>1 flight NYC→LA = ~1,040 lbs CO₂e</span>
-            <span class="source-tag">Source: ICAO</span>
+          <div class="spec">
+            <div class="spec__v">1,040 lb</div>
+            <div class="spec__l">CO₂e for one NYC→LA flight</div>
+            <div class="spec__s">ICAO</div>
           </div>
-          <div class="stat-pill" role="listitem">
-            🏠 <span>Home energy = 29% of US emissions</span>
-            <span class="source-tag">Source: EPA 2022</span>
+          <div class="spec">
+            <div class="spec__v">29%</div>
+            <div class="spec__l">Share of US emissions from home energy</div>
+            <div class="spec__s">EPA 2022</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Ad: Leaderboard below hero -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <div>Measure it&nbsp;✱&nbsp;Compare it&nbsp;✱&nbsp;Cut it&nbsp;✱&nbsp;Every machine has a number&nbsp;✱&nbsp;</div>
+        <div>Measure it&nbsp;✱&nbsp;Compare it&nbsp;✱&nbsp;Cut it&nbsp;✱&nbsp;Every machine has a number&nbsp;✱&nbsp;</div>
+      </div>
+    </div>
+
+    <!-- ═══ PERSONAL TOOLS ═══ -->
+    <section class="band" aria-labelledby="calc-heading">
+      <div class="band__head">
+        <p class="eyebrow">Personal</p>
+        <h2 class="section-heading" id="calc-heading">Choose your calculator</h2>
+        <p class="section-subheading">Different tools for different questions. All running on the same EPA-sourced factors.</p>
+      </div>
+      <div class="tools">
+        <a href="/calculate/quick.html" class="tool">
+          <span class="tool__idx">01 — Instant</span>
+          <span class="tool__t">Quick<br>Calculation</span>
+          <span class="tool__d">What's the footprint of one trip, meal, or purchase? An answer in under a minute.</span>
+          <span class="tool__go">Calculate →</span>
+        </a>
+        <a href="/calculate/annual.html" class="tool">
+          <span class="tool__idx">02 — Complete</span>
+          <span class="tool__t">Annual<br>Footprint</span>
+          <span class="tool__d">Your total for the year — a full multi-section estimate with a ranked action plan at the end.</span>
+          <span class="tool__go">Start estimate →</span>
+        </a>
+        <a href="/explore.html" class="tool">
+          <span class="tool__idx">03 — Side by side</span>
+          <span class="tool__t">Pre-Planning<br>Explorer</span>
+          <span class="tool__d">Drive or fly. Beef or chicken. Gas or electric. See the gap before you commit.</span>
+          <span class="tool__go">Compare options →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ═══ INDUSTRIAL TOOLS ═══ -->
+    <section class="band band--dark" aria-labelledby="equip-heading">
+      <div class="band__head">
+        <p class="eyebrow">Business &amp; Industrial</p>
+        <h2 class="section-heading" id="equip-heading">Anything with an engine</h2>
+        <p class="section-subheading" style="color:rgba(244,244,241,.6)">Generators, fleets, and heavy equipment — cost per hour, CO₂e per hour, and what a swap actually pays back.</p>
+      </div>
+      <div class="tools">
+        <a href="/compare/" class="tool">
+          <span class="tool__idx">01 — Head to head</span>
+          <span class="tool__t">Carbon<br>Compare</span>
+          <span class="tool__d">Diesel against electric, buy against rent. Cost, emissions, and break-even for two machines at a time.</span>
+          <span class="tool__go">Run a matchup →</span>
+        </a>
+        <a href="/equipment/offroad.html" class="tool">
+          <span class="tool__idx">02 — Off-road</span>
+          <span class="tool__t">Fuel &amp; Cost<br>Savings</span>
+          <span class="tool__d">Generator alone or generator plus battery. Scenario modelling for construction and rental fleets.</span>
+          <span class="tool__go">Model savings →</span>
+        </a>
+        <a href="/equipment/" class="tool">
+          <span class="tool__idx">03 — Full suite</span>
+          <span class="tool__t">Generator<br>&amp; BESS</span>
+          <span class="tool__d">Spec comparison, 24-hour hybrid dispatch, and load profile builder for sites and events.</span>
+          <span class="tool__go">Open equipment →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ═══ HOW IT WORKS ═══ -->
+    <section class="band" aria-labelledby="how-heading">
+      <div class="band__head">
+        <p class="eyebrow">The process</p>
+        <h2 class="section-heading" id="how-heading">How it works</h2>
+      </div>
+      <div class="container" style="padding-bottom:var(--space-16)">
+        <div class="steps">
+          <div class="step">
+            <div class="step__n" aria-hidden="true">01</div>
+            <h3>Answer a few questions</h3>
+            <p>Your home, travel, diet, and purchases. We handle the arithmetic using published EPA emission factors.</p>
+          </div>
+          <div class="step">
+            <div class="step__n" aria-hidden="true">02</div>
+            <h3>See your footprint</h3>
+            <p>A breakdown by category, measured against the US average of 16 tons CO₂e per year.</p>
+          </div>
+          <div class="step">
+            <div class="step__n" aria-hidden="true">03</div>
+            <h3>Take action</h3>
+            <p>Your highest-leverage changes, ranked by impact rather than guilt. Every ton counts the same.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ad -->
     <div class="container">
       <div class="ad-unit" aria-label="Advertisement">
         <p class="ad-label">Advertisement</p>
@@ -294,120 +313,29 @@
       </div>
     </div>
 
-    <!-- How It Works -->
-    <section class="section" aria-labelledby="how-heading">
-      <div class="container">
-        <div class="section-header text-center">
-          <p class="eyebrow">The process</p>
-          <h2 class="section-heading" id="how-heading">How It Works</h2>
-        </div>
-        <div class="how-it-works__grid">
-          <div class="how-step">
-            <div class="how-step__icon" aria-hidden="true">📋</div>
-            <h3>Answer a few questions</h3>
-            <p>Tell us about your home, travel, diet, and purchases. We handle all the math using real EPA emission factors.</p>
-          </div>
-          <div class="how-step">
-            <div class="how-step__icon" aria-hidden="true">📊</div>
-            <h3>See your footprint</h3>
-            <p>Get a detailed breakdown by category, compared against the US average of 16 tons CO₂e per year.</p>
-          </div>
-          <div class="how-step">
-            <div class="how-step__icon" aria-hidden="true">🎯</div>
-            <h3>Take action</h3>
-            <p>We show you your highest-leverage changes — ranked by impact, not guilt. Every ton saved matters.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Calculator Entry Cards -->
-    <section class="section-sm" style="background: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);" aria-labelledby="calc-heading">
-      <div class="container">
-        <div class="section-header text-center">
-          <h2 class="section-heading" id="calc-heading">Choose your calculator</h2>
-          <p class="section-subheading" style="margin: 0 auto;">Different tools for different needs. All powered by the same EPA-sourced data.</p>
-        </div>
-        <div class="entry-cards">
-          <a href="/calculate/quick.html" class="card card-hover entry-card" aria-label="Quick Calculation — single topic calculator">
-            <div class="entry-card__icon" aria-hidden="true">⚡</div>
-            <h3 class="entry-card__title">Quick Calculation</h3>
-            <p class="entry-card__desc">What's the footprint of one trip, meal, or purchase? Get an instant answer in under a minute.</p>
-            <span class="entry-card__arrow">→</span>
-          </a>
-          <a href="/calculate/annual.html" class="card card-hover entry-card" aria-label="Annual Footprint — comprehensive yearly calculator">
-            <div class="entry-card__icon" aria-hidden="true">📅</div>
-            <h3 class="entry-card__title">Annual Footprint</h3>
-            <p class="entry-card__desc">What's my total carbon footprint this year? A complete multi-section estimate with a personalized action plan.</p>
-            <span class="entry-card__arrow">→</span>
-          </a>
-          <a href="/explore.html" class="card card-hover entry-card" aria-label="Pre-Planning Explorer — compare two options side by side">
-            <div class="entry-card__icon" aria-hidden="true">🔀</div>
-            <h3 class="entry-card__title">Pre-Planning Explorer</h3>
-            <p class="entry-card__desc">Compare two options before you decide — drive vs. fly, beef vs. chicken, gas vs. electric. See the difference before you choose.</p>
-            <span class="entry-card__arrow">→</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Equipment & Industrial Section -->
-    <section class="section-sm" aria-labelledby="equip-heading">
-      <div class="container">
-        <div class="section-header text-center">
-          <p class="eyebrow">Equipment &amp; Industrial</p>
-          <h2 class="section-heading" id="equip-heading">Generator &amp; BESS Carbon Tools</h2>
-          <p class="section-subheading" style="margin: 0 auto;">Compare diesel generators, model BESS hybrid savings, and build load profiles for construction, events, telecom, and industrial sites.</p>
-        </div>
-        <div class="entry-cards">
-          <a href="/equipment/compare.html" class="card card-hover entry-card" aria-label="Generator Comparison Tool">
-            <div class="entry-card__icon" aria-hidden="true">⚡</div>
-            <div class="entry-card__body">
-              <h3 class="entry-card__title">Generator Comparison</h3>
-              <p class="entry-card__desc">Compare Atlas Copco, Aggreko, and Himoinsa generators side-by-side on fuel, cost, and CO₂e per kWh at any load point.</p>
-            </div>
-            <span class="entry-card__arrow">→</span>
-          </a>
-          <a href="/equipment/hybrid.html" class="card card-hover entry-card" aria-label="BESS + Generator Hybrid Modeler">
-            <div class="entry-card__icon" aria-hidden="true">🔋</div>
-            <div class="entry-card__body">
-              <h3 class="entry-card__title">BESS + Generator Hybrid</h3>
-              <p class="entry-card__desc">Model 24-hour fuel and emissions savings from pairing a battery energy storage system with a generator under a real load profile.</p>
-            </div>
-            <span class="entry-card__arrow">→</span>
-          </a>
-          <a href="/equipment/load-profiles.html" class="card card-hover entry-card" aria-label="Load Profile Builder">
-            <div class="entry-card__icon" aria-hidden="true">📊</div>
-            <div class="entry-card__body">
-              <h3 class="entry-card__title">Load Profile Builder</h3>
-              <p class="entry-card__desc">Browse preset profiles for construction, events, telecom, and industrial — or drag-and-draw your own 24-hour kW demand profile.</p>
-            </div>
-            <span class="entry-card__arrow">→</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Credibility Bar -->
-    <div class="credibility-bar" role="complementary" aria-label="Data sources">
-      <div class="credibility-bar__inner">
-        <p class="credibility-bar__label">Calculation data sourced from</p>
-        <div class="credibility-pills" role="list">
-          <span class="credibility-pill" role="listitem">EPA eGRID 2022</span>
-          <span class="credibility-pill" role="listitem">EPA GHG Factors Hub</span>
-          <span class="credibility-pill" role="listitem">GHG Protocol</span>
-          <span class="credibility-pill" role="listitem">IPCC AR6</span>
-          <span class="credibility-pill" role="listitem">ICAO</span>
-          <span class="credibility-pill" role="listitem">USDA</span>
-          <span class="credibility-pill" role="listitem">Poore & Nemecek 2018</span>
+    <!-- ═══ SOURCES ═══ -->
+    <div class="sources" role="complementary" aria-label="Data sources">
+      <div class="sources__inner">
+        <p class="eyebrow" style="margin-bottom:0">Calculation data sourced from</p>
+        <div class="sources__list" role="list">
+          <span role="listitem">EPA eGRID 2022</span>
+          <span role="listitem">EPA GHG Factors Hub</span>
+          <span role="listitem">GHG Protocol</span>
+          <span role="listitem">IPCC AR6</span>
+          <span role="listitem">ICAO</span>
+          <span role="listitem">USDA</span>
+          <span role="listitem">Poore &amp; Nemecek 2018</span>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="footer">
     <div class="footer__inner">
+      <div class="footer__brand">
+        <a href="/" class="footer__logo">calculateyourcarbon</a>
+        <p class="footer__tagline">Estimation tools for informational purposes only. Not professional advice.</p>
+      </div>
       <nav class="footer__links" aria-label="Footer navigation">
         <a href="/about.html" class="footer__link">About</a>
         <a href="/methodology.html" class="footer__link">Methodology</a>
@@ -422,7 +350,6 @@
   </footer>
 
   <script>
-    // Mobile nav
     const hamburger = document.getElementById('hamburger');
     const mobileNav = document.getElementById('mobileNav');
     const mobileClose = document.getElementById('mobileClose');
@@ -431,13 +358,10 @@
       mobileNav.classList.add('open');
       hamburger.setAttribute('aria-expanded', 'true');
     });
-
     mobileClose.addEventListener('click', () => {
       mobileNav.classList.remove('open');
       hamburger.setAttribute('aria-expanded', 'false');
     });
-
-    // Close on outside click
     mobileNav.addEventListener('click', (e) => {
       if (e.target === mobileNav) {
         mobileNav.classList.remove('open');

@@ -8,6 +8,114 @@
   <meta property="og:url" content="https://calculateyourcarbon.com/about.html">
   <link rel="canonical" href="https://calculateyourcarbon.com/about.html">
   <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* ── Page hero ── */
+    .page-hero {
+      padding: var(--space-16) 0 var(--space-8);
+      border-bottom: 1.5px solid var(--color-rule);
+    }
+    .page-hero h1 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(2.25rem, 6vw, 4rem);
+      line-height: .94;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+      max-width: 18ch;
+    }
+
+    /* ── Prose blocks ── */
+    .about-body {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: var(--space-12) var(--space-6) var(--space-24);
+    }
+    .about-block { padding-top: var(--space-12); }
+    .about-block:first-child { padding-top: 0; }
+
+    .about-block__head {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-4);
+      padding-bottom: var(--space-4);
+      border-bottom: 1.5px solid var(--color-rule);
+      margin-bottom: var(--space-6);
+    }
+    .about-block__idx {
+      flex: none;
+      font: 700 11px/1 var(--font-mono);
+      letter-spacing: .18em;
+      color: var(--color-accent-ink);
+    }
+    .about-block__head h2 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(1.5rem, 3.4vw, 2rem);
+      line-height: .98;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+    }
+
+    .about-block p {
+      font-family: var(--font-body);
+      font-size: 1.0625rem;
+      line-height: 1.7;
+      color: var(--color-text);
+      max-width: 68ch;
+    }
+    .about-block p + p { margin-top: var(--space-5); }
+    .about-block a:not(.btn) {
+      color: var(--color-accent-ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1.5px;
+    }
+    .about-block a:not(.btn):hover { background: var(--color-accent); color: var(--color-text); text-decoration: none; }
+    .about-block .btn { margin-top: var(--space-6); }
+
+    code.inline-code {
+      font: 500 .9375rem/1.5 var(--font-mono);
+      background: var(--color-sunk);
+      border: 1px solid var(--color-border);
+      padding: 1px 6px;
+      white-space: nowrap;
+    }
+
+    /* ── Approach list ── */
+    .approach { display: flex; flex-direction: column; }
+    .approach__item {
+      display: flex;
+      gap: var(--space-5);
+      align-items: flex-start;
+      padding: var(--space-6) 0;
+      border-top: 1px solid var(--color-border);
+    }
+    .approach__item:first-child { border-top: none; padding-top: var(--space-1); }
+    .approach__n {
+      flex: none;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      background: var(--color-rule);
+      color: var(--color-bg);
+      font: 700 13px/1 var(--font-mono);
+      letter-spacing: .06em;
+    }
+    .approach__item h3 {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 1.0625rem;
+      line-height: 1.3;
+      margin-bottom: var(--space-2);
+    }
+    .approach__item p { font-size: 1rem; line-height: 1.7; color: var(--color-muted); }
+
+    @media (max-width: 640px) {
+      .approach__n { width: 34px; height: 34px; font-size: 11px; }
+      .approach__item { gap: var(--space-4); }
+    }
+  </style>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
@@ -15,10 +123,11 @@
     <div class="nav__inner">
       <a href="/" class="nav__logo">calculateyourcarbon</a>
       <div class="nav__links">
-        <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
-        <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
-        <a href="/compare/" class="nav__link">Compare</a>
+        <a href="/calculate/quick.html" class="nav__link">Quick</a>
+        <a href="/calculate/annual.html" class="nav__link">Annual</a>
         <a href="/explore.html" class="nav__link">Explore</a>
+        <a href="/compare/" class="nav__link">Compare</a>
+        <a href="/equipment/" class="nav__link">Equipment</a>
         <a href="/dashboard.html" class="nav__link">Dashboard</a>
         <a href="/learn/" class="nav__link">Learn</a>
       </div>
@@ -27,78 +136,95 @@
   </nav>
   <div class="nav__mobile-overlay" id="mobileNav">
     <button class="nav__mobile-close" id="mobileClose">✕</button>
-    <a href="/" class="nav__link">Home</a>
-    <a href="/methodology.html" class="nav__link">Methodology</a>
+    <a href="/calculate/quick.html" class="nav__link">Quick</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual</a>
+    <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
+    <a href="/dashboard.html" class="nav__link">Dashboard</a>
+    <a href="/learn/" class="nav__link">Learn</a>
   </div>
 
   <main id="main">
-    <div style="padding:var(--space-16) 0 var(--space-8);">
+    <header class="page-hero">
       <div class="container">
         <p class="eyebrow">About this site</p>
-        <h1 class="section-heading">We believe you can't improve<br>what you can't measure.</h1>
+        <h1>We believe you can't improve what you can't measure.</h1>
       </div>
-    </div>
+    </header>
 
-    <div class="container" style="padding-bottom:var(--space-24); max-width: 720px;">
+    <div class="about-body">
 
-      <div class="card" style="margin-bottom:var(--space-8);">
-        <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-4);">Why this site exists</h2>
-        <p style="line-height:1.8;margin-bottom:var(--space-4);">The EPA publishes detailed, high-quality greenhouse gas emission data. Climate scientists have developed rigorous methodologies for translating that data into meaningful footprint calculations. But most people never see any of it — it lives in dense Excel spreadsheets, technical guidance documents, and academic papers.</p>
+      <section class="about-block" aria-labelledby="why-heading">
+        <div class="about-block__head">
+          <span class="about-block__idx" aria-hidden="true">01</span>
+          <h2 id="why-heading">Why this site exists</h2>
+        </div>
+        <p>The EPA publishes detailed, high-quality greenhouse gas emission data. Climate scientists have developed rigorous methodologies for translating that data into meaningful footprint calculations. But most people never see any of it — it lives in dense Excel spreadsheets, technical guidance documents, and academic papers.</p>
 
-        <p style="line-height:1.8;margin-bottom:var(--space-4);">We built calculateyourcarbon.com to change that. Our goal is simple: make the EPA's best available data accessible to anyone with an internet connection, in a form that's fast, accurate, and genuinely useful for decision-making.</p>
+        <p>We built calculateyourcarbon.com to change that. Our goal is simple: make the EPA's best available data accessible to anyone with an internet connection, in a form that's fast, accurate, and genuinely useful for decision-making.</p>
 
-        <p style="line-height:1.8;">No sign-up required. No data saved. No apps to download. Just transparent math, real numbers, and honest context.</p>
-      </div>
+        <p>No sign-up required. No data saved. No apps to download. Just transparent math, real numbers, and honest context.</p>
+      </section>
 
-      <div class="card" style="margin-bottom:var(--space-8);">
-        <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-4);">Our approach</h2>
-
-        <div class="icon-feature" style="margin-bottom:var(--space-6);">
-          <div class="icon-feature__icon" aria-hidden="true">🔢</div>
-          <div class="icon-feature__text">
-            <h3>Real data, not estimates</h3>
-            <p>Every emission factor on this site traces to a primary source: EPA eGRID, the EPA GHG Emission Factors Hub, ICAO, or peer-reviewed research. We link to the source for every number. No proprietary black boxes.</p>
-          </div>
+      <section class="about-block" aria-labelledby="approach-heading">
+        <div class="about-block__head">
+          <span class="about-block__idx" aria-hidden="true">02</span>
+          <h2 id="approach-heading">Our approach</h2>
         </div>
 
-        <div class="icon-feature" style="margin-bottom:var(--space-6);">
-          <div class="icon-feature__icon" aria-hidden="true">⚖️</div>
-          <div class="icon-feature__text">
-            <h3>Honest about limitations</h3>
-            <p>All carbon footprint calculations are estimates. Diet data has ±30% uncertainty. eGRID averages mask sub-state variation. We document every assumption and limitation on our <a href="/methodology.html" style="color:var(--color-accent);">methodology page</a>.</p>
+        <div class="approach">
+          <div class="approach__item">
+            <div class="approach__n" aria-hidden="true">01</div>
+            <div>
+              <h3>Real data, not estimates</h3>
+              <p>Every emission factor on this site traces to a primary source: EPA eGRID, the EPA GHG Emission Factors Hub, ICAO, or peer-reviewed research. We link to the source for every number. No proprietary black boxes.</p>
+            </div>
+          </div>
+
+          <div class="approach__item">
+            <div class="approach__n" aria-hidden="true">02</div>
+            <div>
+              <h3>Honest about limitations</h3>
+              <p>All carbon footprint calculations are estimates. Diet data has ±30% uncertainty. eGRID averages mask sub-state variation. We document every assumption and limitation on our <a href="/methodology.html">methodology page</a>.</p>
+            </div>
+          </div>
+
+          <div class="approach__item">
+            <div class="approach__n" aria-hidden="true">03</div>
+            <div>
+              <h3>Focus on high-leverage choices</h3>
+              <p>The evidence on which individual actions matter most is clear. We design our calculators and recommendations around that evidence — not around what's easiest to recommend or what makes people feel good.</p>
+            </div>
+          </div>
+
+          <div class="approach__item">
+            <div class="approach__n" aria-hidden="true">04</div>
+            <div>
+              <h3>No data collection</h3>
+              <p>All calculations happen in your browser. We don't store, transmit, or sell your footprint data. We don't require an account. Your numbers are yours.</p>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div class="icon-feature" style="margin-bottom:var(--space-6);">
-          <div class="icon-feature__icon" aria-hidden="true">🎯</div>
-          <div class="icon-feature__text">
-            <h3>Focus on high-leverage choices</h3>
-            <p>The evidence on which individual actions matter most is clear. We design our calculators and recommendations around that evidence — not around what's easiest to recommend or what makes people feel good.</p>
-          </div>
+      <section class="about-block" aria-labelledby="transparency-heading">
+        <div class="about-block__head">
+          <span class="about-block__idx" aria-hidden="true">03</span>
+          <h2 id="transparency-heading">Methodology transparency</h2>
         </div>
-
-        <div class="icon-feature">
-          <div class="icon-feature__icon" aria-hidden="true">🔒</div>
-          <div class="icon-feature__text">
-            <h3>No data collection</h3>
-            <p>All calculations happen in your browser. We don't store, transmit, or sell your footprint data. We don't require an account. Your numbers are yours.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom:var(--space-8);">
-        <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-4);">Methodology transparency</h2>
-        <p style="line-height:1.8;margin-bottom:var(--space-4);">Every calculation formula, every emission factor, and every data source is documented on our <a href="/methodology.html" style="color:var(--color-accent);">methodology page</a>. The calculation engine itself is unminified JavaScript in <code style="background:var(--color-bg);padding:2px 6px;border-radius:4px;">assets/js/calc-engine.js</code> — open your browser's developer tools to read it directly.</p>
+        <p>Every calculation formula, every emission factor, and every data source is documented on our <a href="/methodology.html">methodology page</a>. The calculation engine itself is unminified JavaScript in <code class="inline-code">assets/js/calc-engine.js</code> — open your browser's developer tools to read it directly.</p>
         <a href="/methodology.html" class="btn btn-ghost btn-sm">Read full methodology →</a>
-      </div>
+      </section>
 
-      <div class="card">
-        <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-4);">Get in touch</h2>
-        <p style="line-height:1.8;margin-bottom:var(--space-4);">Found an error in our data? Have a suggestion for a new calculator feature? Noticed a methodology concern? We want to hear from you.</p>
-        <p>
-          <a href="mailto:hello@calculateyourcarbon.com" class="btn btn-primary btn-sm">hello@calculateyourcarbon.com</a>
-        </p>
-      </div>
+      <section class="about-block" aria-labelledby="contact-heading">
+        <div class="about-block__head">
+          <span class="about-block__idx" aria-hidden="true">04</span>
+          <h2 id="contact-heading">Get in touch</h2>
+        </div>
+        <p>Found an error in our data? Have a suggestion for a new calculator feature? Noticed a methodology concern? We want to hear from you.</p>
+        <a href="mailto:hello@calculateyourcarbon.com" class="btn btn-primary btn-sm">hello@calculateyourcarbon.com</a>
+      </section>
 
     </div>
   </main>

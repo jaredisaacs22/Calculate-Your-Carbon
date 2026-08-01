@@ -7,20 +7,20 @@
   <meta name="description" content="Estimate and compare diesel generator fuel costs, CO2 emissions, and BESS hybrid savings for off-road and construction equipment. Includes MQ Power, ANA eBOSS, Viridi, and Atlas Copco units.">
   <link rel="canonical" href="https://calculateyourcarbon.com/equipment/offroad.html">
   <link rel="stylesheet" href="../assets/css/main.css">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
 /* ── Calculator-scoped design tokens (mapped to site palette) ── */
 :root {
-  --bg:#FAFAF8;--sf:#ffffff;--in:#f0f4f2;--bd:rgba(0,0,0,.08);
-  --tx:#1a1a1a;--t2:#49525e;--t3:#3d5a4a;--t4:#939598;--t5:#c4c6c8;
-  --acc:#2D6A4F;--acc2:#52B788;
-  --c1:#2D6A4F;--c1l:#e8f4ee;
-  --c2:#52B788;--c2l:#edf8f2;
+  --bg:#f6f6f4;--sf:#ffffff;--in:#eeeeea;--bd:rgba(23,24,26,.14);
+  --tx:#17181a;--t2:#49525e;--t3:#3f4348;--t4:#8b8d90;--t5:#b9bbbd;
+  --acc:#17181a;--acc2:#cf9b56;
+  --c1:#17181a;--c1l:#eeeeea;
+  --c2:#cf9b56;--c2l:#f8efe2;
   --c3:#49525e;--c3l:#ecedee;
-  --c4:#1E5C3A;--c4l:#e5f0ec;
-  --gn:#2D6A4F;--gnl:#e8f4ee;
-  --mono:'JetBrains Mono',monospace;
-  --r:10px;--r2:6px
+  --c4:#8a6636;--c4l:#f3e9db;
+  --gn:#17181a;--gnl:#eeeeea;
+  --mono:'Spline Sans Mono',ui-monospace,monospace;
+  --r:0;--r2:0
 }
 
 /* ── Calculator wrapper ── */
@@ -45,9 +45,9 @@
 .calc-wrap select{font-family:var(--font-body,system-ui);font-size:14px;font-weight:500;color:var(--tx);background:var(--sf);border:1px solid var(--bd);padding:10px 30px 10px 12px;border-radius:var(--r2);width:100%;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23999' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
 .calc-wrap select:focus{outline:none;border-color:var(--acc)}
 .vprow{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
-.vpb{padding:7px 12px;border-radius:20px;border:1px solid var(--bd);background:none;font-family:var(--mono);font-size:12px;font-weight:500;cursor:pointer;color:var(--t3);transition:all .12s;min-height:32px}
+.vpb{padding:7px 12px;border-radius:0;border:1px solid var(--bd);background:none;font-family:var(--mono);font-size:12px;font-weight:500;cursor:pointer;color:var(--t3);transition:all .12s;min-height:32px}
 .vpb:active,.vpb.on{background:var(--acc);color:#fff;border-color:var(--acc)}
-.chip{display:inline-flex;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:600}
+.chip{display:inline-flex;padding:3px 8px;border-radius:0;font-size:10px;font-weight:600}
 .bchk{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--in);border-radius:var(--r2);margin-bottom:10px;font-size:13px;font-weight:500}
 .bchk input{width:18px;height:18px;accent-color:var(--acc);cursor:pointer;flex-shrink:0}
 .rate{display:flex;align-items:center;gap:8px;margin-top:6px}
@@ -60,12 +60,12 @@
 @media(max-width:600px){.scg{grid-template-columns:1fr}}
 .addc{border:2px dashed var(--bd);border-radius:var(--r);background:none;display:grid;place-items:center;min-height:100px;cursor:pointer;color:var(--t5);font-size:13px;font-weight:600;font-family:var(--font-body,system-ui);transition:all .12s;padding:20px}
 .addc:active{border-color:var(--acc);color:var(--acc)}
-.hyb-badge{display:inline-flex;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:700;background:var(--c1l);color:var(--c1);letter-spacing:.5px;margin-top:6px}
+.hyb-badge{display:inline-flex;padding:4px 8px;border-radius:0;font-size:10px;font-weight:700;background:var(--c1l);color:var(--c1);letter-spacing:.5px;margin-top:6px}
 .dash{margin-bottom:16px}
 .dash-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:600px){.dash-cards{grid-template-columns:1fr}}
 .dc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:24px 20px;position:relative;overflow:hidden}
-.dc-bar{position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--r) var(--r) 0 0}
+.dc-bar{position:absolute;top:0;left:0;right:0;height:4px;border-radius:0}
 .dc-label{font-size:10px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:12px}
 .dc-total{font-family:var(--mono);font-weight:700;font-size:36px;letter-spacing:-2px;line-height:1}
 @media(max-width:480px){.dc-total{font-size:30px}}
@@ -89,9 +89,9 @@
 .hb-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
 .hb-label{font-size:11px;font-weight:700}
 .hb-val{font-family:var(--mono);font-size:14px;font-weight:700}
-.hb-track{width:100%;height:28px;background:var(--in);border-radius:6px;overflow:hidden}
-.hb-fill{height:100%;border-radius:6px;transition:width .6s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden;min-width:4px}
-.hb-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.2) 0%,rgba(255,255,255,0) 60%);border-radius:6px}
+.hb-track{width:100%;height:28px;background:var(--in);border-radius:0;overflow:hidden}
+.hb-fill{height:100%;border-radius:0;transition:width .6s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden;min-width:4px}
+.hb-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.2) 0%,rgba(255,255,255,0) 60%);border-radius:0}
 .donut-wrap{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;padding:8px 0}
 .donut-item{text-align:center;min-width:100px}
 .donut-label{font-size:11px;font-weight:700;letter-spacing:.5px;margin-top:8px}
@@ -106,10 +106,10 @@
 .mc h4:first-child{margin-top:0}
 .fb{font-family:var(--mono);font-size:11px;background:#1a1a1a;color:#c8d4c8;padding:14px 16px;border-radius:var(--r2);margin:8px 0;line-height:2;overflow-x:auto}
 .cyc{display:flex;align-items:center;gap:0;margin:10px 0;flex-wrap:wrap}
-.cyc-s{padding:7px 12px;font-size:10px;font-weight:700;border-radius:6px;text-align:center;line-height:1.3}
+.cyc-s{padding:7px 12px;font-size:10px;font-weight:700;border-radius:0;text-align:center;line-height:1.3}
 .cyc-a{font-size:13px;color:var(--t5);padding:0 4px}
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:9999;padding:16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-.mx{background:var(--sf);border-radius:16px;padding:24px;max-width:440px;width:100%;max-height:85vh;overflow:auto}
+.mx{background:var(--sf);border-radius:0;padding:24px;max-width:440px;width:100%;max-height:85vh;overflow:auto}
 .mx p{margin-top:8px;font-size:13px;color:var(--t2);line-height:1.7}
 .anim{animation:fu .4s ease both}
 @keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -126,11 +126,11 @@
     <div class="nav__inner">
       <a href="/" class="nav__logo" aria-label="calculateyourcarbon home">calculateyourcarbon</a>
       <div class="nav__links" role="list">
-        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick Calc</a>
-        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual Calc</a>
-        <a href="/equipment/" class="nav__link nav__link--active" role="listitem">Equipment</a>
-        <a href="/compare/" class="nav__link" role="listitem">Compare</a>
+        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick</a>
+        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual</a>
         <a href="/explore.html" class="nav__link" role="listitem">Explore</a>
+        <a href="/compare/" class="nav__link" role="listitem">Compare</a>
+        <a href="/equipment/" class="nav__link" role="listitem">Equipment</a>
         <a href="/dashboard.html" class="nav__link" role="listitem">Dashboard</a>
         <a href="/learn/" class="nav__link" role="listitem">Learn</a>
       </div>
@@ -141,11 +141,11 @@
   </nav>
   <div class="nav__mobile-overlay" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation menu">
     <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">&#x2715;</button>
-    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
-    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
-    <a href="/equipment/" class="nav__link">Equipment</a>
-    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/calculate/quick.html" class="nav__link">Quick</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual</a>
     <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
     <a href="/dashboard.html" class="nav__link">Dashboard</a>
     <a href="/learn/" class="nav__link">Learn</a>
   </div>
@@ -287,9 +287,9 @@ function rent(s){const mo=S.dy/28;const u=getU(s.genId);let t=(s.genRate||0)*mo;
 function vpCk(s){const w=[];if(!S.sV&&!S.sPh)return w;const u=getU(s.genId);if(!u)return w;if(S.sV&&!u.v.includes(S.sV))w.push(`Unit has no ${S.sV}V output`);if(S.sPh&&!u.ph.includes(S.sPh))w.push(`Unit has no ${S.sPh}Φ`);if(!u.isHyb&&s.withBess){const b=BESS.find(x=>x.id===s.bessId);if(b){if(S.sV&&!b.v.includes(S.sV))w.push(`BESS: ${b.v.join("/")}V, site ${S.sV}V`);if(S.sPh&&!b.ph.includes(S.sPh))w.push(`BESS phase mismatch`)}}return w}
 
 /* Scenario colors — site palette: steel, forest green, light green */
-const SC=["#49525e","#2D6A4F","#52B788"];
+const SC=["#49525e","#17181a","#cf9b56"];
 
-function donut(gH,bH,hp,c){const sz=110,r=42,cx=sz/2,cy=sz/2,sw=10,C=2*Math.PI*r,gP=Math.max(0,(hp-bH)/hp);let s=`<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}"><defs><linearGradient id="dg${c.replace('#','')}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${c}" stop-opacity=".85"/><stop offset="100%" stop-color="${c}"/></linearGradient></defs><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#e8f4ee" stroke-width="${sw}"/>`;if(bH>0){const bP=bH/hp;s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${c}" stroke-width="${sw}" stroke-dasharray="${C*bP} ${C*(1-bP)}" transform="rotate(-90 ${cx} ${cy})" opacity=".14" stroke-linecap="round"/>`;s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="url(#dg${c.replace('#','')})" stroke-width="${sw}" stroke-dasharray="${C*gP} ${C*(1-gP)}" stroke-dashoffset="${-C*bP}" transform="rotate(-90 ${cx} ${cy})" stroke-linecap="round"/>`}else s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${c}" stroke-width="${sw}"/>`;s+=`<text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="22" font-family="'JetBrains Mono',monospace" font-weight="700" fill="${c}" dominant-baseline="central">${Math.round(gP*100)}%</text><text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="9" font-family="system-ui" font-weight="600" fill="#939598" dominant-baseline="central">GEN</text>`;return s+`</svg>`}
+function donut(gH,bH,hp,c){const sz=110,r=42,cx=sz/2,cy=sz/2,sw=10,C=2*Math.PI*r,gP=Math.max(0,(hp-bH)/hp);let s=`<svg viewBox="0 0 ${sz} ${sz}" width="${sz}" height="${sz}"><defs><linearGradient id="dg${c.replace('#','')}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${c}" stop-opacity=".85"/><stop offset="100%" stop-color="${c}"/></linearGradient></defs><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#e8f4ee" stroke-width="${sw}"/>`;if(bH>0){const bP=bH/hp;s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${c}" stroke-width="${sw}" stroke-dasharray="${C*bP} ${C*(1-bP)}" transform="rotate(-90 ${cx} ${cy})" opacity=".14" stroke-linecap="round"/>`;s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="url(#dg${c.replace('#','')})" stroke-width="${sw}" stroke-dasharray="${C*gP} ${C*(1-gP)}" stroke-dashoffset="${-C*bP}" transform="rotate(-90 ${cx} ${cy})" stroke-linecap="round"/>`}else s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${c}" stroke-width="${sw}"/>`;s+=`<text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="22" font-family="'Spline Sans Mono',monospace" font-weight="700" fill="${c}" dominant-baseline="central">${Math.round(gP*100)}%</text><text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="9" font-family="Archivo,system-ui" font-weight="600" fill="#939598" dominant-baseline="central">GEN</text>`;return s+`</svg>`}
 
 function genOpts(){let o='<optgroup label="MQ Power">';UNITS.filter(u=>u.br==='MQ Power').forEach(u=>{o+=`<option value="${u.id}">${u.kw}kW — ${u.nm}${u.par?' ✓':''}</option>`});o+='</optgroup><optgroup label="ANA eBOSS (Hybrid)">';UNITS.filter(u=>u.br==='ANA eBOSS').forEach(u=>{o+=`<option value="${u.id}">${u.kw}kW — ${u.nm} ⚡ Hybrid</option>`});return o+'</optgroup>'}
 function ni(id,v,u,st,mn,mx,h){return`<div><div class="fwrap"><input type="number" id="${id}" value="${v}" step="${st}" min="${mn}" max="${mx}" onchange="sP('${id}',+this.value)"><div class="funit">${u}</div><div class="fbtns"><button class="fbtn" onclick="sp('${id}',${st})">▲</button><button class="fbtn" onclick="sp('${id}',${-st})">▼</button></div></div>${h?`<div class="fhint">${h}</div>`:''}</div>`}
@@ -381,7 +381,7 @@ function render(){
     res.forEach((r,i)=>{if(!r)return;const c=SC[i%3];o+=`<div class="donut-item">${donut(r.genHrs,r.battHrs,S.hp,c)}<div class="donut-label" style="color:${c}">S${i+1}</div><div class="donut-meta">${F(r.genHrs)}h gen${r.battHrs>0?`<br>${F(r.battHrs)}h batt`:''}</div></div>`});
     o+=`</div></div></div>`;
 
-    o+=`<div style="display:flex;gap:8px;margin-top:20px;margin-bottom:4px;align-items:stretch"><input id="custName" type="text" placeholder="Customer / Job name (optional)" value="${S.custName||''}" oninput="S.custName=this.value" style="flex:1;padding:12px 14px;font-family:inherit;font-size:14px;border:1px solid var(--bd);border-radius:var(--r);background:var(--sf);color:var(--tx);outline:none" onfocus="this.style.borderColor='#2D6A4F'" onblur="this.style.borderColor='var(--bd)'"><button class="export-btn" style="width:auto;flex-shrink:0;margin-bottom:0;padding:12px 18px" onclick="doExport()"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 3v12m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Export PNG</button></div>`;
+    o+=`<div style="display:flex;gap:8px;margin-top:20px;margin-bottom:4px;align-items:stretch"><input id="custName" type="text" placeholder="Customer / Job name (optional)" value="${S.custName||''}" oninput="S.custName=this.value" style="flex:1;padding:12px 14px;font-family:inherit;font-size:14px;border:1px solid var(--bd);border-radius:var(--r);background:var(--sf);color:var(--tx);outline:none" onfocus="this.style.borderColor='#17181a'" onblur="this.style.borderColor='var(--bd)'"><button class="export-btn" style="width:auto;flex-shrink:0;margin-bottom:0;padding:12px 18px" onclick="doExport()"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 3v12m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Export PNG</button></div>`;
     o+=`<div class="src"><strong>Data sources (third-party, not owned by this site):</strong> MQ Power DCA series — OEM published fuel tables. ANA eBOSS — Airman SDG engine specs; 33kW charge rate confirmed. Viridi RPS150 — 208/480V, DEIF sync. Atlas Copco ZBC — OEM spec sheet. LTO cell eff 99%, inverter 95% one-way. CO₂e 10.18 kg/gal (U.S. EPA). SOC window 100→20%. All brand names are property of their respective owners. <a href="/legal.html" style="color:var(--acc)">Legal disclaimer</a></div>`;
     o+=`</div>`}
 
@@ -408,7 +408,7 @@ async function doExport(){
   const res=comp(),vr=res.filter(Boolean);if(!vr.length)return;
   const mk=mK(),base=Math.min(S.base,mk),peak=Math.min(S.peak,mk),wLoad=base*(1-S.pkt/100)+peak*(S.pkt/100);
   const S2=2,W=420*S2,P=28*S2,RW=W-P*2;
-  const sans='DM Sans,system-ui,sans-serif',mono='JetBrains Mono,monospace';
+  const sans='Archivo,system-ui,sans-serif',mono='Spline Sans Mono,monospace';
   const hasSav=vr.length>1&&res[1];
   const fSav=hasSav?res[0].cost-res[1].cost:0;
   const fPct=hasSav&&res[0].cost>0?fSav/res[0].cost*100:0;
@@ -424,7 +424,7 @@ async function doExport(){
   let cy=0;
   /* header */
   x.fillStyle='#1A1A1A';x.fillRect(0,0,W,hdrH);
-  x.fillStyle='#2D6A4F';x.fillRect(0,hdrH-3*S2,W,3*S2);
+  x.fillStyle='#cf9b56';x.fillRect(0,hdrH-3*S2,W,3*S2);
   x.font=`600 ${8*S2}px ${sans}`;x.fillStyle='#888';
   x.fillText('FUEL & COST COMPARISON — calculateyourcarbon.com',P,18*S2);
   const ttl=S.custName&&S.custName.trim()?S.custName.trim().substring(0,40):'Power Scenario Analysis';
@@ -438,7 +438,7 @@ async function doExport(){
   cy+=paramH;
   /* hero savings */
   if(fSav>0){
-    x.fillStyle='#2D6A4F';x.fillRect(0,cy,W,heroH);
+    x.fillStyle='#17181a';x.fillRect(0,cy,W,heroH);
     x.font=`700 ${36*S2}px ${mono}`;x.fillStyle='#fff';
     x.fillText($(fSav),P,cy+44*S2);
     x.font=`600 ${11*S2}px ${sans}`;x.fillStyle='rgba(255,255,255,.75)';
@@ -471,7 +471,7 @@ async function doExport(){
       x.font=`500 ${9*S2}px ${sans}`;x.fillStyle='#999';
       x.fillText(d[0],P,cy+18*S2);
       x.font=`700 ${12*S2}px ${mono}`;
-      x.fillStyle=isLower&&di<3?'#2D6A4F':'#1a1a1a';
+      x.fillStyle=isLower&&di<3?'#8a6636':'#17181a';
       const vw=x.measureText(d[1]).width;
       x.fillText(d[1],W-P-vw,cy+18*S2);
       cy+=rowH;
@@ -481,7 +481,7 @@ async function doExport(){
   });
   /* footer */
   x.fillStyle='#1A1A1A';x.fillRect(0,H-footH,W,footH);
-  x.fillStyle='#2D6A4F';x.fillRect(0,H-footH,W,2*S2);
+  x.fillStyle='#cf9b56';x.fillRect(0,H-footH,W,2*S2);
   x.font=`400 ${8*S2}px ${sans}`;x.fillStyle='#777';
   const ft='Estimates only · calculateyourcarbon.com · Not for regulatory use';
   x.fillText(ft,(W-x.measureText(ft).width)/2,H-footH+20*S2);
@@ -501,9 +501,9 @@ function sI(t){S.info=t;rMdl()}
 function cM(){S.info=null;rMdl()}
 function rMdl(){const e=document.getElementById('mdl');if(!S.info){e.innerHTML='';return}let t='',b='';
   if(S.info==='go'){t='Generator Only';b=`<p>Runs continuously. Fuel calculated separately for base and peak phases (non-linear fuel curve).</p><div class="fb" style="background:#1a1a1a;color:#c8d4c8">Fuel = GPH(base)×h×(1−p) + GPH(peak)×h×p</div>`}
-  else if(S.info==='gb'){t='Gen + BESS (DEIF Sync)';b=`<p>BESS primary via cam-lock inline. DEIF controller synchronizes gen and BESS on AC bus. Gen charges when SOC hits 20%.</p><div style="border-radius:8px;padding:12px;background:var(--c1l);border:1px solid #b3d4c4"><p style="margin:0;font-weight:600">BESS 100→20% → Gen on (load + charge) → 100% → Gen off → repeat</p></div><p>BESS eff: 95% one-way. Peak capacity validated against BESS kW output.</p>`}
-  else if(S.info==='hy'){t='eBOSS Hybrid (DC Bus)';b=`<p>Airman engine + LTO battery on internal DC bus. Engine at 100% prime during charge — constant GPH, max efficiency.</p><div style="border-radius:8px;padding:12px;background:#fffbe6;border:1px solid #e0d000"><p style="margin:0;font-weight:600">Double conversion: AC→Rectifier(92%)→DC Bus→Inverter(95%)→AC Load. Battery cell eff 99%.</p></div><p>Net charge rate = crKw − (load ÷ 0.95). LTO: 90k cycles · 20yr · No thermal runaway</p>`}
-  e.innerHTML=`<div class="mo" onclick="cM()"><div class="mx" onclick="event.stopPropagation()"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:16px;font-weight:700">${t}</span><button onclick="cM()" style="background:var(--in);border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:14px;font-weight:700;color:var(--t3)">✕</button></div>${b}</div></div>`}
+  else if(S.info==='gb'){t='Gen + BESS (DEIF Sync)';b=`<p>BESS primary via cam-lock inline. DEIF controller synchronizes gen and BESS on AC bus. Gen charges when SOC hits 20%.</p><div style="border-radius:0;padding:12px;background:var(--c1l);border:1px solid #b3d4c4"><p style="margin:0;font-weight:600">BESS 100→20% → Gen on (load + charge) → 100% → Gen off → repeat</p></div><p>BESS eff: 95% one-way. Peak capacity validated against BESS kW output.</p>`}
+  else if(S.info==='hy'){t='eBOSS Hybrid (DC Bus)';b=`<p>Airman engine + LTO battery on internal DC bus. Engine at 100% prime during charge — constant GPH, max efficiency.</p><div style="border-radius:0;padding:12px;background:#fffbe6;border:1px solid #e0d000"><p style="margin:0;font-weight:600">Double conversion: AC→Rectifier(92%)→DC Bus→Inverter(95%)→AC Load. Battery cell eff 99%.</p></div><p>Net charge rate = crKw − (load ÷ 0.95). LTO: 90k cycles · 20yr · No thermal runaway</p>`}
+  e.innerHTML=`<div class="mo" onclick="cM()"><div class="mx" onclick="event.stopPropagation()"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:16px;font-weight:700">${t}</span><button onclick="cM()" style="background:var(--in);border:none;border-radius:0;width:30px;height:30px;cursor:pointer;font-size:14px;font-weight:700;color:var(--t3)">✕</button></div>${b}</div></div>`}
 
 document.addEventListener('DOMContentLoaded', () => {
   render();

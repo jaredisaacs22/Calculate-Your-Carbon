@@ -20,27 +20,27 @@
   // Decision type configs
   const decisionTypes = {
     travel: {
-      label: '🚗 Getting There',
+      label: 'Getting There',
       buildInputs: buildTravelInputs,
       calc: calcTravel
     },
     food: {
-      label: '🍽️ What to Eat',
+      label: 'What to Eat',
       buildInputs: buildFoodInputs,
       calc: calcFood
     },
     home: {
-      label: '🏠 Home Decision',
+      label: 'Home Decision',
       buildInputs: buildHomeInputs,
       calc: calcHome
     },
     purchase: {
-      label: '🛒 What to Buy',
+      label: 'What to Buy',
       buildInputs: buildPurchaseInputs,
       calc: calcPurchase
     },
     trip: {
-      label: '✈️ Trip Planning',
+      label: 'Trip Planning',
       buildInputs: buildTripInputs,
       calc: calcTrip
     }
@@ -420,12 +420,12 @@
     return {
       multi: true,
       options: [
-        { label: 'Drive alone', lbs: options.drive_alone, icon: '🚗' },
+        { label: 'Drive alone', lbs: options.drive_alone, icon: '01' },
         { label: 'EV (avg US grid)', lbs: options.ev_drive, icon: '⚡' },
-        { label: 'Carpool (×2)', lbs: options.carpool_2, icon: '👥' },
-        { label: 'Fly (economy)', lbs: options.fly_economy, icon: '✈️' },
-        { label: 'Train (Amtrak)', lbs: options.amtrak, icon: '🚂' },
-        { label: 'Bus', lbs: options.bus, icon: '🚌' }
+        { label: 'Carpool (×2)', lbs: options.carpool_2, icon: '02' },
+        { label: 'Fly (economy)', lbs: options.fly_economy, icon: '03' },
+        { label: 'Train (Amtrak)', lbs: options.amtrak, icon: '04' },
+        { label: 'Bus', lbs: options.bus, icon: '05' }
       ].sort((a,b) => a.lbs - b.lbs),
       context: `Round-trip comparison for a ${dist}-mile trip.`
     };
@@ -478,7 +478,7 @@
       </div>
 
       <div class="alert alert-ok" style="margin-top:var(--space-6);">
-        ✅ <strong>${winner === 'a' ? 'Option A' : 'Option B'} saves ${CC.fmt(diff)} lbs CO₂e — that's ${pctBetter}% less carbon.</strong>
+        <strong>${winner === 'a' ? 'Option A' : 'Option B'} saves ${CC.fmt(diff)} lbs CO₂e — that's ${pctBetter}% less carbon.</strong>
         ${annualDiff > 0 ? `<br>Annually: <strong>${CC.fmt(annualDiff)} lbs saved = ${CC.lbsToTons(annualDiff).toFixed(2)} tons/year</strong>` : ''}
       </div>
 

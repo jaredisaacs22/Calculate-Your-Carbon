@@ -9,12 +9,12 @@ let isDragging = false;
 let allProfiles = [];
 
 const SECTOR_LABELS = {
-  construction: '🏗 Construction',
-  events: '🎵 Events',
-  telecom: '📡 Telecom',
-  oil_gas: '🛢 Oil & Gas',
-  industrial: '🏭 Industrial',
-  custom: '✏️ Custom',
+  construction: 'Construction',
+  events: 'Events',
+  telecom: 'Telecom',
+  oil_gas: 'Oil & Gas',
+  industrial: 'Industrial',
+  custom: '✏ Custom',
 };
 
 async function init() {

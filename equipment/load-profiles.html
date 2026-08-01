@@ -8,47 +8,116 @@
   <link rel="canonical" href="https://calculateyourcarbon.com/equipment/load-profiles.html">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
-    .page-header { padding:var(--space-16) var(--space-6) var(--space-8); max-width:760px; margin:0 auto; text-align:center; }
-    .page-header h1 { font-family:var(--font-heading); font-size:clamp(1.75rem,4vw,2.75rem); margin-bottom:var(--space-3); }
-    .page-header p  { color:var(--color-muted); font-size:var(--text-base); line-height:1.7; }
+    /* ── Page header — poster block ───────────────────────── */
+    .page-header { padding:var(--space-16) var(--space-6) var(--space-8); max-width:1200px; margin:0 auto; }
+    .page-header h1 {
+      font-family:var(--font-display);
+      font-size:clamp(2.25rem,6.5vw,3.75rem);
+      line-height:.96;
+      letter-spacing:.01em;
+      text-transform:uppercase;
+      margin-bottom:var(--space-5);
+    }
+    .page-header .sub { display:flex; gap:var(--space-4); align-items:flex-start; }
+    .page-header .sub .rule { width:44px; height:1.5px; background:var(--color-rule); flex:none; margin-top:11px; }
+    .page-header p  { color:var(--color-muted); font-size:var(--text-base); line-height:1.65; max-width:58ch; }
 
     .layout { display:grid; grid-template-columns:300px 1fr; gap:var(--space-8); max-width:1200px; margin:0 auto; padding:0 var(--space-6) var(--space-16); }
     @media(max-width:900px) { .layout { grid-template-columns:1fr; } }
 
-    /* Sector tabs */
-    .sector-tabs { display:flex; gap:var(--space-2); flex-wrap:wrap; margin-bottom:var(--space-6); }
-    .sector-tab { padding:var(--space-2) var(--space-4); border:1px solid var(--color-border); border-radius:100px; font-size:var(--text-sm); text-decoration:none; color:var(--color-muted); transition:border-color .15s,color .15s; white-space:nowrap; }
-    .sector-tab:hover, .sector-tab--active { border-color:var(--color-accent); color:var(--color-accent); background:rgba(45,106,79,.06); }
+    /* ── Sector tabs — square chips ───────────────────────── */
+    .sector-tabs { display:flex; gap:0; flex-wrap:wrap; margin-bottom:var(--space-6); }
+    .sector-tab {
+      padding:8px 13px;
+      border:1.5px solid var(--color-border);
+      margin:-1.5px 0 0 -1.5px;
+      font:600 10px/1 var(--font-mono);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-decoration:none;
+      color:var(--color-muted);
+      background:transparent;
+      cursor:pointer;
+      transition:background .15s,color .15s,border-color .15s;
+      white-space:nowrap;
+    }
+    .sector-tab:hover { border-color:var(--color-rule); color:var(--color-text); }
+    .sector-tab--active { background:var(--color-rule); border-color:var(--color-rule); color:var(--color-bg); }
 
-    /* Profile gallery */
-    .profile-gallery { display:flex; flex-direction:column; gap:var(--space-3); }
-    .profile-card { text-align:left; background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius); padding:var(--space-4); cursor:pointer; width:100%; transition:border-color .15s; }
-    .profile-card:hover, .profile-card--active { border-color:var(--color-accent); }
-    .profile-card--active { background:rgba(45,106,79,.05); }
-    .profile-card__name   { font-weight:600; margin-bottom:var(--space-1); }
-    .profile-card__sector { font-size:var(--text-xs); color:var(--color-muted); margin-bottom:var(--space-2); }
-    .profile-card__stats  { font-size:var(--text-xs); color:var(--color-muted); }
+    /* ── Profile gallery ──────────────────────────────────── */
+    .profile-gallery { display:flex; flex-direction:column; }
+    .profile-card {
+      text-align:left;
+      background:var(--color-surface);
+      border:1.5px solid var(--color-border);
+      margin-top:-1.5px;
+      padding:var(--space-4);
+      cursor:pointer;
+      width:100%;
+      transition:background .15s,color .15s,border-color .15s;
+    }
+    .profile-card:first-child { margin-top:0; }
+    .profile-card:hover { border-color:var(--color-rule); }
+    .profile-card--active { background:var(--color-dark); border-color:var(--color-dark); color:var(--color-dark-text); position:relative; z-index:1; }
+    .profile-card__name   { font-family:var(--font-display); font-size:var(--text-base); line-height:1.05; text-transform:uppercase; letter-spacing:.01em; margin-bottom:var(--space-2); }
+    .profile-card__sector { font:600 9px/1 var(--font-mono); letter-spacing:.18em; text-transform:uppercase; color:var(--color-faint); margin-bottom:var(--space-2); }
+    .profile-card__stats  { font:500 10px/1.7 var(--font-mono); color:var(--color-muted); }
+    .profile-card__stats strong { font-weight:700; color:var(--color-text); }
+    .profile-card--active .profile-card__sector { color:var(--color-accent); }
+    .profile-card--active .profile-card__stats { color:rgba(244,244,241,.5); }
+    .profile-card--active .profile-card__stats strong { color:var(--color-dark-text); }
 
-    /* Editor */
-    .editor { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:var(--space-6); }
-    .editor h2 { font-family:var(--font-heading); font-size:var(--text-xl); margin-bottom:var(--space-5); }
+    /* ── Editor ───────────────────────────────────────────── */
+    .editor { background:var(--color-surface); border:1.5px solid var(--color-border); border-top:1.5px solid var(--color-rule); padding:var(--space-6); }
+    .editor h2 {
+      font-family:var(--font-display);
+      font-size:var(--text-2xl);
+      line-height:.96;
+      text-transform:uppercase;
+      letter-spacing:.01em;
+      margin-bottom:var(--space-5);
+      padding-bottom:var(--space-4);
+      border-bottom:1px solid var(--color-border);
+    }
     canvas { width:100%!important; cursor:crosshair; }
-    .editor-hint { font-size:var(--text-xs); color:var(--color-muted); margin-top:var(--space-2); margin-bottom:var(--space-5); }
+    .editor-hint { font:500 10px/1.6 var(--font-mono); letter-spacing:.06em; color:var(--color-faint); margin-top:var(--space-2); margin-bottom:var(--space-6); }
 
-    .stats-row { display:flex; gap:var(--space-5); flex-wrap:wrap; margin-bottom:var(--space-6); }
-    .stat-box { flex:1; min-width:100px; background:var(--color-bg); border:1px solid var(--color-border); border-radius:var(--radius); padding:var(--space-3) var(--space-4); }
-    .stat-box__label { font-size:var(--text-xs); color:var(--color-muted); margin-bottom:2px; }
-    .stat-box__value { font-size:var(--text-lg); font-weight:700; color:var(--color-accent); }
+    /* ── Stats — dark readout ─────────────────────────────── */
+    .stats-row { display:flex; gap:1.5px; flex-wrap:wrap; background:rgba(244,244,241,.14); margin-bottom:var(--space-6); }
+    .stat-box { flex:1; min-width:110px; background:var(--color-dark); color:var(--color-dark-text); border:none; padding:var(--space-4) var(--space-5); }
+    .stat-box__label { font:600 9px/1 var(--font-mono); letter-spacing:.2em; text-transform:uppercase; color:rgba(244,244,241,.45); margin-bottom:8px; }
+    .stat-box__value { font:700 var(--text-xl)/1 var(--font-mono); letter-spacing:-.03em; color:var(--color-accent); }
 
-    .editor-fields { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); margin-bottom:var(--space-5); }
+    .editor-fields { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); margin-bottom:var(--space-6); }
     @media(max-width:600px) { .editor-fields { grid-template-columns:1fr; } }
     .form-group { display:flex; flex-direction:column; gap:var(--space-2); }
-    .form-group label { font-size:var(--text-sm); font-weight:500; }
-    .form-group input, .form-group select, .form-group textarea { padding:var(--space-3) var(--space-4); border:1px solid var(--color-border); border-radius:var(--radius); font-size:var(--text-base); background:var(--color-bg); }
+    .form-group label { font:600 10px/1.4 var(--font-mono); letter-spacing:.2em; text-transform:uppercase; color:var(--color-faint); }
+    .form-group input, .form-group select, .form-group textarea {
+      padding:12px 14px;
+      border:1.5px solid var(--color-border);
+      background:var(--color-bg);
+      font-family:var(--font-mono);
+      font-size:var(--text-sm);
+      font-weight:500;
+      color:var(--color-text);
+      width:100%;
+      appearance:none;
+      -webkit-appearance:none;
+      transition:border-color .15s;
+    }
+    .form-group textarea { resize:vertical; line-height:1.6; }
+    .form-group select {
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%2317181a' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;
+      background-position:right 14px center;
+      padding-right:34px;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline:none; border-color:var(--color-rule); }
 
-    .editor-actions { display:flex; gap:var(--space-3); flex-wrap:wrap; }
-    .max-kw-row { display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-3); font-size:var(--text-sm); }
-    .max-kw-row input { width:80px; }
+    .editor-actions { display:flex; gap:var(--space-3); flex-wrap:wrap; padding-top:var(--space-5); border-top:1px solid var(--color-border); }
+    .max-kw-row { display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-4); font:600 10px/1 var(--font-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--color-faint); flex-wrap:wrap; }
+    .max-kw-row input { width:88px; padding:8px 10px; border:1.5px solid var(--color-border); background:var(--color-bg); font:700 13px/1 var(--font-mono); color:var(--color-text); }
+    .max-kw-row input:focus { outline:none; border-color:var(--color-rule); }
   </style>
 </head>
 <body>
@@ -57,11 +126,11 @@
     <div class="nav__inner">
       <a href="/" class="nav__logo">calculateyourcarbon</a>
       <div class="nav__links" role="list">
-        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick Calc</a>
-        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual Calc</a>
-        <a href="/equipment/" class="nav__link nav__link--active" role="listitem">Equipment</a>
-        <a href="/compare/" class="nav__link" role="listitem">Compare</a>
+        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick</a>
+        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual</a>
         <a href="/explore.html" class="nav__link" role="listitem">Explore</a>
+        <a href="/compare/" class="nav__link" role="listitem">Compare</a>
+        <a href="/equipment/" class="nav__link" role="listitem">Equipment</a>
         <a href="/dashboard.html" class="nav__link" role="listitem">Dashboard</a>
         <a href="/learn/" class="nav__link" role="listitem">Learn</a>
       </div>
@@ -70,11 +139,11 @@
   </nav>
   <div class="nav__mobile-overlay" id="mobileNav" role="dialog" aria-modal="true">
     <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
-    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
-    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
-    <a href="/equipment/" class="nav__link">Equipment</a>
-    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/calculate/quick.html" class="nav__link">Quick</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual</a>
     <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
     <a href="/dashboard.html" class="nav__link">Dashboard</a>
     <a href="/learn/" class="nav__link">Learn</a>
   </div>
@@ -82,8 +151,11 @@
   <main id="main">
     <div class="page-header">
       <p class="eyebrow">Equipment Tools</p>
-      <h1>Load Profile Builder</h1>
-      <p>Browse preset 24-hour load profiles by sector, or drag-and-draw your own. Save custom profiles to use in the BESS + Generator Hybrid Modeler.</p>
+      <h1>Load Profile<br>Builder</h1>
+      <div class="sub">
+        <div class="rule"></div>
+        <p>Browse preset 24-hour load profiles by sector, or drag-and-draw your own. Save custom profiles to use in the BESS + Generator Hybrid Modeler.</p>
+      </div>
     </div>
 
     <div class="layout">
@@ -100,7 +172,7 @@
         <div class="max-kw-row">
           <label for="max-kw-input">Chart max kW:</label>
           <input type="number" id="max-kw-input" value="100" min="10" max="5000" step="10">
-          <span style="color:var(--color-muted);font-size:var(--text-xs)">Drag bars to set hourly demand</span>
+          <span style="color:var(--color-faint)">← Drag bars to set hourly demand</span>
         </div>
 
         <canvas id="profile-chart" height="200" aria-label="Editable 24-hour load profile chart"></canvas>
@@ -167,6 +239,61 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+  /* ── Stage & Steel chart theme ──────────────────────────────────────────
+     Restyles Chart.js output to the site palette without touching the
+     calculator logic in the page scripts below. Dataset colours declared as
+     legacy hex literals are remapped in place; radii are squared off.        */
+  (function () {
+    if (!window.Chart) return;
+    var INK = '#17181a', AMBER = '#cf9b56', STEEL = '#49525e', GREEN = '#3f7d5a';
+    var MAP = {
+      '#2d6a4f': INK,   /* forest green  -> ink   */
+      '#1d4d38': INK,   /* dark green    -> ink   */
+      '#52b788': AMBER, /* light green   -> amber */
+      '#e76f51': AMBER, /* terracotta    -> amber */
+      '#3a86ff': STEEL, /* blue          -> steel */
+      '#8338ec': GREEN  /* purple        -> green */
+    };
+    function fix(obj, key) {
+      var v = obj[key];
+      if (typeof v === 'string') {
+        var p = MAP[v.slice(0, 7).toLowerCase()];
+        if (p) obj[key] = p + v.slice(7);
+      } else if (Array.isArray(v)) {
+        for (var i = 0; i < v.length; i++) {
+          if (typeof v[i] === 'string') {
+            var q = MAP[v[i].slice(0, 7).toLowerCase()];
+            if (q) v[i] = q + v[i].slice(7);
+          }
+        }
+      }
+    }
+    try {
+      Chart.defaults.font.family = "'Spline Sans Mono', ui-monospace, Menlo, monospace";
+      Chart.defaults.font.size = 11;
+      Chart.defaults.color = 'rgba(23,24,26,.58)';
+      Chart.defaults.borderColor = 'rgba(23,24,26,.14)';
+      Chart.defaults.elements.bar.borderRadius = 0;
+      Chart.defaults.plugins.legend.labels.boxWidth = 10;
+      Chart.defaults.plugins.legend.labels.boxHeight = 10;
+      Chart.defaults.plugins.legend.labels.font = { family: "'Spline Sans Mono', ui-monospace, monospace", size: 10 };
+    } catch (e) { /* defaults are cosmetic only */ }
+    Chart.register({
+      id: 'stageSteelTheme',
+      beforeUpdate: function (chart) {
+        var ds = (chart.data && chart.data.datasets) || [];
+        for (var i = 0; i < ds.length; i++) {
+          fix(ds[i], 'backgroundColor');
+          fix(ds[i], 'borderColor');
+          fix(ds[i], 'pointBackgroundColor');
+          fix(ds[i], 'pointBorderColor');
+          if ('borderRadius' in ds[i]) ds[i].borderRadius = 0;
+        }
+      }
+    });
+  })();
+  </script>
   <script src="../assets/js/equipment-api.js"></script>
   <script src="../assets/js/load-profile.js"></script>
 </body>

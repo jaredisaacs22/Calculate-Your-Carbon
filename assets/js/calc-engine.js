@@ -497,7 +497,7 @@ function compareFoodOptions(foodA, foodB, servingsPerWeek, servingKg = 0.2) {
 function generateShareText(totalTons) {
   const comparison = totalTons < 16 ? 'below' : 'above';
   const diff = Math.abs(totalTons - 16).toFixed(1);
-  return `I just calculated my carbon footprint: ${totalTons.toFixed(1)} tons CO₂e/year — ${diff} tons ${comparison} the US average. Calculate yours free at calculateyourcarbon.com 🌿`;
+  return `I just calculated my carbon footprint: ${totalTons.toFixed(1)} tons CO₂e/year — ${diff} tons ${comparison} the US average. Calculate yours free at calculateyourcarbon.com`;
 }
 
 /* ── Exports (available globally in browser) ─────────────────── */

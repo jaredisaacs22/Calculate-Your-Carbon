@@ -11,6 +11,7 @@
   <link rel="canonical" href="https://calculateyourcarbon.com/dashboard.html">
   <link rel="stylesheet" href="assets/css/main.css">
   <style>
+    /* ── Layout ───────────────────────────────────────────────── */
     .dashboard-layout {
       display: grid;
       grid-template-columns: 1fr 300px;
@@ -31,9 +32,126 @@
       height: 260px;
       width: 100%;
     }
+
+    /* ── Poster head ──────────────────────────────────────────── */
+    .dash-head {
+      padding: var(--space-16) 0 var(--space-10);
+      border-bottom: 1.5px solid var(--color-rule);
+      margin-bottom: var(--space-12);
+    }
+    .dash-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.75rem, 9vw, 5rem);
+      line-height: .9;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+    }
+    .dash-lede { display: flex; gap: var(--space-4); align-items: flex-start; margin-top: var(--space-6); }
+    .dash-lede__rule { width: 44px; height: 1px; background: var(--color-rule); flex: none; margin-top: 11px; }
+    .dash-lede__p { font-size: var(--text-base); line-height: 1.55; color: var(--color-muted); max-width: 52ch; }
+
+    /* ── Rule + label ─────────────────────────────────────────── */
+    .dash-rule-label { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-4); }
+    .dash-rule-label .l {
+      font: 600 10px/1 var(--font-mono);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+    }
+    .dash-rule-label .line { flex: 1; height: 1px; background: var(--color-border); }
+
+    /* ── Card type ────────────────────────────────────────────── */
+    .dash-h2 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(1.5rem, 3.6vw, var(--text-3xl));
+      line-height: .96;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-3);
+    }
+    .dash-note {
+      font-size: var(--text-sm);
+      line-height: 1.6;
+      color: var(--color-muted);
+      margin-bottom: var(--space-6);
+      max-width: 62ch;
+    }
+
+    /* ── Numbers ──────────────────────────────────────────────── */
+    .kpi-unit {
+      font: 700 var(--text-base)/1 var(--font-mono);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+    }
+    /* Every data cell after the label column reads as mono data */
+    .data-table td:not(:first-child) {
+      font: 700 var(--text-sm)/1.5 var(--font-mono);
+      letter-spacing: -.01em;
+      white-space: nowrap;
+    }
+    .data-table td:first-child { font-weight: 600; }
+
+    /* ── Stat strip (trend footer) ────────────────────────────── */
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--color-border);
+      margin-top: var(--space-6);
+    }
+    .stat { padding: var(--space-4) var(--space-4) 0 0; border-right: 1px solid var(--color-border); }
+    .stat:last-child { border-right: none; padding-right: 0; }
+    .stat__l {
+      font: 600 10px/1 var(--font-mono);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+      margin-bottom: var(--space-2);
+    }
+    .stat__v { font: 700 var(--text-xl)/1.1 var(--font-mono); letter-spacing: -.02em; }
+    .stat__v--ok { color: var(--color-ok); }
+
+    /* ── Equivalency control row ──────────────────────────────── */
+    .equiv-row { display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap; margin-bottom: var(--space-6); }
+    .equiv-row__is {
+      font: 600 10px/1 var(--font-mono);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+    }
+
+    /* ── Sidebar ──────────────────────────────────────────────── */
+    .side-h {
+      font: 600 10px/1 var(--font-mono);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+      margin-bottom: var(--space-3);
+    }
+    .side-p { font-size: var(--text-sm); color: var(--color-muted); line-height: 1.6; margin-bottom: var(--space-4); }
+    .side-links { display: flex; flex-direction: column; }
+    .side-link {
+      display: block;
+      padding: var(--space-3) 0;
+      border-top: 1px solid var(--color-border);
+      font: 600 11px/1.45 var(--font-mono);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--color-text);
+      transition: color .15s;
+    }
+    .side-links li:first-child .side-link { border-top: none; padding-top: 0; }
+    .side-link:hover { color: var(--color-accent-ink); }
+
     @media (max-width: 900px) {
       .dashboard-layout { grid-template-columns: 1fr; }
       .dashboard-sidebar { display: none; }
+    }
+    @media (max-width: 640px) {
+      .stat-strip { grid-template-columns: 1fr; }
+      .stat { border-right: none; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4); }
+      .stat:last-child { border-bottom: none; }
     }
   </style>
 </head>
@@ -44,11 +162,12 @@
     <div class="nav__inner">
       <a href="/" class="nav__logo">calculateyourcarbon</a>
       <div class="nav__links">
-        <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
-        <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
-        <a href="/compare/" class="nav__link">Compare</a>
+        <a href="/calculate/quick.html" class="nav__link">Quick</a>
+        <a href="/calculate/annual.html" class="nav__link">Annual</a>
         <a href="/explore.html" class="nav__link">Explore</a>
-        <a href="/dashboard.html" class="nav__link active">Dashboard</a>
+        <a href="/compare/" class="nav__link">Compare</a>
+        <a href="/equipment/" class="nav__link">Equipment</a>
+        <a href="/dashboard.html" class="nav__link nav__link--active">Dashboard</a>
         <a href="/learn/" class="nav__link">Learn</a>
       </div>
       <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger">
@@ -58,19 +177,24 @@
   </nav>
   <div class="nav__mobile-overlay" id="mobileNav">
     <button class="nav__mobile-close" id="mobileClose">✕</button>
-    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
-    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/calculate/quick.html" class="nav__link">Quick</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual</a>
     <a href="/explore.html" class="nav__link">Explore</a>
-    <a href="/dashboard.html" class="nav__link active">Dashboard</a>
+    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
+    <a href="/dashboard.html" class="nav__link nav__link--active">Dashboard</a>
     <a href="/learn/" class="nav__link">Learn</a>
   </div>
 
   <main id="main">
-    <div style="padding: var(--space-16) 0 var(--space-8); text-align:center;">
+    <div class="dash-head">
       <div class="container">
-        <p class="eyebrow">Data & insights</p>
-        <h1 class="section-heading">Carbon Footprint Dashboard</h1>
-        <p class="section-subheading" style="margin:0 auto;">US emissions data, sector breakdowns, and interactive tools. All sourced from EPA and peer-reviewed research.</p>
+        <p class="eyebrow">Data &amp; insights</p>
+        <h1 class="dash-h1">Carbon Footprint<br>Dashboard</h1>
+        <div class="dash-lede">
+          <span class="dash-lede__rule" aria-hidden="true"></span>
+          <p class="dash-lede__p">US emissions data, sector breakdowns, and interactive tools. All sourced from EPA and peer-reviewed research.</p>
+        </div>
       </div>
     </div>
 
@@ -79,24 +203,28 @@
         <div>
 
           <!-- KPI Cards -->
+          <div class="dash-rule-label">
+            <span class="l">Key figures</span>
+            <span class="line" aria-hidden="true"></span>
+          </div>
           <div class="grid-2" style="gap:var(--space-4);margin-bottom:var(--space-8);">
             <div class="kpi-card">
-              <div class="kpi-value">16 <span style="font-size:var(--text-xl);">tons</span></div>
+              <div class="kpi-value">16 <span class="kpi-unit">tons</span></div>
               <div class="kpi-label">Avg US Individual Footprint (CO₂e/year)</div>
               <div class="kpi-source">Source: EPA 2022</div>
             </div>
             <div class="kpi-card">
-              <div class="kpi-value">4.7 <span style="font-size:var(--text-xl);">tons</span></div>
+              <div class="kpi-value">4.7 <span class="kpi-unit">tons</span></div>
               <div class="kpi-label">Global Average (CO₂e/person/year)</div>
               <div class="kpi-source">Source: World Bank 2022</div>
             </div>
             <div class="kpi-card">
-              <div class="kpi-value" style="color:var(--color-ok);">&lt;2 <span style="font-size:var(--text-xl);">tons</span></div>
+              <div class="kpi-value" style="color:var(--color-ok);">&lt;2 <span class="kpi-unit">tons</span></div>
               <div class="kpi-label">Paris Agreement Target (CO₂e/person/year)</div>
               <div class="kpi-source">Source: IPCC AR6 2021</div>
             </div>
             <div class="kpi-card">
-              <div class="kpi-value">5.56 <span style="font-size:var(--text-xl);">Gt</span></div>
+              <div class="kpi-value">5.56 <span class="kpi-unit">Gt</span></div>
               <div class="kpi-label">US Total Annual Emissions (2022)</div>
               <div class="kpi-source">Source: EPA National GHG Inventory 2022</div>
             </div>
@@ -104,14 +232,14 @@
 
           <!-- Sector breakdown -->
           <div class="card" style="margin-bottom:var(--space-8);">
-            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">US Emissions by Sector</h2>
-            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">Transportation is now the single largest source of US greenhouse gas emissions.</p>
+            <h2 class="dash-h2">US Emissions by Sector</h2>
+            <p class="dash-note">Transportation is now the single largest source of US greenhouse gas emissions.</p>
             <div class="chart-container">
               <canvas id="chart-sector" aria-label="Donut chart showing US greenhouse gas emissions by sector" role="img"></canvas>
             </div>
             <!-- Accessible data table -->
             <div class="table-wrapper" style="margin-top:var(--space-6);">
-              <table aria-label="US emissions by sector data table">
+              <table class="data-table" aria-label="US emissions by sector data table">
                 <thead>
                   <tr><th>Sector</th><th>Share</th><th>Approx. Billion Tons CO₂e</th></tr>
                 </thead>
@@ -131,22 +259,22 @@
 
           <!-- Personal breakdown -->
           <div class="card" style="margin-bottom:var(--space-8);">
-            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">Average American's Footprint by Category</h2>
-            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">Transportation and home energy together account for ~58% of a typical American's carbon footprint.</p>
+            <h2 class="dash-h2">Average American's Footprint by Category</h2>
+            <p class="dash-note">Transportation and home energy together account for ~58% of a typical American's carbon footprint.</p>
             <div class="chart-container-tall">
               <canvas id="chart-personal" aria-label="Bar chart of average American carbon footprint by category" role="img"></canvas>
             </div>
-            <p class="source-tag" style="margin-top:var(--space-6);">Source: EPA 2022, USDA, Poore & Nemecek 2018</p>
+            <p class="source-tag" style="margin-top:var(--space-6);">Source: EPA 2022, USDA, Poore &amp; Nemecek 2018</p>
           </div>
 
           <!-- Diet comparison -->
           <div class="card" style="margin-bottom:var(--space-8);">
-            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">Diet & Carbon: Annual Impact</h2>
-            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">What you eat is one of the highest-leverage lifestyle choices for your carbon footprint. A vegan diet produces 3× less than a meat-heavy one.</p>
+            <h2 class="dash-h2">Diet &amp; Carbon: Annual Impact</h2>
+            <p class="dash-note">What you eat is one of the highest-leverage lifestyle choices for your carbon footprint. A vegan diet produces 3× less than a meat-heavy one.</p>
             <div class="chart-container">
               <canvas id="chart-diet" aria-label="Bar chart comparing annual carbon footprint by diet type" role="img"></canvas>
             </div>
-            <p class="source-tag" style="margin-top:var(--space-6);">Source: Poore & Nemecek 2018 (Science), Oxford University. Includes land use change, methane, N₂O.</p>
+            <p class="source-tag" style="margin-top:var(--space-6);">Source: Poore &amp; Nemecek 2018 (Science), Oxford University. Includes land use change, methane, N₂O.</p>
           </div>
 
           <!-- Ad between rows -->
@@ -157,10 +285,10 @@
 
           <!-- Flight emissions table -->
           <div class="card" style="margin-bottom:var(--space-8);">
-            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">Flight Emissions by Route</h2>
-            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">A single long-haul round trip can equal 10–30% of an average American's annual footprint. Business class multiplies emissions by 2–6×.</p>
+            <h2 class="dash-h2">Flight Emissions by Route</h2>
+            <p class="dash-note">A single long-haul round trip can equal 10–30% of an average American's annual footprint. Business class multiplies emissions by 2–6×.</p>
             <div class="table-wrapper">
-              <table aria-label="Flight emissions table by route and cabin class">
+              <table class="data-table" aria-label="Flight emissions table by route and cabin class">
                 <thead>
                   <tr>
                     <th>Route</th>
@@ -217,17 +345,17 @@
 
           <!-- Equivalency Widget -->
           <div class="card" style="margin-bottom:var(--space-8);">
-            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">Carbon Equivalency Calculator</h2>
-            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">Enter any CO₂e amount to see what it's equivalent to in everyday terms.</p>
+            <h2 class="dash-h2">Carbon Equivalency Calculator</h2>
+            <p class="dash-note">Enter any CO₂e amount to see what it's equivalent to in everyday terms.</p>
 
-            <div style="display:flex;gap:var(--space-4);align-items:center;margin-bottom:var(--space-6);">
+            <div class="equiv-row">
               <input type="number" id="equiv-input" class="form-input" style="max-width:180px;" value="1000" min="0" aria-label="Enter CO₂e amount">
-              <select id="equiv-unit" class="form-select" style="max-width:140px;" aria-label="Select unit">
+              <select id="equiv-unit" class="form-select" style="max-width:150px;" aria-label="Select unit">
                 <option value="lbs">lbs CO₂e</option>
                 <option value="kg">kg CO₂e</option>
                 <option value="tons">tons CO₂e</option>
               </select>
-              <span style="color:var(--color-muted);font-size:var(--text-sm);">is equivalent to...</span>
+              <span class="equiv-row__is">is equivalent to</span>
             </div>
 
             <div id="equiv-output">
@@ -237,26 +365,26 @@
 
           <!-- Trend line chart -->
           <div class="card">
-            <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);margin-bottom:var(--space-2);">US GHG Emissions Trend (2005–2022)</h2>
-            <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-6);">Total US emissions have declined ~25% from their 2005 peak, driven by coal plant retirements and efficiency improvements. But more work remains to hit climate targets.</p>
+            <h2 class="dash-h2">US GHG Emissions Trend (2005–2022)</h2>
+            <p class="dash-note">Total US emissions have declined ~25% from their 2005 peak, driven by coal plant retirements and efficiency improvements. But more work remains to hit climate targets.</p>
             <div class="chart-container">
               <canvas id="chart-trend" aria-label="Line chart of US total greenhouse gas emissions 2005 to 2022" role="img"></canvas>
             </div>
-            <div style="margin-top:var(--space-4);display:flex;gap:var(--space-6);flex-wrap:wrap;">
-              <div>
-                <p style="font-size:var(--text-xs);color:var(--color-muted);">2005 peak</p>
-                <p style="font-weight:600;">7.38 billion tons</p>
+            <div class="stat-strip">
+              <div class="stat">
+                <p class="stat__l">2005 peak</p>
+                <p class="stat__v">7.38 <span class="kpi-unit">Gt</span></p>
               </div>
-              <div>
-                <p style="font-size:var(--text-xs);color:var(--color-muted);">2022 (latest)</p>
-                <p style="font-weight:600;">5.56 billion tons</p>
+              <div class="stat">
+                <p class="stat__l">2022 latest</p>
+                <p class="stat__v">5.56 <span class="kpi-unit">Gt</span></p>
               </div>
-              <div>
-                <p style="font-size:var(--text-xs);color:var(--color-muted);">Reduction</p>
-                <p style="font-weight:600;color:var(--color-ok);">−24.7%</p>
+              <div class="stat">
+                <p class="stat__l">Reduction</p>
+                <p class="stat__v stat__v--ok">−24.7%</p>
               </div>
             </div>
-            <p class="source-tag" style="margin-top:var(--space-3);">Source: EPA National Greenhouse Gas Inventory, April 2024</p>
+            <p class="source-tag" style="margin-top:var(--space-4);">Source: EPA National Greenhouse Gas Inventory, April 2024</p>
           </div>
 
         </div>
@@ -272,16 +400,16 @@
                  data-ad-format="rectangle"></ins>
           </div>
           <div class="card" style="margin-top:var(--space-6);">
-            <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-3);">Calculate yours</h3>
-            <p style="font-size:var(--text-sm);color:var(--color-muted);margin-bottom:var(--space-4);">See how you compare to these averages with a personalized estimate.</p>
+            <h3 class="side-h">Calculate yours</h3>
+            <p class="side-p">See how you compare to these averages with a personalized estimate.</p>
             <a href="/calculate/annual.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;display:flex;">Annual Calculator →</a>
           </div>
           <div class="card" style="margin-top:var(--space-4);">
-            <h3 style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-3);">Learn the science</h3>
-            <ul style="display:flex;flex-direction:column;gap:var(--space-2);">
-              <li><a href="/learn/what-is-carbon-footprint.html" style="font-size:var(--text-sm);color:var(--color-accent);">What is a carbon footprint? →</a></li>
-              <li><a href="/learn/carbon-cost-of-food.html" style="font-size:var(--text-sm);color:var(--color-accent);">Why beef is so carbon-intensive →</a></li>
-              <li><a href="/learn/flying-carbon-budget.html" style="font-size:var(--text-sm);color:var(--color-accent);">The carbon math of flying →</a></li>
+            <h3 class="side-h">Learn the science</h3>
+            <ul class="side-links">
+              <li><a href="/learn/what-is-carbon-footprint.html" class="side-link">What is a carbon footprint? →</a></li>
+              <li><a href="/learn/carbon-cost-of-food.html" class="side-link">Why beef is so carbon-intensive →</a></li>
+              <li><a href="/learn/flying-carbon-budget.html" class="side-link">The carbon math of flying →</a></li>
             </ul>
           </div>
         </aside>
@@ -304,6 +432,82 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+  <script>
+    /* ── Stage & Steel chart skin ──────────────────────────────────
+       The chart configs live in assets/js/dashboard.js. Rather than
+       restructure that file, wrap the Chart constructor and restyle
+       each config on the way in: ink / amber / muted / green, mono
+       type, square bars, hard grid rules. Purely cosmetic — no data,
+       scales, ids, or callbacks are touched. */
+    (function () {
+      if (!window.Chart) return;
+
+      var INK   = '#17181a';
+      var AMBER = '#cf9b56';
+      var MUTED = 'rgba(23,24,26,.35)';
+      var GREEN = '#3f7d5a';
+      var MONO  = "'Spline Sans Mono', ui-monospace, Menlo, monospace";
+      var GRID  = 'rgba(23,24,26,.12)';
+      var TICK  = 'rgba(23,24,26,.55)';
+
+      var SERIES = {
+        'chart-sector':   [INK, AMBER, GREEN, 'rgba(23,24,26,.62)', 'rgba(207,155,86,.62)', 'rgba(63,125,90,.55)', MUTED],
+        'chart-personal': INK,
+        'chart-diet':     [INK, 'rgba(23,24,26,.66)', AMBER, 'rgba(207,155,86,.62)', 'rgba(63,125,90,.62)', GREEN]
+      };
+
+      function skinOptions(node, depth) {
+        if (!node || typeof node !== 'object' || depth > 7) return;
+        Object.keys(node).forEach(function (key) {
+          var val = node[key];
+          if (!val || typeof val !== 'object') return;
+          if (/font$/i.test(key)) val.family = MONO;
+          if (key === 'grid') { val.color = GRID; val.tickColor = GRID; }
+          if (key === 'ticks') val.color = TICK;
+          if (key === 'title' && typeof val.text === 'string') val.color = MUTED;
+          if (key === 'labels' && !Array.isArray(val)) val.color = INK;
+          skinOptions(val, depth + 1);
+        });
+      }
+
+      function skinData(id, data) {
+        if (!data || !data.datasets) return;
+        data.datasets.forEach(function (ds) {
+          ds.borderRadius = 0;                    // zero radius, everywhere
+          if (id === 'chart-trend') {
+            ds.borderColor = INK;
+            ds.backgroundColor = 'rgba(23,24,26,.07)';
+            ds.borderWidth = 2;
+            ds.tension = 0;
+            ds.pointBackgroundColor = AMBER;
+            ds.pointBorderColor = INK;
+            ds.pointBorderWidth = 1.5;
+          } else if (SERIES[id]) {
+            ds.backgroundColor = SERIES[id];
+            if (id === 'chart-sector') { ds.borderColor = '#ffffff'; ds.borderWidth = 2; }
+          }
+        });
+      }
+
+      var Base = window.Chart;
+      try {
+        Base.defaults.font.family = MONO;
+        Base.defaults.color = TICK;
+        Base.defaults.borderColor = GRID;
+      } catch (e) {}
+
+      function Skinned(item, config) {
+        try {
+          var id = (item && item.id) || (item && item.canvas && item.canvas.id) || '';
+          if (config) { skinData(id, config.data); skinOptions(config.options, 0); }
+        } catch (e) {}
+        return new Base(item, config);
+      }
+      Skinned.prototype = Base.prototype;
+      Object.setPrototypeOf(Skinned, Base);   // keep Chart.register / Chart.defaults reachable
+      window.Chart = Skinned;
+    })();
+  </script>
   <script src="assets/js/calc-engine.js" defer></script>
   <script src="assets/js/dashboard.js" defer></script>
   <script>

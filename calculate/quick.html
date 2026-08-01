@@ -12,22 +12,174 @@
   <link rel="canonical" href="https://calculateyourcarbon.com/calculate/quick.html">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
+    /* ── Page frame ─────────────────────────────────────────── */
     .page-header {
-      padding: var(--space-16) 0 var(--space-12);
-      text-align: center;
+      padding: var(--space-16) 0 var(--space-8);
+      border-bottom: 1.5px solid var(--color-rule);
     }
+    .page-header .section-heading {
+      font-size: clamp(2.75rem, 8vw, 4.5rem);
+      max-width: 15ch;
+      margin-bottom: var(--space-5);
+    }
+    .page-header .section-subheading { max-width: 48ch; }
+
     .calc-layout {
       display: grid;
       grid-template-columns: 1fr 300px;
-      gap: var(--space-8);
+      gap: var(--space-12);
       align-items: start;
+      padding-top: var(--space-12);
     }
     .calc-main { min-width: 0; }
-    .calc-sidebar { position: sticky; top: 80px; }
+    .calc-sidebar {
+      position: sticky;
+      top: 80px;
+      border-left: 1.5px solid var(--color-border);
+      padding-left: var(--space-6);
+    }
+
+    /* ── Steps ──────────────────────────────────────────────── */
+    .calc-step { display: none; }
+    .calc-step.active { display: block; }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+      text-transform: uppercase;
+      line-height: .96;
+      letter-spacing: .01em;
+      margin-bottom: var(--space-8);
+      max-width: 20ch;
+    }
+
+    /* ── Category picker — hairline grid, no cards ──────────── */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: var(--color-border);
+      border: 1.5px solid var(--color-border);
+    }
+    .category-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-8);
+      min-height: 158px;
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border: none;
+      color: var(--color-text);
+      text-align: left;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .category-card__icon {
+      font: 700 11px/1 var(--font-mono);
+      letter-spacing: .16em;
+      color: var(--color-faint);
+      transition: color .15s;
+    }
+    .category-card__label {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      text-transform: uppercase;
+      letter-spacing: .01em;
+      line-height: 1;
+    }
+    .category-card::after {
+      content: '→';
+      position: absolute;
+      top: var(--space-5);
+      right: var(--space-5);
+      font: 600 13px/1 var(--font-mono);
+      color: var(--color-faint);
+      opacity: 0;
+      transition: opacity .15s, color .15s;
+    }
+    .category-card:hover,
+    .category-card:focus-visible,
+    .category-card.selected {
+      background: var(--color-dark);
+      color: var(--color-dark-text);
+    }
+    .category-card:hover .category-card__icon,
+    .category-card:focus-visible .category-card__icon,
+    .category-card.selected .category-card__icon { color: var(--color-accent); }
+    .category-card:hover::after,
+    .category-card:focus-visible::after,
+    .category-card.selected::after { opacity: 1; color: var(--color-accent); }
+
+    /* ── Tooltips (markup injected by quick-calc.js) ─────────── */
+    .tooltip-wrap { position: relative; display: inline-flex; margin-left: 6px; vertical-align: middle; }
+    .tooltip-icon {
+      width: 15px; height: 15px;
+      display: grid; place-items: center;
+      border: 1.5px solid var(--color-border);
+      font: 700 9px/1 var(--font-mono);
+      color: var(--color-faint);
+      cursor: help;
+    }
+    .tooltip-box {
+      position: absolute;
+      left: 0;
+      bottom: calc(100% + 8px);
+      width: 230px;
+      padding: 10px 12px;
+      background: var(--color-dark);
+      color: var(--color-dark-text);
+      font: 500 10.5px/1.55 var(--font-mono);
+      letter-spacing: 0;
+      text-transform: none;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .15s;
+      z-index: 20;
+    }
+    .tooltip-wrap:hover .tooltip-box,
+    .tooltip-wrap:focus-within .tooltip-box { opacity: 1; visibility: visible; }
+
+    /* ── Result ─────────────────────────────────────────────── */
+    .result-hero .form-label,
+    .result-hero .source-tag { color: rgba(244,244,241,.5); }
+    .result-hero .compare-bar { background: rgba(244,244,241,.16); }
+
+    .result-block { margin-top: var(--space-6); }
+    .result-block__title {
+      font: 600 10px/1 var(--font-mono);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+      margin-bottom: var(--space-5);
+    }
+    #result-meaning p { font-size: var(--text-sm); line-height: 1.7; color: var(--color-muted); }
+    #action-tips li { font-size: var(--text-sm); line-height: 1.7; margin-bottom: var(--space-2); }
+
+    .result-actions {
+      display: flex;
+      gap: var(--space-4);
+      margin-top: var(--space-6);
+      flex-wrap: wrap;
+    }
+
+    /* ── Sidebar promo ──────────────────────────────────────── */
+    .promo { border-top: 1.5px solid var(--color-rule); padding-top: var(--space-5); margin-top: var(--space-8); }
+    .promo__title { font-family: var(--font-display); font-size: var(--text-xl); text-transform: uppercase; line-height: .98; margin-bottom: var(--space-3); }
+    .promo__text { font-size: var(--text-sm); color: var(--color-muted); margin-bottom: var(--space-5); }
 
     @media (max-width: 900px) {
       .calc-layout { grid-template-columns: 1fr; }
       .calc-sidebar { display: none; }
+    }
+    @media (max-width: 620px) {
+      .category-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 380px) {
+      .category-grid { grid-template-columns: 1fr; }
+      .category-card { min-height: 0; gap: var(--space-6); }
     }
   </style>
 </head>
@@ -38,10 +190,11 @@
     <div class="nav__inner">
       <a href="/" class="nav__logo">calculateyourcarbon</a>
       <div class="nav__links">
-        <a href="/calculate/quick.html" class="nav__link active">Quick Calc</a>
-        <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
-        <a href="/compare/" class="nav__link">Compare</a>
+        <a href="/calculate/quick.html" class="nav__link nav__link--active">Quick</a>
+        <a href="/calculate/annual.html" class="nav__link">Annual</a>
         <a href="/explore.html" class="nav__link">Explore</a>
+        <a href="/compare/" class="nav__link">Compare</a>
+        <a href="/equipment/" class="nav__link">Equipment</a>
         <a href="/dashboard.html" class="nav__link">Dashboard</a>
         <a href="/learn/" class="nav__link">Learn</a>
       </div>
@@ -52,9 +205,11 @@
   </nav>
   <div class="nav__mobile-overlay" id="mobileNav">
     <button class="nav__mobile-close" id="mobileClose">✕</button>
-    <a href="/calculate/quick.html" class="nav__link active">Quick Calc</a>
-    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+    <a href="/calculate/quick.html" class="nav__link nav__link--active">Quick</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual</a>
     <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
     <a href="/dashboard.html" class="nav__link">Dashboard</a>
     <a href="/learn/" class="nav__link">Learn</a>
   </div>
@@ -64,7 +219,7 @@
       <div class="container">
         <p class="eyebrow">Single activity</p>
         <h1 class="section-heading">Quick Carbon Calculator</h1>
-        <p class="section-subheading" style="margin: 0 auto;">Calculate the footprint of any single trip, meal, or purchase. Results in seconds.</p>
+        <p class="section-subheading">Calculate the footprint of any single trip, meal, or purchase. Results in seconds.</p>
       </div>
     </div>
 
@@ -74,30 +229,31 @@
         <div class="calc-main">
           <!-- Step 1: Category selection -->
           <div class="calc-step active" id="step-1">
-            <h2 style="font-family: var(--font-heading); font-size: var(--text-2xl); margin-bottom: var(--space-6);">What would you like to calculate?</h2>
+            <p class="eyebrow">Step 01 / 02 — Pick a category</p>
+            <h2 class="step-title">What would you like to calculate?</h2>
             <div class="category-grid" role="radiogroup" aria-label="Select a category">
               <button class="category-card" data-category="driving" role="radio" aria-checked="false" tabindex="0">
-                <span class="category-card__icon" aria-hidden="true">🚗</span>
+                <span class="category-card__icon" aria-hidden="true">01</span>
                 <span class="category-card__label">Driving</span>
               </button>
               <button class="category-card" data-category="flying" role="radio" aria-checked="false" tabindex="0">
-                <span class="category-card__icon" aria-hidden="true">✈️</span>
+                <span class="category-card__icon" aria-hidden="true">02</span>
                 <span class="category-card__label">Flying</span>
               </button>
               <button class="category-card" data-category="home_energy" role="radio" aria-checked="false" tabindex="0">
-                <span class="category-card__icon" aria-hidden="true">🏠</span>
+                <span class="category-card__icon" aria-hidden="true">03</span>
                 <span class="category-card__label">Home Energy</span>
               </button>
               <button class="category-card" data-category="food" role="radio" aria-checked="false" tabindex="0">
-                <span class="category-card__icon" aria-hidden="true">🍽️</span>
+                <span class="category-card__icon" aria-hidden="true">04</span>
                 <span class="category-card__label">A Meal</span>
               </button>
               <button class="category-card" data-category="purchase" role="radio" aria-checked="false" tabindex="0">
-                <span class="category-card__icon" aria-hidden="true">🛒</span>
+                <span class="category-card__icon" aria-hidden="true">05</span>
                 <span class="category-card__label">A Purchase</span>
               </button>
               <button class="category-card" data-category="waste" role="radio" aria-checked="false" tabindex="0">
-                <span class="category-card__icon" aria-hidden="true">♻️</span>
+                <span class="category-card__icon" aria-hidden="true">06</span>
                 <span class="category-card__label">Waste</span>
               </button>
             </div>
@@ -106,6 +262,7 @@
           <!-- Step 2: Inputs -->
           <div class="calc-step" id="step-2">
             <button class="btn btn-ghost btn-sm" id="back-btn" style="margin-bottom: var(--space-6);">← Back to categories</button>
+            <p class="eyebrow">Step 02 / 02 — Your numbers</p>
             <div class="card" id="input-area">
               <!-- Populated by JS -->
             </div>
@@ -115,14 +272,15 @@
           </div>
 
           <!-- Result Panel -->
-          <div class="result-panel" id="result-panel" style="display: none; margin-top: var(--space-8);">
-            <div class="result-hero card">
+          <div class="result-panel" id="result-panel" style="display: none; margin-top: var(--space-12);">
+            <div class="result-hero">
+              <p class="eyebrow" style="color: rgba(244,244,241,.5); margin-bottom: var(--space-6);">Result</p>
               <div id="result-number" class="result-number result-ok">—</div>
               <div id="result-unit" class="result-unit">lbs of CO₂e</div>
               <div id="result-context" class="result-context"></div>
 
               <!-- Compare bar -->
-              <div style="margin-top: var(--space-6);">
+              <div style="margin-top: var(--space-8); max-width: 480px; margin-left: auto; margin-right: auto;">
                 <p class="form-label" style="text-align:left; margin-bottom: var(--space-2);">Compared to US average</p>
                 <div class="compare-bar">
                   <div id="result-compare-fill" class="compare-bar__fill compare-bar__fill-ok" style="width: 0%"></div>
@@ -132,14 +290,14 @@
             </div>
 
             <!-- What this means -->
-            <div class="card" style="margin-top: var(--space-6);">
-              <h3 style="font-weight:600; margin-bottom: var(--space-4);">What this means</h3>
+            <div class="card result-block">
+              <h3 class="result-block__title">What this means</h3>
               <div id="result-meaning"></div>
               <div id="result-equiv"></div>
             </div>
 
             <!-- Action tips collapsible -->
-            <div class="collapsible" style="margin-top: var(--space-6);">
+            <div class="collapsible result-block">
               <button class="collapsible__trigger" aria-expanded="false">
                 Want to reduce this?
               </button>
@@ -154,7 +312,7 @@
             </div>
 
             <!-- Action row -->
-            <div style="display: flex; gap: var(--space-4); margin-top: var(--space-6); flex-wrap: wrap;">
+            <div class="result-actions">
               <button class="btn btn-ghost" id="reset-btn">Calculate something else</button>
               <button class="btn btn-ghost" id="share-btn">Share Result</button>
             </div>
@@ -174,7 +332,7 @@
 
         <!-- Sidebar ad (desktop) -->
         <aside class="calc-sidebar" aria-label="Sidebar advertisement">
-          <div class="ad-unit">
+          <div class="ad-unit" style="margin-top: 0;">
             <p class="ad-label">Advertisement</p>
             <ins class="adsbygoogle"
                  style="display:block;width:300px;height:250px"
@@ -182,9 +340,10 @@
                  data-ad-slot="XXXXXXXXXX"
                  data-ad-format="rectangle"></ins>
           </div>
-          <div class="card" style="margin-top: var(--space-4);">
-            <h3 style="font-size: var(--text-sm); font-weight: 600; margin-bottom: var(--space-3);">Want the full picture?</h3>
-            <p style="font-size: var(--text-sm); color: var(--color-muted); margin-bottom: var(--space-4);">The annual calculator covers all categories and gives you a ranked action plan.</p>
+          <div class="promo">
+            <p class="eyebrow">Go deeper</p>
+            <h3 class="promo__title">Want the full picture?</h3>
+            <p class="promo__text">The annual calculator covers all categories and gives you a ranked action plan.</p>
             <a href="/calculate/annual.html" class="btn btn-primary btn-sm" style="width:100%; justify-content:center;">Full Annual Estimate →</a>
           </div>
         </aside>

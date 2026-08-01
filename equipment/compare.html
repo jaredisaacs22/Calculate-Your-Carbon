@@ -8,13 +8,23 @@
   <link rel="canonical" href="https://calculateyourcarbon.com/equipment/compare.html">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
-    .page-header { padding: var(--space-16) var(--space-6) var(--space-8); max-width:760px; margin:0 auto; text-align:center; }
-    .page-header h1 { font-family:var(--font-heading); font-size:clamp(1.75rem,4vw,2.75rem); margin-bottom:var(--space-3); }
-    .page-header p  { color:var(--color-muted); font-size:var(--text-base); line-height:1.7; }
+    /* ── Page header — poster block ───────────────────────── */
+    .page-header { padding: var(--space-16) var(--space-6) var(--space-8); max-width:900px; margin:0 auto; }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem,6.5vw,3.75rem);
+      line-height: .96;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-5);
+    }
+    .page-header .sub { display:flex; gap:var(--space-4); align-items:flex-start; }
+    .page-header .sub .rule { width:44px; height:1.5px; background:var(--color-rule); flex:none; margin-top:11px; }
+    .page-header p  { color:var(--color-muted); font-size:var(--text-base); line-height:1.65; max-width:56ch; }
 
     .compare-form {
       max-width: 900px;
-      margin: 0 auto var(--space-8);
+      margin: 0 auto var(--space-12);
       padding: 0 var(--space-6);
     }
     .compare-form__selects {
@@ -22,6 +32,8 @@
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: var(--space-4);
       margin-bottom: var(--space-6);
+      padding-top: var(--space-6);
+      border-top: 1.5px solid var(--color-rule);
     }
     .compare-form__controls {
       display: flex;
@@ -29,37 +41,148 @@
       align-items: flex-end;
       flex-wrap: wrap;
       margin-bottom: var(--space-6);
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--color-border);
     }
     .form-group { display:flex; flex-direction:column; gap:var(--space-2); flex:1; min-width:160px; }
-    .form-group label { font-size:var(--text-sm); font-weight:500; }
-    .form-group select, .form-group input { padding: var(--space-3) var(--space-4); border:1px solid var(--color-border); border-radius:var(--radius); font-size:var(--text-base); background:var(--color-bg); }
-    .load-display { font-weight:700; font-size:var(--text-xl); color:var(--color-accent); margin-left:var(--space-2); }
+    .form-group label {
+      font: 600 10px/1.4 var(--font-mono);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+    }
+    .form-group select, .form-group input[type=number] {
+      padding: 12px 14px;
+      border: 1.5px solid var(--color-border);
+      background: var(--color-surface);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-text);
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color .15s;
+    }
+    .form-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%2317181a' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 34px;
+    }
+    .form-group select:focus, .form-group input:focus { outline:none; border-color:var(--color-rule); }
+    .load-display { font: 700 var(--text-lg)/1 var(--font-mono); color: var(--color-accent-ink); margin-left: var(--space-2); }
 
-    #error-msg { background:#fff3cd; border:1px solid #ffc107; border-radius:var(--radius); padding:var(--space-4); color:#856404; margin-bottom:var(--space-4); }
+    #error-msg {
+      background: var(--color-accent-wash);
+      border: 1.5px solid var(--color-rule);
+      border-left-width: 5px;
+      padding: var(--space-4);
+      color: var(--color-text);
+      font: 500 var(--text-sm)/1.6 var(--font-mono);
+      margin-bottom: var(--space-4);
+    }
 
-    /* Result cards */
+    /* ── Results header — dark band ───────────────────────── */
+    .results-band {
+      background: var(--color-dark);
+      color: var(--color-dark-text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      padding: var(--space-5) var(--space-6);
+      margin-bottom: var(--space-6);
+    }
+    .results-band h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: .96;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    .results-band .live {
+      font: 600 10px/1 var(--font-mono);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+    }
+    #share-btn.btn-secondary {
+      background: transparent;
+      border: 1.5px solid rgba(244,244,241,.35);
+      color: var(--color-dark-text);
+      padding: 9px 16px;
+      font-size: var(--text-xs);
+    }
+    #share-btn.btn-secondary:hover { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-text); }
+
+    /* ── Result cards — spec sheets ───────────────────────── */
     #result-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: var(--space-5);
+      gap: var(--space-4);
       margin-bottom: var(--space-8);
     }
     .compare-card {
       background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-top: 4px solid var(--color-accent);
-      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--color-border);
+      border-top: 5px solid var(--color-rule) !important;
       padding: var(--space-6);
     }
-    .compare-card__oem   { font-size:var(--text-xs); font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:var(--space-1); }
-    .compare-card__model { font-family:var(--font-heading); font-size:var(--text-xl); margin-bottom:var(--space-1); }
-    .compare-card__rating{ font-size:var(--text-sm); color:var(--color-muted); margin-bottom:var(--space-5); }
-    .compare-card__metrics { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-3) var(--space-4); }
-    .compare-card__metrics dt { font-size:var(--text-xs); color:var(--color-muted); margin-bottom:2px; }
-    .compare-card__metrics dd { font-size:var(--text-base); font-weight:600; margin:0; }
+    /* Slot colours — ink / amber / steel / green, overriding compare.js inline hues.
+       Rules use the raw hue; type uses a darker ink-safe variant.               */
+    #result-cards .compare-card:nth-child(1) { border-top-color: #17181a !important; }
+    #result-cards .compare-card:nth-child(2) { border-top-color: #cf9b56 !important; }
+    #result-cards .compare-card:nth-child(3) { border-top-color: #49525e !important; }
+    #result-cards .compare-card:nth-child(4) { border-top-color: #3f7d5a !important; }
+    #result-cards .compare-card:nth-child(1) .compare-card__oem { color: #17181a !important; }
+    #result-cards .compare-card:nth-child(2) .compare-card__oem { color: #8a6027 !important; }
+    #result-cards .compare-card:nth-child(3) .compare-card__oem { color: #49525e !important; }
+    #result-cards .compare-card:nth-child(4) .compare-card__oem { color: #2f6045 !important; }
 
-    .chart-wrapper { max-width:700px; margin: 0 auto var(--space-8); padding: 0 var(--space-6); }
+    .compare-card__oem   { font: 600 10px/1 var(--font-mono); letter-spacing:.2em; text-transform:uppercase; margin-bottom:var(--space-3); }
+    .compare-card__model { font-family:var(--font-display); font-size:var(--text-xl); line-height:1; text-transform:uppercase; letter-spacing:.01em; margin-bottom:var(--space-2); }
+    .compare-card__rating{ font:500 10px/1.6 var(--font-mono); color:var(--color-faint); margin-bottom:var(--space-5); padding-bottom:var(--space-4); border-bottom:1px solid var(--color-border); }
+    .compare-card__metrics { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); }
+    .compare-card__metrics dt { font:600 9px/1 var(--font-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--color-faint); margin-bottom:5px; }
+    .compare-card__metrics dd { font:700 var(--text-base)/1 var(--font-mono); margin:0; }
+    .compare-card__badge {
+      display: inline-block;
+      margin: var(--space-4) var(--space-2) 0 0;
+      padding: 4px 9px;
+      font: 700 9px/1.4 var(--font-mono);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .compare-card__badge--efficiency { background: var(--color-accent); color: var(--color-text); }
+    .compare-card__badge--cost { background: transparent; border: 1.5px solid var(--color-rule); color: var(--color-text); }
+
+    /* ── Chart panel ──────────────────────────────────────── */
+    .chart-wrapper {
+      max-width: 700px;
+      margin: 0 auto var(--space-6);
+      padding: var(--space-6);
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+    }
     canvas { width:100% !important; }
+
+    #optimal-load-info { font:500 11px/1.9 var(--font-mono); color:var(--color-muted); }
+    #optimal-load-info span { color: var(--color-text) !important; }
+    #optimal-load-info span:nth-of-type(1) { color: #17181a !important; }
+    #optimal-load-info span:nth-of-type(2) { color: #cf9b56 !important; }
+    #optimal-load-info span:nth-of-type(3) { color: #49525e !important; }
+    #optimal-load-info span:nth-of-type(4) { color: #3f7d5a !important; }
+
+    .src-note {
+      font: 500 10px/1.8 var(--font-mono);
+      letter-spacing: .04em;
+      color: var(--color-faint);
+      border-top: 1px solid var(--color-border);
+      padding-top: var(--space-4);
+    }
+    .src-note a { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -69,11 +192,11 @@
     <div class="nav__inner">
       <a href="/" class="nav__logo">calculateyourcarbon</a>
       <div class="nav__links" role="list">
-        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick Calc</a>
-        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual Calc</a>
-        <a href="/equipment/" class="nav__link nav__link--active" role="listitem">Equipment</a>
-        <a href="/compare/" class="nav__link" role="listitem">Compare</a>
+        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick</a>
+        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual</a>
         <a href="/explore.html" class="nav__link" role="listitem">Explore</a>
+        <a href="/compare/" class="nav__link" role="listitem">Compare</a>
+        <a href="/equipment/" class="nav__link" role="listitem">Equipment</a>
         <a href="/dashboard.html" class="nav__link" role="listitem">Dashboard</a>
         <a href="/learn/" class="nav__link" role="listitem">Learn</a>
       </div>
@@ -82,11 +205,11 @@
   </nav>
   <div class="nav__mobile-overlay" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation menu">
     <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
-    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
-    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
-    <a href="/equipment/" class="nav__link">Equipment</a>
-    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/calculate/quick.html" class="nav__link">Quick</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual</a>
     <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
     <a href="/dashboard.html" class="nav__link">Dashboard</a>
     <a href="/learn/" class="nav__link">Learn</a>
   </div>
@@ -94,8 +217,11 @@
   <main id="main">
     <div class="page-header">
       <p class="eyebrow">Equipment Tools</p>
-      <h1>Generator Comparison</h1>
-      <p>Select 2–4 generators, set a load point, and compare fuel consumption, hourly cost, and CO₂e/kWh side-by-side. Fuel curve chart shows full load-range performance.</p>
+      <h1>Generator<br>Comparison</h1>
+      <div class="sub">
+        <div class="rule"></div>
+        <p>Select 2–4 generators, set a load point, and compare fuel consumption, hourly cost, and CO₂e/kWh side-by-side. Fuel curve chart shows full load-range performance.</p>
+      </div>
     </div>
 
     <section class="compare-form" aria-label="Comparison inputs">
@@ -134,16 +260,19 @@
     </section>
 
     <section id="results" hidden aria-label="Comparison results" style="max-width:900px;margin:0 auto;padding:0 var(--space-6) var(--space-16)">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-6)">
-        <h2 style="font-family:var(--font-heading);margin:0">Results</h2>
-        <button id="share-btn" class="btn btn-secondary" hidden>Copy link</button>
+      <div class="results-band">
+        <h2>Tale of the Tape</h2>
+        <div style="display:flex;align-items:center;gap:var(--space-4)">
+          <span class="live">● Live</span>
+          <button id="share-btn" class="btn btn-secondary" hidden>Copy link</button>
+        </div>
       </div>
       <div id="result-cards"></div>
       <div class="chart-wrapper">
         <canvas id="fuel-curve-chart" aria-label="Fuel consumption curve chart"></canvas>
       </div>
-      <p id="optimal-load-info" style="font-size:var(--text-sm);margin:var(--space-2) 0 var(--space-4);line-height:1.6"></p>
-      <p style="font-size:var(--text-xs);color:var(--color-muted)">Fuel consumption data from OEM published spec sheets. CO₂e uses EPA GHG Factors Hub 2024: 2.63 kg CO₂e/L diesel. <a href="/methodology.html">Full methodology →</a></p>
+      <p id="optimal-load-info" style="margin:var(--space-2) 0 var(--space-6)"></p>
+      <p class="src-note">Fuel consumption data from OEM published spec sheets. CO₂e uses EPA GHG Factors Hub 2024: 2.63 kg CO₂e/L diesel. <a href="/methodology.html">Full methodology →</a></p>
     </section>
   </main>
 
@@ -169,6 +298,61 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+  /* ── Stage & Steel chart theme ──────────────────────────────────────────
+     Restyles Chart.js output to the site palette without touching the
+     calculator logic in the page scripts below. Dataset colours declared as
+     legacy hex literals are remapped in place; radii are squared off.        */
+  (function () {
+    if (!window.Chart) return;
+    var INK = '#17181a', AMBER = '#cf9b56', STEEL = '#49525e', GREEN = '#3f7d5a';
+    var MAP = {
+      '#2d6a4f': INK,   /* forest green  -> ink   */
+      '#1d4d38': INK,   /* dark green    -> ink   */
+      '#52b788': AMBER, /* light green   -> amber */
+      '#e76f51': AMBER, /* terracotta    -> amber */
+      '#3a86ff': STEEL, /* blue          -> steel */
+      '#8338ec': GREEN  /* purple        -> green */
+    };
+    function fix(obj, key) {
+      var v = obj[key];
+      if (typeof v === 'string') {
+        var p = MAP[v.slice(0, 7).toLowerCase()];
+        if (p) obj[key] = p + v.slice(7);
+      } else if (Array.isArray(v)) {
+        for (var i = 0; i < v.length; i++) {
+          if (typeof v[i] === 'string') {
+            var q = MAP[v[i].slice(0, 7).toLowerCase()];
+            if (q) v[i] = q + v[i].slice(7);
+          }
+        }
+      }
+    }
+    try {
+      Chart.defaults.font.family = "'Spline Sans Mono', ui-monospace, Menlo, monospace";
+      Chart.defaults.font.size = 11;
+      Chart.defaults.color = 'rgba(23,24,26,.58)';
+      Chart.defaults.borderColor = 'rgba(23,24,26,.14)';
+      Chart.defaults.elements.bar.borderRadius = 0;
+      Chart.defaults.plugins.legend.labels.boxWidth = 10;
+      Chart.defaults.plugins.legend.labels.boxHeight = 10;
+      Chart.defaults.plugins.legend.labels.font = { family: "'Spline Sans Mono', ui-monospace, monospace", size: 10 };
+    } catch (e) { /* defaults are cosmetic only */ }
+    Chart.register({
+      id: 'stageSteelTheme',
+      beforeUpdate: function (chart) {
+        var ds = (chart.data && chart.data.datasets) || [];
+        for (var i = 0; i < ds.length; i++) {
+          fix(ds[i], 'backgroundColor');
+          fix(ds[i], 'borderColor');
+          fix(ds[i], 'pointBackgroundColor');
+          fix(ds[i], 'pointBorderColor');
+          if ('borderRadius' in ds[i]) ds[i].borderRadius = 0;
+        }
+      }
+    });
+  })();
+  </script>
   <script src="../assets/js/equipment-api.js"></script>
   <script src="../assets/js/compare.js"></script>
 </body>

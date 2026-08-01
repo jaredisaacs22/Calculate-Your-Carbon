@@ -33,7 +33,7 @@
   // ── Category Inputs Config ────────────────────────────────────
   const categoryInputs = {
     driving: {
-      label: '🚗 Driving',
+      label: 'Driving',
       fields: `
         <div class="form-group">
           <label class="form-label" for="qc-miles">Miles driven <span class="tooltip-wrap"><span class="tooltip-icon">?</span><span class="tooltip-box">Enter the total miles for this trip or time period</span></span></label>
@@ -65,7 +65,7 @@
     },
 
     flying: {
-      label: '✈️ Flying',
+      label: 'Flying',
       fields: `
         <div class="form-group">
           <label class="form-label" for="qc-flight-haul">Trip length</label>
@@ -105,7 +105,7 @@
     },
 
     home_energy: {
-      label: '🏠 Home Energy',
+      label: 'Home Energy',
       fields: `
         <div class="form-group">
           <label class="form-label" for="qc-state">Your state <span class="tooltip-wrap"><span class="tooltip-icon">?</span><span class="tooltip-box">Electricity emissions vary widely by state based on your grid's energy mix</span></span></label>
@@ -136,7 +136,7 @@
     },
 
     food: {
-      label: '🍽️ A Meal / Food Choice',
+      label: 'A Meal / Food Choice',
       fields: `
         <div class="form-group">
           <label class="form-label" for="qc-food">Food item</label>
@@ -183,7 +183,7 @@
     },
 
     purchase: {
-      label: '🛒 A Purchase',
+      label: 'A Purchase',
       fields: `
         <div class="form-group">
           <label class="form-label" for="qc-category">Category</label>
@@ -212,7 +212,7 @@
     },
 
     waste: {
-      label: '♻️ Waste & Recycling',
+      label: 'Waste & Recycling',
       fields: `
         <div class="form-group">
           <label class="form-label">Do you recycle regularly?</label>
@@ -424,7 +424,7 @@
     if (e.target.id === 'share-btn') {
       const lbs = parseFloat(resultNumber.textContent.replace(/,/g,'')) || 0;
       const tons = CarbonCalc.lbsToTons(lbs).toFixed(2);
-      const text = `I just calculated a ${tons} ton CO₂e footprint for this activity. Calculate yours free at calculateyourcarbon.com 🌿`;
+      const text = `I just calculated a ${tons} ton CO₂e footprint for this activity. Calculate yours free at calculateyourcarbon.com`;
       if (navigator.share) {
         navigator.share({ text, url: 'https://calculateyourcarbon.com/calculate/quick.html' });
       } else {

@@ -10,6 +10,148 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://calculateyourcarbon.com/explore.html">
   <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* ── Poster head ──────────────────────────────────────────── */
+    .exp-head {
+      padding: var(--space-16) 0 var(--space-10);
+      border-bottom: 1.5px solid var(--color-rule);
+      margin-bottom: var(--space-12);
+    }
+    .exp-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.75rem, 9vw, 5rem);
+      line-height: .9;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+    }
+    .exp-lede { display: flex; gap: var(--space-4); align-items: flex-start; margin-top: var(--space-6); }
+    .exp-lede__rule { width: 44px; height: 1px; background: var(--color-rule); flex: none; margin-top: 11px; }
+    .exp-lede__p { font-size: var(--text-base); line-height: 1.55; color: var(--color-muted); max-width: 52ch; }
+
+    .exp-h2 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(1.5rem, 4vw, var(--text-3xl));
+      line-height: .96;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+    }
+
+    .exp-step-head {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+      flex-wrap: wrap;
+    }
+
+    /* ── Step 1: decision grid ────────────────────────────────── */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      border-top: 1.5px solid var(--color-rule);
+      border-left: 1px solid var(--color-border);
+    }
+    .category-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+      text-align: left;
+      padding: var(--space-5) var(--space-5) var(--space-8);
+      background: transparent;
+      border: none;
+      border-right: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      color: inherit;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+    .category-card:hover { background: var(--color-surface); }
+    .category-card__icon {
+      font: 600 10px/1 var(--font-mono);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+      transition: color .15s;
+    }
+    .category-card__label {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: 1;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+    }
+    .category-card__desc { font-size: var(--text-xs); color: var(--color-muted); line-height: 1.5; }
+    .category-card.selected { background: var(--color-rule); color: var(--color-dark-text); }
+    .category-card.selected .category-card__icon { color: var(--color-accent); }
+    .category-card.selected .category-card__desc { color: rgba(244,244,241,.6); }
+
+    /* ── A-vs-B layout (markup injected by assets/js/explorer.js) ─ */
+    .vs-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: var(--space-5);
+      align-items: stretch;
+    }
+    .vs-divider {
+      display: grid;
+      place-items: center;
+      position: relative;
+      font: 700 11px/1 var(--font-mono);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+    }
+    .vs-divider::before,
+    .vs-divider::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      width: 1px;
+      background: var(--color-border);
+    }
+    .vs-divider::before { top: 0; height: calc(50% - 20px); }
+    .vs-divider::after  { bottom: 0; height: calc(50% - 20px); }
+
+    .winner-card { border-color: var(--color-rule); border-top: 6px solid var(--color-accent); }
+
+    /* ── Callout ──────────────────────────────────────────────── */
+    .alert {
+      padding: var(--space-5);
+      border: 1.5px solid var(--color-border);
+      font-size: var(--text-sm);
+      line-height: 1.7;
+    }
+    .alert-ok {
+      background: var(--color-rule);
+      border-color: var(--color-rule);
+      color: var(--color-dark-text);
+    }
+    .alert-ok strong { color: var(--color-accent); font-weight: 700; }
+
+    /* Normalise the result markup injected by explorer.js to the
+       design system: square corners, no shadows, mono numerals.
+       Headings keep the display face; readouts inside cards become
+       mono data. Styling only — no structure or ids are touched. */
+    #exp-result .card { box-shadow: none !important; border-radius: 0 !important; }
+    #exp-result .card [style*="--font-heading"] {
+      font-family: var(--font-mono) !important;
+      font-weight: 700 !important;
+      letter-spacing: -.03em;
+    }
+    #exp-result h2 {
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      line-height: .96;
+    }
+
+    @media (max-width: 760px) {
+      .vs-grid { grid-template-columns: 1fr; }
+      .vs-divider { padding: var(--space-2) 0; }
+      .vs-divider::before, .vs-divider::after { display: none; }
+    }
+  </style>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
@@ -18,10 +160,11 @@
     <div class="nav__inner">
       <a href="/" class="nav__logo">calculateyourcarbon</a>
       <div class="nav__links">
-        <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
-        <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
+        <a href="/calculate/quick.html" class="nav__link">Quick</a>
+        <a href="/calculate/annual.html" class="nav__link">Annual</a>
+        <a href="/explore.html" class="nav__link nav__link--active">Explore</a>
         <a href="/compare/" class="nav__link">Compare</a>
-        <a href="/explore.html" class="nav__link active">Explore</a>
+        <a href="/equipment/" class="nav__link">Equipment</a>
         <a href="/dashboard.html" class="nav__link">Dashboard</a>
         <a href="/learn/" class="nav__link">Learn</a>
       </div>
@@ -32,19 +175,24 @@
   </nav>
   <div class="nav__mobile-overlay" id="mobileNav">
     <button class="nav__mobile-close" id="mobileClose">✕</button>
-    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
-    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
-    <a href="/explore.html" class="nav__link active">Explore</a>
+    <a href="/calculate/quick.html" class="nav__link">Quick</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual</a>
+    <a href="/explore.html" class="nav__link nav__link--active">Explore</a>
+    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/equipment/" class="nav__link">Equipment</a>
     <a href="/dashboard.html" class="nav__link">Dashboard</a>
     <a href="/learn/" class="nav__link">Learn</a>
   </div>
 
   <main id="main">
-    <div style="padding: var(--space-16) 0 var(--space-8); text-align:center;">
+    <div class="exp-head">
       <div class="container">
         <p class="eyebrow">Before you decide</p>
-        <h1 class="section-heading">Pre-Planning Explorer</h1>
-        <p class="section-subheading" style="margin:0 auto;">Compare two real options side by side. See the carbon difference before you choose — no account needed.</p>
+        <h1 class="exp-h1">Pre-Planning<br>Explorer</h1>
+        <div class="exp-lede">
+          <span class="exp-lede__rule" aria-hidden="true"></span>
+          <p class="exp-lede__p">Compare two real options side by side. See the carbon difference before you choose — no account needed.</p>
+        </div>
       </div>
     </div>
 
@@ -52,41 +200,41 @@
 
       <!-- Step 1: Pick decision type -->
       <div id="exp-step-1">
-        <h2 style="font-size:var(--text-xl);font-weight:600;margin-bottom:var(--space-6);">What are you deciding?</h2>
+        <h2 class="exp-h2" style="margin-bottom:var(--space-6);">What are you deciding?</h2>
         <div class="category-grid" role="radiogroup" aria-label="Select a decision type">
-          <button class="category-card" data-type="travel" role="radio" aria-checked="false">
-            <span class="category-card__icon" aria-hidden="true">🚗</span>
+          <button class="category-card decision-card" data-type="travel" role="radio" aria-checked="false">
+            <span class="category-card__icon" aria-hidden="true">01</span>
             <span class="category-card__label">Getting There</span>
-            <span style="font-size:var(--text-xs);color:var(--color-muted);">Drive vs. train vs. fly</span>
+            <span class="category-card__desc">Drive vs. train vs. fly</span>
           </button>
-          <button class="category-card" data-type="food" role="radio" aria-checked="false">
-            <span class="category-card__icon" aria-hidden="true">🍽️</span>
+          <button class="category-card decision-card" data-type="food" role="radio" aria-checked="false">
+            <span class="category-card__icon" aria-hidden="true">02</span>
             <span class="category-card__label">What to Eat</span>
-            <span style="font-size:var(--text-xs);color:var(--color-muted);">Compare any two foods</span>
+            <span class="category-card__desc">Compare any two foods</span>
           </button>
-          <button class="category-card" data-type="home" role="radio" aria-checked="false">
-            <span class="category-card__icon" aria-hidden="true">🏠</span>
+          <button class="category-card decision-card" data-type="home" role="radio" aria-checked="false">
+            <span class="category-card__icon" aria-hidden="true">03</span>
             <span class="category-card__label">Home Decision</span>
-            <span style="font-size:var(--text-xs);color:var(--color-muted);">Appliances, heating</span>
+            <span class="category-card__desc">Appliances, heating</span>
           </button>
-          <button class="category-card" data-type="purchase" role="radio" aria-checked="false">
-            <span class="category-card__icon" aria-hidden="true">🛒</span>
+          <button class="category-card decision-card" data-type="purchase" role="radio" aria-checked="false">
+            <span class="category-card__icon" aria-hidden="true">04</span>
             <span class="category-card__label">What to Buy</span>
-            <span style="font-size:var(--text-xs);color:var(--color-muted);">New vs. secondhand</span>
+            <span class="category-card__desc">New vs. secondhand</span>
           </button>
-          <button class="category-card" data-type="trip" role="radio" aria-checked="false">
-            <span class="category-card__icon" aria-hidden="true">✈️</span>
+          <button class="category-card decision-card" data-type="trip" role="radio" aria-checked="false">
+            <span class="category-card__icon" aria-hidden="true">05</span>
             <span class="category-card__label">Trip Planning</span>
-            <span style="font-size:var(--text-xs);color:var(--color-muted);">All modes compared</span>
+            <span class="category-card__desc">All modes compared</span>
           </button>
         </div>
       </div>
 
       <!-- Step 2: Inputs -->
       <div id="exp-step-2" style="display:none;">
-        <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-6);">
+        <div class="exp-step-head">
           <button class="btn btn-ghost btn-sm" id="exp-back-btn">← Back</button>
-          <h2 id="exp-step2-label" style="font-size:var(--text-xl);font-weight:600;"></h2>
+          <h2 id="exp-step2-label" class="exp-h2"></h2>
         </div>
 
         <div id="compare-inputs">

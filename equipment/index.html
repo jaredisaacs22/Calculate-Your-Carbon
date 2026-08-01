@@ -8,69 +8,126 @@
   <link rel="canonical" href="https://calculateyourcarbon.com/equipment/">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
+    /* ── Hero — poster block ─────────────────────────────── */
     .equipment-hero {
-      padding: var(--space-24) var(--space-6) var(--space-16);
-      text-align: center;
-      max-width: 760px;
+      max-width: var(--max-width);
       margin: 0 auto;
+      padding: var(--space-16) var(--space-6) var(--space-12);
     }
-    .equipment-hero h1 { font-family: var(--font-heading); font-size: clamp(2rem,5vw,3.25rem); line-height:1.15; margin-bottom:var(--space-5); }
-    .equipment-hero p  { font-size:var(--text-lg); color:var(--color-muted); margin-bottom:var(--space-8); line-height:1.7; }
+    .equipment-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 4.75rem);
+      line-height: .96;
+      letter-spacing: .01em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-6);
+      max-width: 14ch;
+    }
+    .equipment-hero h1 .outline { color: transparent; -webkit-text-stroke: 2px var(--color-text); }
+    .hero-sub { display: flex; gap: var(--space-4); align-items: flex-start; margin-bottom: var(--space-8); }
+    .hero-sub .rule { width: 44px; height: 1.5px; background: var(--color-rule); flex: none; margin-top: 11px; }
+    .hero-sub p { font-size: var(--text-base); color: var(--color-muted); line-height: 1.65; max-width: 52ch; }
+    .hero-ctas { display: flex; gap: var(--space-3); flex-wrap: wrap; }
 
+    /* ── Tool cards — numbered lineup ────────────────────── */
     .tool-cards {
+      counter-reset: tc;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: var(--space-6);
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 0;
       max-width: var(--max-width);
       margin: 0 auto var(--space-16);
       padding: 0 var(--space-6);
+      border-top: 1.5px solid var(--color-rule);
+      border-left: 1.5px solid var(--color-border);
     }
     .tool-card {
+      counter-increment: tc;
       background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-8);
+      border: 1.5px solid var(--color-border);
+      border-top: none;
+      border-left: none;
+      padding: var(--space-6) var(--space-6) var(--space-8);
       text-decoration: none;
       color: inherit;
-      display: block;
-      transition: border-color .15s, box-shadow .15s;
+      display: flex;
+      flex-direction: column;
+      transition: background .15s, color .15s;
     }
-    .tool-card:hover { border-color: var(--color-accent); box-shadow: 0 4px 20px rgba(0,0,0,.08); }
-    .tool-card__icon { font-size: 2rem; margin-bottom: var(--space-4); }
-    .tool-card__title { font-family: var(--font-heading); font-size: var(--text-xl); margin-bottom: var(--space-2); }
-    .tool-card__desc  { font-size: var(--text-sm); color: var(--color-muted); line-height:1.6; }
-    .tool-card__arrow { margin-top: var(--space-4); font-weight:600; color: var(--color-accent); }
+    .tool-card:hover { background: var(--color-rule); color: var(--color-dark-text); }
+    .tool-card__cat {
+      font: 600 10px/1 var(--font-mono);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--color-faint);
+      margin-bottom: var(--space-5);
+    }
+    .tool-card__cat::before { content: counter(tc, decimal-leading-zero) " / "; color: var(--color-accent-ink); }
+    .tool-card:hover .tool-card__cat { color: rgba(244,244,241,.5); }
+    .tool-card:hover .tool-card__cat::before { color: var(--color-accent); }
+    .tool-card__title {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: .01em;
+      margin-bottom: var(--space-3);
+    }
+    .tool-card__desc { font-size: var(--text-sm); color: var(--color-muted); line-height: 1.65; }
+    .tool-card:hover .tool-card__desc { color: rgba(244,244,241,.62); }
+    .tool-card__arrow {
+      margin-top: auto;
+      padding-top: var(--space-6);
+      font: 600 10px/1 var(--font-mono);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--color-accent-ink);
+    }
+    .tool-card:hover .tool-card__arrow { color: var(--color-accent); }
 
+    /* ── Sector strip ────────────────────────────────────── */
     .sector-section {
-      background: var(--color-surface);
-      border-top: 1px solid var(--color-border);
+      background: var(--color-sunk);
+      border-top: 1.5px solid var(--color-rule);
+      border-bottom: 1.5px solid var(--color-rule);
       padding: var(--space-12) var(--space-6);
     }
     .sector-section__inner { max-width: var(--max-width); margin: 0 auto; }
-    .sector-section h2 { font-family: var(--font-heading); font-size: var(--text-2xl); margin-bottom: var(--space-3); }
-    .sector-section p  { color: var(--color-muted); margin-bottom: var(--space-8); }
-    .sector-chips { display:flex; gap:var(--space-3); flex-wrap:wrap; }
+    .sector-section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, var(--text-3xl));
+      line-height: .96;
+      text-transform: uppercase;
+      margin-bottom: var(--space-3);
+    }
+    .sector-section p { color: var(--color-muted); font-size: var(--text-sm); margin-bottom: var(--space-6); }
+    .sector-chips { display: flex; gap: 0; flex-wrap: wrap; }
     .sector-chip {
-      padding: var(--space-2) var(--space-5);
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
-      border-radius: 100px;
-      font-size: var(--text-sm);
-      font-weight: 500;
+      padding: 10px var(--space-5);
+      background: transparent;
+      border: 1.5px solid var(--color-border);
+      margin: -1.5px 0 0 -1.5px;
+      font: 600 10.5px/1 var(--font-mono);
+      letter-spacing: .12em;
+      text-transform: uppercase;
       text-decoration: none;
       color: var(--color-muted);
-      transition: border-color .15s, color .15s;
+      transition: background .15s, color .15s, border-color .15s;
     }
-    .sector-chip:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    .sector-chip:hover { background: var(--color-rule); border-color: var(--color-rule); color: var(--color-bg); }
 
+    /* ── Data freshness ──────────────────────────────────── */
     .data-freshness {
       max-width: var(--max-width);
       margin: 0 auto;
       padding: var(--space-6);
-      font-size: var(--text-xs);
-      color: var(--color-muted);
+      font: 500 10px/1.8 var(--font-mono);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--color-faint);
     }
-    #freshness-indicator { font-weight: 500; }
+    .data-freshness a { text-decoration: underline; }
+    #freshness-indicator { font-weight: 700; color: var(--color-text); }
   </style>
 </head>
 <body>
@@ -80,11 +137,11 @@
     <div class="nav__inner">
       <a href="/" class="nav__logo" aria-label="calculateyourcarbon home">calculateyourcarbon</a>
       <div class="nav__links" role="list">
-        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick Calc</a>
-        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual Calc</a>
-        <a href="/equipment/" class="nav__link nav__link--active" role="listitem">Equipment</a>
-        <a href="/compare/" class="nav__link" role="listitem">Compare</a>
+        <a href="/calculate/quick.html" class="nav__link" role="listitem">Quick</a>
+        <a href="/calculate/annual.html" class="nav__link" role="listitem">Annual</a>
         <a href="/explore.html" class="nav__link" role="listitem">Explore</a>
+        <a href="/compare/" class="nav__link" role="listitem">Compare</a>
+        <a href="/equipment/" class="nav__link nav__link--active" role="listitem">Equipment</a>
         <a href="/dashboard.html" class="nav__link" role="listitem">Dashboard</a>
         <a href="/learn/" class="nav__link" role="listitem">Learn</a>
       </div>
@@ -95,11 +152,11 @@
   </nav>
   <div class="nav__mobile-overlay" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation menu">
     <button class="nav__mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
-    <a href="/calculate/quick.html" class="nav__link">Quick Calc</a>
-    <a href="/calculate/annual.html" class="nav__link">Annual Calc</a>
-    <a href="/equipment/" class="nav__link">Equipment</a>
-    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/calculate/quick.html" class="nav__link">Quick</a>
+    <a href="/calculate/annual.html" class="nav__link">Annual</a>
     <a href="/explore.html" class="nav__link">Explore</a>
+    <a href="/compare/" class="nav__link">Compare</a>
+    <a href="/equipment/" class="nav__link nav__link--active">Equipment</a>
     <a href="/dashboard.html" class="nav__link">Dashboard</a>
     <a href="/learn/" class="nav__link">Learn</a>
   </div>
@@ -107,35 +164,50 @@
   <main id="main">
     <div class="equipment-hero">
       <p class="eyebrow">Equipment &amp; Industrial</p>
-      <h1>Generator &amp; BESS<br>Carbon Calculators</h1>
-      <p>Compare diesel generators from Atlas Copco, Aggreko, and Himoinsa side-by-side. Model fuel and emission savings from pairing a battery energy storage system with a generator under real load profiles.</p>
-      <div style="display:flex;gap:var(--space-4);justify-content:center;flex-wrap:wrap;">
+      <h1>Generator &amp; BESS<br><span class="outline">carbon</span> calculators</h1>
+      <div class="hero-sub">
+        <div class="rule"></div>
+        <p>Compare diesel generators from Atlas Copco, Aggreko, and Himoinsa side-by-side. Model fuel and emission savings from pairing a battery energy storage system with a generator under real load profiles.</p>
+      </div>
+      <div class="hero-ctas">
         <a href="/equipment/compare.html" class="btn btn-primary btn-lg">Compare Generators →</a>
         <a href="/equipment/hybrid.html" class="btn btn-ghost btn-lg">Model Hybrid System →</a>
       </div>
     </div>
 
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <div>Fuel curves&nbsp;✱&nbsp;BESS hybrid dispatch&nbsp;✱&nbsp;Load profiles&nbsp;✱&nbsp;Off-road cost&nbsp;✱&nbsp;</div>
+        <div>Fuel curves&nbsp;✱&nbsp;BESS hybrid dispatch&nbsp;✱&nbsp;Load profiles&nbsp;✱&nbsp;Off-road cost&nbsp;✱&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="rule-label" style="max-width:var(--max-width);margin:var(--space-12) auto var(--space-6);padding:0 var(--space-6)">
+      <div class="eyebrow" style="margin:0">The Toolkit — Four Ways In</div>
+      <div class="line"></div>
+    </div>
+
     <div class="tool-cards">
       <a href="/equipment/compare.html" class="tool-card">
-        <div class="tool-card__cat">// Gen Comparison</div>
+        <div class="tool-card__cat">Gen Comparison</div>
         <div class="tool-card__title">Generator Comparison</div>
         <p class="tool-card__desc">Compare 2–4 generators side-by-side on fuel consumption, hourly cost, and CO₂e per kWh at any load point. Data sourced from OEM spec sheets.</p>
         <div class="tool-card__arrow">Compare now →</div>
       </a>
       <a href="/equipment/hybrid.html" class="tool-card">
-        <div class="tool-card__cat">// Hybrid Dispatch</div>
+        <div class="tool-card__cat">Hybrid Dispatch</div>
         <div class="tool-card__title">BESS + Generator Hybrid</div>
         <p class="tool-card__desc">Model 24-hour fuel and emission savings when pairing a battery with a generator. See hour-by-hour dispatch, SOC trace, and payback analysis.</p>
         <div class="tool-card__arrow">Model hybrid →</div>
       </a>
       <a href="/equipment/load-profiles.html" class="tool-card">
-        <div class="tool-card__cat">// Load Analysis</div>
+        <div class="tool-card__cat">Load Analysis</div>
         <div class="tool-card__title">Load Profile Builder</div>
         <p class="tool-card__desc">Browse pre-built 24-hour load profiles for construction, events, telecom, and industrial sites — or drag-and-draw your own custom profile.</p>
         <div class="tool-card__arrow">Build profile →</div>
       </a>
       <a href="/equipment/offroad.html" class="tool-card">
-        <div class="tool-card__cat">// Off-Road &amp; Rental</div>
+        <div class="tool-card__cat">Off-Road &amp; Rental</div>
         <div class="tool-card__title">Fuel &amp; Cost Calculator</div>
         <p class="tool-card__desc">Compare diesel generators vs. BESS hybrid scenarios for off-road and construction equipment. Includes MQ Power DCA, ANA eBOSS, Viridi, and Atlas Copco units. Export results as PNG.</p>
         <div class="tool-card__arrow">Calculate fuel savings →</div>
