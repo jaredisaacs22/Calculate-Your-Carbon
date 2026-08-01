@@ -784,6 +784,18 @@ hr, .divider {
   color: var(--color-text);
 }
 
+.footer__disclaimer {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  line-height: 1.7;
+  max-width: 680px;
+  text-align: center;
+}
+
+.footer__disclaimer a {
+  color: var(--color-accent);
+}
+
 .footer__copy {
   font-size: var(--text-xs);
   color: var(--color-muted);
